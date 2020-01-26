@@ -46,12 +46,18 @@
         var scene = null;
         var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
         var createScene = function () {
+            
             // Playground needs to return at least an empty scene and default camera
             var scene = new BABYLON.Scene(engine);
             var camera = new BABYLON.Camera("camera1", BABYLON.Vector3.Zero(), scene);
         
-            scene.activeCamera.position = new BABYLON.Vector3(0.4,1.7,-5);
-            var box = BABYLON.Mesh.CreateBox("Box",4.0,scene);
+            // Add lights to the scene
+            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+            var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+
+
+            scene.activeCamera.position = new BABYLON.Vector3(1,1,1);
+            var myBox = BABYLON.MeshBuilder.CreateBox("myBox", {height: 1, width: 0.5, depth: 0.5}, scene);
             var VRHelper = scene.createDefaultVRExperience();
                    
             return scene;

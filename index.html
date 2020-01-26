@@ -50,6 +50,7 @@
             var scene = new BABYLON.Scene(engine);
             var camera = new BABYLON.Camera("camera1", BABYLON.Vector3.Zero(), scene);
         
+            /*
             // Async call
             BABYLON.SceneLoader.Append("https://www.babylonjs.com/Scenes/Mansion/",
                 "Mansion.babylon", scene, function () {
@@ -57,6 +58,8 @@
                     // We will add some logic there
                     var VRHelper = scene.createDefaultVRExperience();
                 });
+                */
+            var box = BABYLON.Mesh.CreateBox("Box",4.0,scene);
         
             return scene;
         };

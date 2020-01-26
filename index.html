@@ -55,9 +55,12 @@
             var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
             var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
-
-            scene.activeCamera.position = new BABYLON.Vector3(1,1,1);
-            var myBox = BABYLON.MeshBuilder.CreateBox("myBox", {height: 1, width: 0.5, depth: 0.5}, scene);
+            for(var ii=-10; ii < 11; ii++) 
+                {
+                    var myBox = BABYLON.MeshBuilder.CreateBox("myBox", {height: 1, width: 0.5, depth: 0.5}, scene);
+                    myBox.position = new BABYLON.Vector3(ii*2, 1, 1);
+                }
+            
             var VRHelper = scene.createDefaultVRExperience();
                    
             return scene;

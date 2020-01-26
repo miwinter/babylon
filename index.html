@@ -50,10 +50,10 @@ scene.onPointerDown = function () {
             mesh.scaling.x = scale;
         });
         // oculus only
-        /*gp.onSecondaryTriggerStateChangedObservable.add(function (stateObject) {
+        gp.onSecondaryTriggerStateChangedObservable.add(function (stateObject) {
             let scale = 2 - stateObject.value;
             mesh.scaling.z = scale;
-        });*/
+        });
         gp.attachToMesh(mesh);
     });
 }

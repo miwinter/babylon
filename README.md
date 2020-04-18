@@ -1,4 +1,7 @@
-# babylon
+# Examples de fichier Babylon JS pour casque oculus quest
 
-Pour voir un fichier de l'extérieur : 
+Pour visualiser : 
 https://miwinter.github.io/babylon/cubes.html
+https://miwinter.github.io/babylon/index.html
+https://miwinter.github.io/babylon/manson.html
+

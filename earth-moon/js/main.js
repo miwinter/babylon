@@ -64,7 +64,7 @@ function createScene() {
     
     let counter = 0;
     time = 0;
-    delta_time = 1;
+    delta_time = 0.1;
     var dist_vector = BABYLON.Vector3.Zero();
     var gravity_force = BABYLON.Vector3.Zero();
     G = 0.01;

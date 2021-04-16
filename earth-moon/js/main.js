@@ -10,7 +10,7 @@ function startGame() {
     //engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
     scene = createScene();
 
-    //var VRHelper = scene.createDefaultVRExperience();
+    var VRHelper = scene.createDefaultVRExperience();
 
     engine.runRenderLoop(() => {
     
@@ -48,7 +48,7 @@ function createScene() {
     Moon.masse = 1;
 
 
-    var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -100), scene);
+    var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -10), scene);
     // This targets the camera to scene origin
     //camera.setTarget(BABYLON.Vector3.Zero());
     camera.setTarget(new BABYLON.Vector3(0, 0, 0));

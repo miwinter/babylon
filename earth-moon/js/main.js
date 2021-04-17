@@ -7,10 +7,11 @@ window.onload = startGame;
 function startGame() {
     canvas = document.querySelector("#myCanvas");
     engine = new BABYLON.Engine(canvas, true);
-    //engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+
     scene = createScene();
 
-    var VRHelper = scene.createDefaultVRExperience();
+    // Pour autoriser la VR
+    // var VRHelper = scene.createDefaultVRExperience();
 
     engine.runRenderLoop(() => {
     
@@ -47,11 +48,13 @@ function createScene() {
     Moon.position = new BABYLON.Vector3(10,0,0);
     Moon.masse = 1;
 
-
-    var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -10), scene);
+    // Cette Camera pour la VR
+    // var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -10), scene);
+    
+    // Cette pour le debug
+    var camera = new BABYLON.ArcRotateCamera('MainCamera1', -1, 1, 20, BABYLON.Vector3(0, 0, 0), scene, true);
     // This targets the camera to scene origin
     //camera.setTarget(BABYLON.Vector3.Zero());
-    camera.setTarget(new BABYLON.Vector3(0, 0, 0));
     camera.attachControl(canvas,true);
     
 
@@ -67,8 +70,7 @@ function createScene() {
     delta_time = 0.1;
     var dist_vector = BABYLON.Vector3.Zero();
     var gravity_force = BABYLON.Vector3.Zero();
-    G = 0.01;
-    
+    G = 0.01;    
 
     scene.registerBeforeRender(() => {
         /* for(let i = 0; i < spheres.length; i++) {

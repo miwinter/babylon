@@ -30,6 +30,18 @@ function createScene() {
     // ambiant color of the scene = green (like a green sun!)
     scene.ambiantColor = new BABYLON.Color3(0, 1, 0);
 
+
+	// Skybox
+	var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, scene);
+	var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+	skyboxMaterial.backFaceCulling = false;
+	skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/space", scene);
+	skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+	skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+	skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+	skybox.material = skyboxMaterial;			
+	    
+
     let spheres = [];
 
     Earth = BABYLON.MeshBuilder.CreateSphere("earth", {diameter: 5, segments: 32}, scene);

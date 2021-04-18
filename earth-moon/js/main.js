@@ -11,7 +11,7 @@ function startGame() {
     scene = createScene();
 
     // Pour autoriser la VR
-    // var VRHelper = scene.createDefaultVRExperience();
+    var VRHelper = scene.createDefaultVRExperience();
 
     engine.runRenderLoop(() => {
     
@@ -51,7 +51,7 @@ function createScene() {
     // Cette Camera pour la VR
     // var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -10), scene);
     
-    // Cette pour le debug
+    // Cette camera pour le debug
     var camera = new BABYLON.ArcRotateCamera('MainCamera1', -1, 1, 20, BABYLON.Vector3(0, 0, 0), scene, true);
     // This targets the camera to scene origin
     //camera.setTarget(BABYLON.Vector3.Zero());

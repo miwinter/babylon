@@ -4,6 +4,11 @@ let scene;
 
 window.onload = startGame;
 
+/*
+Pour aller attraper les controllers et leur position : 
+https://doc.babylonjs.com/divingDeeper/cameras/webVRHelper#accessing-controllers
+*/
+
 function startGame() {
     canvas = document.querySelector("#myCanvas");
     engine = new BABYLON.Engine(canvas, true);
@@ -11,7 +16,7 @@ function startGame() {
     scene = createScene();
 
     // Pour autoriser la VR
-    // var VRHelper = scene.createDefaultVRExperience();
+    var VRHelper = scene.createDefaultVRExperience();
 
     engine.runRenderLoop(() => {
     
@@ -25,6 +30,8 @@ function createScene() {
     // ambiant color of the scene = green (like a green sun!)
     scene.ambiantColor = new BABYLON.Color3(0, 1, 0);
 
+    let spheres = [];
+
     Earth = BABYLON.MeshBuilder.CreateSphere("earth", {diameter: 5, segments: 32}, scene);
     Earth.material = new BABYLON.StandardMaterial("EarthMaterial", scene);
     Earth.material.ambiantColor = new BABYLON.Color3(0, 0.5, 0);
@@ -34,19 +41,48 @@ function createScene() {
     Earth.momentum = new BABYLON.Vector3(0,0,0);
     Earth.position = new BABYLON.Vector3(0,0,0);
     Earth.masse = 1000;
-    
    
     Earth.position = new BABYLON.Vector3(0,0,0);
+
+    spheres[ 0 ] = Earth;
 
     Moon = BABYLON.MeshBuilder.CreateSphere("Moon", {diameter: 3, segments: 32}, scene);
     Moon.material = new BABYLON.StandardMaterial("MoonMaterial", scene);
     Moon.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
-    Moon.material.diffuseColor = new BABYLON.Color3(5, 5, 0);
+    Moon.material.diffuseColor = new BABYLON.Color3(4, 4, 7);
     Moon.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
     Moon.momentum = new BABYLON.Vector3(0,1,0);
     Moon.position = new BABYLON.Vector3(10,0,0);
     Moon.masse = 1;
+
+    spheres[ 1 ] = Moon;
+
+    Moon2 = BABYLON.MeshBuilder.CreateSphere("Moon", {diameter: 3, segments: 32}, scene);
+    Moon2.material = new BABYLON.StandardMaterial("MoonMaterial", scene);
+    Moon2.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
+    Moon2.material.diffuseColor = new BABYLON.Color3(4, 7, 3);
+    Moon2.material.specularColor = new BABYLON.Color3(0, 0, 0);
+
+    Moon2.momentum = new BABYLON.Vector3(0,1,0);
+    Moon2.position = new BABYLON.Vector3(20,0,0);
+    Moon2.masse = 1;
+
+    spheres[ 2 ] = Moon2;
+
+
+
+    Moon3 = BABYLON.MeshBuilder.CreateSphere("Moon", {diameter: 3, segments: 32}, scene);
+    Moon3.material = new BABYLON.StandardMaterial("MoonMaterial", scene);
+    Moon3.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
+    Moon3.material.diffuseColor = new BABYLON.Color3(8, 0, 3);
+    Moon3.material.specularColor = new BABYLON.Color3(0, 0, 0);
+
+    Moon3.momentum = new BABYLON.Vector3(0,1,0);
+    Moon3.position = new BABYLON.Vector3(30,0,0);
+    Moon3.masse = 1;
+
+    spheres[ 3 ] = Moon3;
 
     // Cette Camera pour la VR
     // var camera = new BABYLON.FreeCamera("myCamera", new BABYLON.Vector3(1, 1, -10), scene);
@@ -70,7 +106,7 @@ function createScene() {
     delta_time = 0.1;
     var dist_vector = BABYLON.Vector3.Zero();
     var gravity_force = BABYLON.Vector3.Zero();
-    G = 0.01;
+    G = 0.001;
 
     scene.onKeyboardObservable.add((kbInfo) => {
         switch (kbInfo.type) {
@@ -102,12 +138,47 @@ function createScene() {
             //sphereMaterials[i].wireframe = true
 
         }*/
+
+        let gravity_force = new Array(spheres.length).fill(0).map(() => new Array(spheres.length).fill(0));
+
+        var dist_vector = new BABYLON.Vector3.Zero();
+
+        for(let i = 0; i < spheres.length; i++) {
+            for(let j = 0; j < i; j++) {
+                dist_vector = spheres[j].position.subtract(spheres[i].position);
+                distance2 = Math.pow(dist_vector.length(),2);
+                gravity_force[i][j] = dist_vector.scale( G * spheres[i].masse * spheres[j].masse /  distance2);
+                gravity_force[j][i] = gravity_force[i][j].scale( - 1);
+                //console.log(gravity_force[i][j]);alert("*****")
+            }
+
+        }
+        // console.table(gravity_force[0][1]);alert("ici");
+
+        let sum_gravity_force_for_i = new BABYLON.Vector3.Zero();
+        for(let i = 0; i < spheres.length; i++) {
+            sum_gravity_force_for_i = BABYLON.Vector3.Zero();
+
+            for(let j = 0; j < spheres.length; j++) {
+
+                if(i != j) {
+                    sum_gravity_force_for_i.addInPlace( gravity_force[i][j]);
+                }
+            }
+            spheres[i].momentum.addInPlace( sum_gravity_force_for_i.scale(delta_time) );
+            spheres[i].position.addInPlace( spheres[i].momentum.scale(delta_time / spheres[i].masse));
+
+        }
+
+        /*
+        //console.table(gravity_force);alert("ici");
+
         //alert(typeof Moon.position);
         dist_vector = Moon.position.subtract(Earth.position);
         //console.log(dist_vector);
         distance2 = Math.pow(dist_vector.length(),2);
         //console.log(distance);
-        //console.log(dist_vector);alert()
+        //console.log(dist_vector);alertj
         dist_vector.normalize();
         //console.log(dist_vector);
         gravity_force = dist_vector.scale(- G * Moon.masse * Earth.masse /  distance2);
@@ -116,7 +187,7 @@ function createScene() {
         Earth.momentum.addInPlace( gravity_force.scale(-delta_time) );
         Moon.position.addInPlace(  Moon.momentum.scale(delta_time / Moon.masse));
         Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
-
+*/
         //console.log(Moon.momentum);
 
     })

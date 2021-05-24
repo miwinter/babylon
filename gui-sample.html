@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var textblock;
+        
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+        
+            var camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(0,0,-20),scene);
+            camera.attachControl(canvas, true);
+            var sunLight = new BABYLON.HemisphericLight("sunLight", new BABYLON.Vector3(0,1,0), scene);
+        
+            // Plane Mesh used for GUI elements
+            var planeForMainMenu = BABYLON.Mesh.CreatePlane("planeForMainMenu", 20);
+            planeForMainMenu.position.y = 5;
+        
+            var planeForColorPicker = BABYLON.Mesh.CreatePlane("planeForColorPicker", 20);
+            planeForColorPicker.position.y = 5;
+            planeForColorPicker.position.x = 20;
+        
+            // GUI
+            var textureForMainMenu = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(planeForMainMenu);
+            var textureForColorPicker = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(planeForColorPicker);
+        
+            var stackPanel = new BABYLON.GUI.StackPanel();  
+            stackPanel.top = "100px";
+            textureForMainMenu.addControl(stackPanel);    
+        
+            var clickMeButton = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Click Me");
+            clickMeButton.width = 1;
+            clickMeButton.height = "100px";
+            clickMeButton.color = "white";
+            clickMeButton.fontSize = 50;
+            clickMeButton.background = "green";
+            clickMeButton.onPointerUpObservable.add(function() {
+                if (VRHelper) {
+                    VRHelper.displayLaserPointer = !VRHelper.displayLaserPointer;
+                }
+            });
+            stackPanel.addControl(clickMeButton);
+        
+            textblock = new BABYLON.GUI.TextBlock();
+            textblock.height = "150px";
+            textblock.fontSize = 100;
+            textblock.text = "please pick an option:";
+            stackPanel.addControl(textblock);   
+        
+            addRadio("option 1", stackPanel);
+            addRadio("option 2", stackPanel);
+            addRadio("option 3", stackPanel);
+            addRadio("option 4", stackPanel);
+            addRadio("option 5", stackPanel);    
+        
+            var picker = new BABYLON.GUI.ColorPicker();
+            picker.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            picker.height = "450px";
+            picker.width = "450px";
+            picker.onValueChangedObservable.add(function(value) { // value is a color3
+                sphereMat.diffuseColor = value;
+            });    
+            textureForColorPicker.addControl(picker);  
+        
+            // Sphere material color will be updated by the value of the Color Picker
+            var sphere = BABYLON.Mesh.CreateSphere("sphere", 12, 2, scene);
+            sphere.position.x = 10;
+            var sphereMat = new BABYLON.StandardMaterial("sphereMat", scene);
+            sphere.material = sphereMat;
+        
+            var VRHelper = scene.createDefaultVRExperience();
+            VRHelper.enableInteractions();
+        
+            return scene;
+        };
+        
+        var addRadio = function(text, parent) {
+            var button = new BABYLON.GUI.RadioButton();
+            button.width = "40px";
+            button.height = "40px";
+            button.color = "white";
+            button.background = "green";     
+            button.onIsCheckedChangedObservable.add(function(state) {
+                if (state) {
+                    textblock.text = "You selected " + text;
+                }
+            }); 
+            var header = BABYLON.GUI.Control.AddHeader(button, text, "400px", { isHorizontal: true, controlFirst: true });
+            header.height = "100px";
+            header.children[1].fontSize = 80;
+            header.children[1].onPointerUpObservable.add(function() {
+                button.isChecked = !button.isChecked;
+            });
+            parent.addControl(header);    
+        }
+                var engine;
+                var scene;
+                initFunction = async function() {               
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();};
+        initFunction().then(() => {sceneToRender = scene        
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>

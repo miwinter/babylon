@@ -182,25 +182,6 @@ function createScene() {
 
         }
 
-        /*
-        //console.table(gravity_force);alert("ici");
-
-        //alert(typeof Moon.position);
-        dist_vector = Moon.position.subtract(Earth.position);
-        //console.log(dist_vector);
-        distance2 = Math.pow(dist_vector.length(),2);
-        //console.log(distance);
-        //console.log(dist_vector);alertj
-        dist_vector.normalize();
-        //console.log(dist_vector);
-        gravity_force = dist_vector.scale(- G * Moon.masse * Earth.masse /  distance2);
-        
-        Moon.momentum.addInPlace(  gravity_force.scale(delta_time));
-        Earth.momentum.addInPlace( gravity_force.scale(-delta_time) );
-        Moon.position.addInPlace(  Moon.momentum.scale(delta_time / Moon.masse));
-        Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
-*/
-        //console.log(Moon.momentum);
 
     })
 

@@ -81,7 +81,7 @@ var createScene = async function () {
     scene.populate();
 
     //scene.addRightTriggerPressedAction( gameScene.myLog )
-    scene.addRightTriggerPressedAction( gameScene.bindStar, gameScene.releaseStar )
+    //scene.addRightTriggerPressedAction( gameScene.bindStar, gameScene.releaseStar )
 
     scene.registerBeforeRender(() => {  
     })

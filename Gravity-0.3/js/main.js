@@ -33,6 +33,7 @@ class gameScene extends BABYLON.Scene{
             controller.onMotionControllerInitObservable.add((motionController) => {
                 if (motionController.handness === 'right') {
                     const xr_ids = motionController.getComponentIds();
+                    this.rightMotionController = motionController;
                     let triggerComponent = motionController.getComponent(xr_ids[0]);//xr-standard-trigger
                     triggerComponent.onButtonStateChangedObservable.add(() => {
                         if (triggerComponent.pressed) {
@@ -56,9 +57,12 @@ class gameScene extends BABYLON.Scene{
     }
     static bindStar(ptr,motionController) {
         //if(motionController.rootMesh) ptr.sun.position = motionController.rootMesh.getAbsolutePosition();
+        //console.log(ptr.rightMotionController);
+        if(ptr.rightMotionController.rootMesh) ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition();
     }
     static releaseStar(ptr,motionController) {
         //if(motionController.rootMesh) ptr.sun.position = motionController.rootMesh.getAbsolutePosition().clone();
+        if(ptr.rightMotionController.rootMesh) ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition().clone();
     }
 }
 

@@ -55,10 +55,12 @@ class gameScene extends BABYLON.Scene{
         console.log(ptr.xrHelper.baseExperience.camera.getFrontPosition(2));
     }
     static bindStar(ptr,motionController) {
-        ptr.sun.position = motionController.rootMesh.getAbsolutePosition();
+        if(motionController.rootMesh)
+            ptr.sun.position = motionController.rootMesh.getAbsolutePosition();
     }
     static releaseStar(ptr,motionController) {
-        ptr.sun.position = motionController.rootMesh.getAbsolutePosition().clone();
+        if(motionController.rootMesh)
+            ptr.sun.position = motionController.rootMesh.getAbsolutePosition().clone();
     }
 }
 

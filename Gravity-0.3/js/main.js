@@ -56,13 +56,22 @@ class gameScene extends BABYLON.Scene{
         console.log(ptr.xrHelper.baseExperience.camera.getFrontPosition(2));
     }
     static bindStar(ptr,motionController) {
-        //if(motionController.rootMesh) ptr.sun.position = motionController.rootMesh.getAbsolutePosition();
-        //console.log(ptr.rightMotionController);
-        if(ptr.rightMotionController.rootMesh) ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition();
+        if(ptr.rightMotionController.rootMesh) {
+            ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition();
+            var p = ptr.rightMotionController.rootMesh;		
+            for (var i = 0; i < p.getChildMeshes(false).length; i++){			
+	            p.getChildMeshes(false)[i].visibility = false; 
+            }
+        }
     }
     static releaseStar(ptr,motionController) {
-        //if(motionController.rootMesh) ptr.sun.position = motionController.rootMesh.getAbsolutePosition().clone();
-        if(ptr.rightMotionController.rootMesh) ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition().clone();
+        if(ptr.rightMotionController.rootMesh) {
+            ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition().clone();
+            var p = ptr.rightMotionController.rootMesh;		
+            for (var i = 0; i < p.getChildMeshes(false).length; i++){			
+	            p.getChildMeshes(false)[i].visibility = true; 
+            }
+        }
     }
 }
 

@@ -36,10 +36,10 @@ class gameScene extends BABYLON.Scene{
                     let triggerComponent = motionController.getComponent(xr_ids[0]);//xr-standard-trigger
                     triggerComponent.onButtonStateChangedObservable.add(() => {
                         if (triggerComponent.pressed) {
-                            pressAction(this,motionController);
+                            //pressAction(this,motionController);
                         }
                         else{
-                            if(releaseAction) releaseAction(this,motionController);
+                            //if(releaseAction) releaseAction(this,motionController);
                         }
                     });
                     
@@ -81,7 +81,7 @@ var createScene = async function () {
     scene.populate();
 
     //scene.addRightTriggerPressedAction( gameScene.myLog )
-    //scene.addRightTriggerPressedAction( gameScene.bindStar, gameScene.releaseStar )
+    scene.addRightTriggerPressedAction( gameScene.bindStar, gameScene.releaseStar )
 
     scene.registerBeforeRender(() => {  
     })

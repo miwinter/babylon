@@ -58,7 +58,8 @@ class gameScene extends BABYLON.Scene{
     static bindStar(ptr,motionController) {
         if(ptr.rightMotionController.rootMesh) {
             ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition();
-            var p = ptr.rightMotionController.rootMesh;		
+            var p = ptr.rightMotionController.rootMesh;
+            p.visibility = false; 
             for (var i = 0; i < p.getChildMeshes(false).length; i++){			
 	            p.getChildMeshes(false)[i].visibility = false; 
             }
@@ -68,6 +69,7 @@ class gameScene extends BABYLON.Scene{
         if(ptr.rightMotionController.rootMesh) {
             ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition().clone();
             var p = ptr.rightMotionController.rootMesh;		
+            p.visibility = true; 
             for (var i = 0; i < p.getChildMeshes(false).length; i++){			
 	            p.getChildMeshes(false)[i].visibility = true; 
             }

@@ -26,9 +26,10 @@ class gameScene extends BABYLON.Scene{
             
         var gl = new BABYLON.GlowLayer("glow", this);
         gl.intensity = Math.floor(Math.random()*8+6);
+
     }
 
-    addRightTriggerPressedAction( pressAction, releaseAction = null ){
+    addRightTriggerAction( pressAction, releaseAction = null ){
         this.xrHelper.input.onControllerAddedObservable.add((controller) => {
             controller.onMotionControllerInitObservable.add((motionController) => {
                 if (motionController.handness === 'right') {
@@ -55,9 +56,13 @@ class gameScene extends BABYLON.Scene{
         console.log(ptr.xrHelper.baseExperience.camera.realWorldHeight);
         console.log(ptr.xrHelper.baseExperience.camera.getFrontPosition(2));
     }
+
     static bindStar(ptr,motionController) {
         if(ptr.rightMotionController.rootMesh) {
             ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition();
+            console.log("toto");
+            //ptr.rightMotionController.rootMesh.setEnabled(false);
+            
             var p = ptr.rightMotionController.rootMesh;
             p.visibility = false; 
             for (var i = 0; i < p.getChildMeshes(false).length; i++){			
@@ -68,11 +73,14 @@ class gameScene extends BABYLON.Scene{
     static releaseStar(ptr,motionController) {
         if(ptr.rightMotionController.rootMesh) {
             ptr.sun.position = ptr.rightMotionController.rootMesh.getAbsolutePosition().clone();
+            ptr.rightMotionController.rootMesh.setEnabled(true);
+            /*
             var p = ptr.rightMotionController.rootMesh;		
             p.visibility = true; 
             for (var i = 0; i < p.getChildMeshes(false).length; i++){			
 	            p.getChildMeshes(false)[i].visibility = true; 
-            }
+                
+            }*/
         }
     }
 }
@@ -93,10 +101,11 @@ var createScene = async function () {
 
     scene.populate();
 
-    //scene.addRightTriggerPressedAction( gameScene.myLog )
-    scene.addRightTriggerPressedAction( gameScene.bindStar, gameScene.releaseStar )
+    //scene.addRightTriggerAction( gameScene.myLog )
+    scene.addRightTriggerAction( gameScene.bindStar, gameScene.releaseStar )
 
     scene.registerBeforeRender(() => {  
+ 
     })
 
     return scene;

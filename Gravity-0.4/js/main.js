@@ -99,15 +99,44 @@ class state1 extends gameState {
         // Liaison du soleil à la manette droite
         this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition();
 
+        // *********************
+        // Création du cube
+        height = this.xrHelper.baseExperience.camera.realWorldHeight;
+       
+        const myPoints = [
+            new BABYLON.Vector3(-0.5, -1+height, 0),
+            new BABYLON.Vector3(-0.5, height, 0),
+            new BABYLON.Vector3(0.5, height, 0),
+            new BABYLON.Vector3(0.5, -1+height, 0),
+            new BABYLON.Vector3(-0.5, -1+height, 0),
+            new BABYLON.Vector3(-0.5, -1+height, 1),
+            new BABYLON.Vector3(0.5,-1+height, 1),
+            new BABYLON.Vector3(0.5,-1+height, 0),
+            new BABYLON.Vector3(0.5,height, 0),
+            new BABYLON.Vector3(0.5,height, 1),
+            new BABYLON.Vector3(-0.5,height, 1),
+            new BABYLON.Vector3(-0.5,height, 0),
+            new BABYLON.Vector3(-0.5,height, 1),
+            new BABYLON.Vector3(-0.5,-1+height, 1),
+            new BABYLON.Vector3(0.5,-1+height, 1),
+            new BABYLON.Vector3(0.5,height, 1),
+        ]
+
         // création de la planete 1
-        this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.1, segments: 32}, this.scene);
-        this.P1.material = new BABYLON.StandardMaterial("P1_Material", this.scene);
-        this.P1.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
-        this.P1.material.diffuseColor = new BABYLON.Color3(5, 5, 0);
-        this.P1.material.specularColor = new BABYLON.Color3(1, 1, 1);
+        this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.05, segments: 32}, this.scene);
+        //this.P1.material = new BABYLON.StandardMaterial("P1_Material", this.scene);
+        //this.P1.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
+        //this.P1.material.diffuseColor = new BABYLON.Color3(5, 5, 0);
+        //this.P1.material.specularColor = new BABYLON.Color3(1, 1, 1);
+
+        var earthMaterial = new BABYLON.StandardMaterial("ground", this.scene);
+        earthMaterial.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", this.scene);
+        earthMaterial.diffuseTexture.vScale = -1;
+
+        this.P1.material = earthMaterial;
     
         this.P1.momentum = new BABYLON.Vector3(0.1,0,0.1);
-        this.P1.position = new BABYLON.Vector3(0.2,0,0);
+        this.P1.position = new BABYLON.Vector3(0.2,height - 0.8,0);
         this.P1.masse = 1;
 
         this.P1.arrow = BABYLON.Mesh.CreateLines("P1_arrow", [ 
@@ -116,28 +145,7 @@ class state1 extends gameState {
             ], this.scene);
         this.P1.arrow.color = new BABYLON.Color3(0, 1, 0);
     
-        // *********************
-        // Création du cube
-        var h = this.xrHelper.baseExperience.camera.realWorldHeight;
-       
-        const myPoints = [
-            new BABYLON.Vector3(-0.5, -1+h, 0),
-            new BABYLON.Vector3(-0.5, h, 0),
-            new BABYLON.Vector3(0.5, h, 0),
-            new BABYLON.Vector3(0.5, -1+h, 0),
-            new BABYLON.Vector3(-0.5, -1+h, 0),
-            new BABYLON.Vector3(-0.5, -1+h, 1),
-            new BABYLON.Vector3(0.5,-1+h, 1),
-            new BABYLON.Vector3(0.5,-1+h, 0),
-            new BABYLON.Vector3(0.5,h, 0),
-            new BABYLON.Vector3(0.5,h, 1),
-            new BABYLON.Vector3(-0.5,h, 1),
-            new BABYLON.Vector3(-0.5,h, 0),
-            new BABYLON.Vector3(-0.5,h, 1),
-            new BABYLON.Vector3(-0.5,-1+h, 1),
-            new BABYLON.Vector3(0.5,-1+h, 1),
-            new BABYLON.Vector3(0.5,h, 1),
-        ]
+
 
         this.cube = BABYLON.MeshBuilder.CreateLines("lines", {points: myPoints});
 
@@ -157,7 +165,7 @@ class state1 extends gameState {
         // *********************
         // affichage du timer
         this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
-        this.plane.position = new BABYLON.Vector3(0, h-0.5, 1);        
+        this.plane.position = new BABYLON.Vector3(0, height-0.5, 1);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
         var panel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(panel);  
@@ -201,6 +209,9 @@ class state2 extends gameState {
     dist_vector = null;
     gravity_force = null;
     G = 0;
+    plane = null;
+    header = null;
+    counter = 0;
 
     debug_count = 0;
 
@@ -214,11 +225,36 @@ class state2 extends gameState {
         this.delta_time = 0.1;
         this.dist_vector = BABYLON.Vector3.Zero();
         this.gravity_force = BABYLON.Vector3.Zero();
-        this.G = 0.000002;    
+        this.G = 0.000002;
+
+
+        // *********************
+        // affichage du timer
+        this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
+        this.plane.position = new BABYLON.Vector3(0, height-0.5, 2);        
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
+        var panel = new BABYLON.GUI.StackPanel();    
+        advancedTexture.addControl(panel);  
+        this.header = new BABYLON.GUI.TextBlock();
+        this.timer = Date.now();
+        this.header.text = String(this.counter);
+        this.header.height = "100px";
+        this.header.color = "white";
+        this.header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.header.fontSize = "120"
+        panel.addControl(this.header); 
     }
 
     sceneRenderLoop() {
 
+        var x = this.P1.position.x;
+        var y = this.P1.position.y;
+        var z = this.P1.position.z;
+
+        if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>height-1)&&(y<height)) {
+            this.counter += 1;
+            this.header.text = String(this.counter);
+        }
         
         this.dist_vector = this.P1.position.subtract(this.sun.position);
 
@@ -269,10 +305,15 @@ var crtState = 0;
 var states = new Array( 3 );
 var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
 
+var height = 0;
+
 
 var createScene = async function () {
 
     var scene = new BABYLON.Scene(engine);
+
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), this.scene);
+
     var xrHelper = await scene.createDefaultXRExperienceAsync({  });
     var rightMotionController = null;
     var leftMotionController = null;

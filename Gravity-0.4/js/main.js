@@ -74,6 +74,17 @@ class state1 extends gameState {
     P1 = null;
     timer = 0;
 
+    sunController() {
+        var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
+        var czero = new BABYLON.Vector3(0,height/2,0);
+    
+        cpos.addInPlace(- czero);
+        cpos.scaleInPlace(10);
+        cpos.addInPlace(czero);
+
+        return cpos;
+    }
+
     initState(prevState = null) {
 
         // *********************
@@ -97,7 +108,8 @@ class state1 extends gameState {
         gl.intensity = Math.floor(Math.random()*8+6);
 
         // Liaison du soleil à la manette droite
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        this.sun.position = this.sunController();
 
         // *********************
         // Création du cube
@@ -184,7 +196,8 @@ class state1 extends gameState {
     }
 
     sceneRenderLoop() {
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        this.sun.position = this.sunController();
         var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
         if(s == 0){
             nextState = 2;
@@ -213,6 +226,25 @@ class state2 extends gameState {
     counter = 0;
 
     debug_count = 0;
+
+    sunController() {
+        var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
+        var czero = new BABYLON.Vector3(0,height/2,0);
+    
+        czero.scaleInPlace(-1);
+        cpos.addInPlace(czero);
+        
+        cpos.scaleInPlace(10);
+        
+        czero.scaleInPlace(-1);
+        cpos.addInPlace(czero);
+
+
+
+        console.log(cpos);
+
+        return cpos;
+    }
 
     initState(prevState = null){
         
@@ -250,7 +282,8 @@ class state2 extends gameState {
         var y = this.P1.position.y;
         var z = this.P1.position.z;
 
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        this.sun.position = this.sunController();
 
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>height-1)&&(y<height)) {
             this.counter += 1;

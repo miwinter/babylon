@@ -97,7 +97,7 @@ class state1 extends gameState {
         gl.intensity = Math.floor(Math.random()*8+6);
 
         // Liaison du soleil à la manette droite
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition();
+        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(10);
 
         // *********************
         // Création du cube
@@ -144,8 +144,6 @@ class state1 extends gameState {
             this.P1.position.clone().addInPlace(this.P1.momentum)
             ], this.scene);
         this.P1.arrow.color = new BABYLON.Color3(0, 1, 0);
-    
-
 
         this.cube = BABYLON.MeshBuilder.CreateLines("lines", {points: myPoints});
 
@@ -186,6 +184,7 @@ class state1 extends gameState {
     }
 
     sceneRenderLoop() {
+        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(10);
         var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
         if(s == 0){
             nextState = 2;

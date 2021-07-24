@@ -97,7 +97,7 @@ class state1 extends gameState {
         gl.intensity = Math.floor(Math.random()*8+6);
 
         // Liaison du soleil à la manette droite
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(10);
+        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
 
         // *********************
         // Création du cube
@@ -184,7 +184,7 @@ class state1 extends gameState {
     }
 
     sceneRenderLoop() {
-        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(10);
+        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
         var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
         if(s == 0){
             nextState = 2;
@@ -250,6 +250,8 @@ class state2 extends gameState {
         var y = this.P1.position.y;
         var z = this.P1.position.z;
 
+        this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>height-1)&&(y<height)) {
             this.counter += 1;
             this.header.text = String(this.counter);
@@ -270,23 +272,17 @@ class state2 extends gameState {
             this.gravity_force.normalize().scaleInPlace(0.005)
         }
 
-        if(this.debug_count < 5){
-            console.log("before");
-            console.log(this.dist_vector);
-            console.log(this.G * this.sun.masse * this.P1.masse /  distance2);
-
-        }
 
         this.P1.momentum.addInPlace(  this.gravity_force.scale(this.delta_time));
         //console.log(gravity_force.scale(delta_time));
         //Earth.momentum.addInPlace( gravity_force.scale(-delta_time) );
         this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
         //Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
-
-        if(this.debug_count < 5){
+        
+        if(this.debug_count % 99 == 0){
             console.log("after");
-            console.log(this.P1.momentum);
-            console.log(this.P1.position);
+            console.log(this.sun.position.x);
+            console.log(this.rightMotionController.rootMesh.getAbsolutePosition().x);
             this.debug_count += 1;
         }
     }

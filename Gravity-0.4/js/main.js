@@ -105,6 +105,8 @@ class state1 extends gameState {
         // Liaison du soleil à la manette droite
         //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
         this.sun.position = this.sunController();
+        this.xrHelper.pointerSelection.displayLaserPointer = false;
+        this.xrHelper.pointerSelection.disablePointerLighting = false;
 
         // *********************
         // Création du cube
@@ -356,6 +358,9 @@ class state2 extends gameState {
         for (var i = 0; i < p.getChildMeshes(false).length; i++){			
             p.getChildMeshes(false)[i].visibility = true; 
         }
+
+        this.xrHelper.pointerSelection.displayLaserPointer = true;
+        this.xrHelper.pointerSelection.disablePointerLighting = true;
         
     }
 }

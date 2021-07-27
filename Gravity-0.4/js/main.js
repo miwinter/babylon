@@ -106,7 +106,7 @@ class state1 extends gameState {
         //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
         this.sun.position = this.sunController();
         this.xrHelper.pointerSelection.displayLaserPointer = false;
-        this.xrHelper.pointerSelection.disablePointerLighting = false;
+        this.xrHelper.pointerSelection.disablePointerLighting = true;
 
         // *********************
         // Création du cube
@@ -360,7 +360,7 @@ class state2 extends gameState {
         }
 
         this.xrHelper.pointerSelection.displayLaserPointer = true;
-        this.xrHelper.pointerSelection.disablePointerLighting = true;
+        this.xrHelper.pointerSelection.disablePointerLighting = false;
         
     }
 }

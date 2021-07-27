@@ -76,12 +76,7 @@ class state1 extends gameState {
 
     sunController() {
         var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
-        var czero = new BABYLON.Vector3(0,height/2,0);
-    
-        cpos.addInPlace(- czero);
-        cpos.scaleInPlace(10);
-        cpos.addInPlace(czero);
-
+        
         return cpos;
     }
 
@@ -216,7 +211,7 @@ class state2 extends gameState {
     cube = null;
     sun = null;
     P1 = null;
-    time = 0;
+    timer = 0;
     delta_time = 0;
     dist_vector = null;
     gravity_force = null;
@@ -224,11 +219,14 @@ class state2 extends gameState {
     plane = null;
     header = null;
     counter = 0;
+    already_in = false;
 
     debug_count = 0;
 
     sunController() {
         var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
+        
+        /*
         var czero = new BABYLON.Vector3(0,height/2,0);
     
         czero.scaleInPlace(-1);
@@ -238,10 +236,7 @@ class state2 extends gameState {
         
         czero.scaleInPlace(-1);
         cpos.addInPlace(czero);
-
-
-
-        console.log(cpos);
+        */
 
         return cpos;
     }
@@ -281,13 +276,28 @@ class state2 extends gameState {
         var x = this.P1.position.x;
         var y = this.P1.position.y;
         var z = this.P1.position.z;
+        var s = 0;
 
-        //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
         this.sun.position = this.sunController();
 
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>height-1)&&(y<height)) {
-            this.counter += 1;
-            this.header.text = String(this.counter);
+            if(this.already_in){
+                s = Math.ceil(500 - (Date.now() - this.timer)/10)/100;
+                this.header.text = String(s.toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+                if(s <= 0){
+                    nextState = 3; // success
+                }
+            }
+            else {
+                this.timer = Date.now();
+                this.already_in = true;
+            }
+        }
+        else{
+            if(this.already_in){
+                this.already_in = false;
+                this.header.text = String((5).toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+            }
         }
         
         this.dist_vector = this.P1.position.subtract(this.sun.position);
@@ -298,13 +308,26 @@ class state2 extends gameState {
 
         this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  distance2);
         
+        this.gravity_force.normalize().scaleInPlace(0.05);
+        /*
         if(this.gravity_force.length() > 0.05) {
             this.gravity_force.normalize().scaleInPlace(0.05)
         }
         if(this.gravity_force.length() < 0.005) {
             this.gravity_force.normalize().scaleInPlace(0.005)
         }
+        */
 
+        if(this.sun.intersectsMesh(this.P1)){
+            console.log("Intersect");
+            BABYLON.ParticleHelper.CreateAsync("explosion", this.scene).then((set) => {
+                set.systems.forEach(s => {
+                    s.disposeOnStop = true;
+                });
+                set.start();
+            });
+            nextState = 4; // fail
+        }
 
         this.P1.momentum.addInPlace(  this.gravity_force.scale(this.delta_time));
         //console.log(gravity_force.scale(delta_time));
@@ -312,13 +335,116 @@ class state2 extends gameState {
         this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
         //Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
         
-        if(this.debug_count % 99 == 0){
-            console.log("after");
-            console.log(this.sun.position.x);
-            console.log(this.rightMotionController.rootMesh.getAbsolutePosition().x);
-            this.debug_count += 1;
-        }
     }
+
+    cleanState() {
+        this.scene.removeMesh(this.P1);
+        this.scene.removeMesh(this.sun);
+        this.scene.removeMesh(this.plane);
+        this.scene.removeMesh(this.cube);
+
+        var p = this.rightMotionController.rootMesh;
+        p.visibility = true; 
+        
+        for (var i = 0; i < p.getChildMeshes(false).length; i++){			
+            p.getChildMeshes(false)[i].visibility = true; 
+        }
+        
+        var p = this.leftMotionController.rootMesh;
+        p.visibility = true; 
+        
+        for (var i = 0; i < p.getChildMeshes(false).length; i++){			
+            p.getChildMeshes(false)[i].visibility = true; 
+        }
+        
+    }
+}
+
+// *******************************************************************
+
+
+
+class success extends gameState {
+
+    plane = null;
+
+    initState(prevState = null) {
+        // Stack panel
+        this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
+        this.plane.position = new BABYLON.Vector3(0, 1, 1);        
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
+        var panel = new BABYLON.GUI.StackPanel();    
+        advancedTexture.addControl(panel);  
+        var header = new BABYLON.GUI.TextBlock();
+        header.text = "Congratulations !";
+        header.height = "100px";
+        header.color = "white";
+        header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        header.fontSize = "120"
+        panel.addControl(header); 
+
+        var clickMeButton = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Restart");
+        clickMeButton.width = 1;
+        clickMeButton.height = "100px";
+        clickMeButton.color = "white";
+        clickMeButton.fontSize = 50;
+        clickMeButton.background = "green";
+        clickMeButton.onPointerUpObservable.add(function() {
+            // if (xr) { xr.displayLaserPointer = !xr.displayLaserPointer; }
+            console.log(clickMeButton.children[0].text);
+            clickMeButton.children[0].text = "C'est parti !!!";
+            nextState = 1;
+        });
+        panel.addControl(clickMeButton);
+    }
+
+    cleanState() {
+        this.scene.removeMesh(this.plane);
+    }
+
+}
+// *******************************************************************
+
+
+
+class fail extends gameState {
+
+    plane = null;
+
+    initState(prevState = null) {
+        // Stack panel
+        this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
+        this.plane.position = new BABYLON.Vector3(0, 1, 1);        
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
+        var panel = new BABYLON.GUI.StackPanel();    
+        advancedTexture.addControl(panel);  
+        var header = new BABYLON.GUI.TextBlock();
+        header.text = "Fail !";
+        header.height = "100px";
+        header.color = "white";
+        header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        header.fontSize = "120"
+        panel.addControl(header); 
+
+        var clickMeButton = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Restart");
+        clickMeButton.width = 1;
+        clickMeButton.height = "100px";
+        clickMeButton.color = "white";
+        clickMeButton.fontSize = 50;
+        clickMeButton.background = "green";
+        clickMeButton.onPointerUpObservable.add(function() {
+            // if (xr) { xr.displayLaserPointer = !xr.displayLaserPointer; }
+            console.log(clickMeButton.children[0].text);
+            clickMeButton.children[0].text = "C'est parti !!!";
+            nextState = 1;
+        });
+        panel.addControl(clickMeButton);
+    }
+
+    cleanState() {
+        this.scene.removeMesh(this.plane);
+    }
+
 }
 
 // *******************************************************************
@@ -349,6 +475,8 @@ var createScene = async function () {
     states[ 0 ] = new intro1(scene, xrHelper, rightMotionController, leftMotionController);
     states[ 1 ] = new state1(scene, xrHelper, rightMotionController, leftMotionController);
     states[ 2 ] = new state2(scene, xrHelper, rightMotionController, leftMotionController);
+    states[ 3 ] = new success(scene, xrHelper, rightMotionController, leftMotionController);
+    states[ 4 ] = new fail(scene, xrHelper, rightMotionController, leftMotionController);
 
     xrHelper.input.onControllerAddedObservable.add((controller) => {
         controller.onMotionControllerInitObservable.add((motionController) => {

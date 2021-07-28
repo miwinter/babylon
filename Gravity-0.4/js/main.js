@@ -73,6 +73,7 @@ class state1 extends gameState {
     sun = null;
     P1 = null;
     timer = 0;
+    gl = null;
 
     sunController() {
         var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
@@ -99,11 +100,11 @@ class state1 extends gameState {
         this.sun.position = new BABYLON.Vector3(0,2,0.2);
         this.sun.masse = 1000;
         
-        var gl = new BABYLON.GlowLayer("glow", this.scene);
+        this.gl = new BABYLON.GlowLayer("glow", this.scene);
         //gl.intensity = Math.floor(Math.random()*8+6);
-        gl.intensity = 2;
+        this.gl.intensity = 2;
         
-        gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
+        this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
             if (mesh.name === "sun") {
                 result.set(0.6259, 0.3056, 0.0619, 0.5);
             } else {
@@ -239,6 +240,7 @@ class state2 extends gameState {
     header = null;
     counter = 0;
     already_in = false;
+    gl = null;
 
     debug_count = 0;
 
@@ -265,6 +267,7 @@ class state2 extends gameState {
         this.cube = prevState.cube;
         this.sun = prevState.sun;
         this.P1 = prevState.P1;
+        this.gl = prevState.gl;
 
         this.time = 0;
         this.delta_time = 0.1;
@@ -340,6 +343,7 @@ class state2 extends gameState {
 
         if(this.sun.intersectsMesh(this.P1)){
             console.log("Intersect");
+            /*
             BABYLON.ParticleHelper.CreateAsync("explosion", this.scene).then((set) => {
                 set.systems.forEach(s => {
                     s.disposeOnStop = true;
@@ -349,6 +353,16 @@ class state2 extends gameState {
 
                 set.start();
             });
+            */
+            var sphereMaterials = new BABYLON.StandardMaterial("sphereMaterial", this.scene);
+            sphereMaterials.ambiantColor = new BABYLON.Color3(0, 0.5, 0);
+            sphereMaterials.diffuseColor = new BABYLON.Color3(5, 0, 0);
+            sphereMaterials.specularColor = new BABYLON.Color3(0, 0, 0);
+            this.gl.intensity = 0;
+
+            this.sun.material = sphereMaterials;
+            this.P1.material = sphereMaterials;
+
             nextState = 4; // fail
         }
 

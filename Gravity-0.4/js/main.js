@@ -100,13 +100,28 @@ class state1 extends gameState {
         this.sun.masse = 1000;
         
         var gl = new BABYLON.GlowLayer("glow", this.scene);
-        gl.intensity = Math.floor(Math.random()*8+6);
+        //gl.intensity = Math.floor(Math.random()*8+6);
+        gl.intensity = 2;
+        
+        gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
+            if (mesh.name === "sun") {
+                result.set(0.6259, 0.3056, 0.0619, 0.5);
+            } else {
+                result.set(0, 0, 0, 0);
+            }
+        }
+        
 
         // Liaison du soleil à la manette droite
         //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
         this.sun.position = this.sunController();
         this.xrHelper.pointerSelection.displayLaserPointer = false;
-        this.xrHelper.pointerSelection.disablePointerLighting = true;
+        this.xrHelper.pointerSelection.disablePointerLighting = false;
+        this.xrHelper.pointerSelection.displaySelectionMesh = false;
+        //var fm = this.xrHelper.baseExperience.featuresManager;
+        //console.log(fm.GetAvailableFeatures());
+        // disable an already-enabled feature
+        //fm.disableFeature(WebXRFeatureName.POINTER_SELECTION);
 
         // *********************
         // Création du cube
@@ -144,8 +159,8 @@ class state1 extends gameState {
 
         this.P1.material = earthMaterial;
     
-        this.P1.momentum = new BABYLON.Vector3(0.1,0,0.1);
-        this.P1.position = new BABYLON.Vector3(0.2,height - 0.8,0);
+        this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
+        this.P1.position = new BABYLON.Vector3(0.2,height - 0.2,0.8);
         this.P1.masse = 1;
 
         this.P1.arrow = BABYLON.Mesh.CreateLines("P1_arrow", [ 
@@ -153,6 +168,8 @@ class state1 extends gameState {
             this.P1.position.clone().addInPlace(this.P1.momentum)
             ], this.scene);
         this.P1.arrow.color = new BABYLON.Color3(0, 1, 0);
+
+
 
         this.cube = BABYLON.MeshBuilder.CreateLines("lines", {points: myPoints});
 
@@ -309,16 +326,17 @@ class state2 extends gameState {
         this.dist_vector.normalize();
 
         this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  distance2);
+        //this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  this.dist_vector.length());
         
         this.gravity_force.normalize().scaleInPlace(0.05);
-        /*
+        
         if(this.gravity_force.length() > 0.05) {
             this.gravity_force.normalize().scaleInPlace(0.05)
         }
         if(this.gravity_force.length() < 0.005) {
             this.gravity_force.normalize().scaleInPlace(0.005)
         }
-        */
+        
 
         if(this.sun.intersectsMesh(this.P1)){
             console.log("Intersect");
@@ -326,6 +344,9 @@ class state2 extends gameState {
                 set.systems.forEach(s => {
                     s.disposeOnStop = true;
                 });
+                this.sun.color = new BABYLON.Color3(1, 0, 0);
+                this.P1.color = new BABYLON.Color3(1, 0, 0);
+
                 set.start();
             });
             nextState = 4; // fail
@@ -340,11 +361,6 @@ class state2 extends gameState {
     }
 
     cleanState() {
-        this.scene.removeMesh(this.P1);
-        this.scene.removeMesh(this.sun);
-        this.scene.removeMesh(this.plane);
-        this.scene.removeMesh(this.cube);
-
         var p = this.rightMotionController.rootMesh;
         p.visibility = true; 
         
@@ -360,7 +376,10 @@ class state2 extends gameState {
         }
 
         this.xrHelper.pointerSelection.displayLaserPointer = true;
-        this.xrHelper.pointerSelection.disablePointerLighting = false;
+        this.xrHelper.pointerSelection.disablePointerLighting = true;
+        this.xrHelper.pointerSelection.displaySelectionMesh = true;
+
+        this.scene.removeMesh(this.plane);
         
     }
 }
@@ -372,11 +391,18 @@ class state2 extends gameState {
 class success extends gameState {
 
     plane = null;
+    P1 = null;
+    sun = null;
+    cube = null
 
     initState(prevState = null) {
+        this.cube = prevState.cube;
+        this.sun = prevState.sun;
+        this.P1 = prevState.P1;
+
         // Stack panel
         this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
-        this.plane.position = new BABYLON.Vector3(0, 1, 1);        
+        this.plane.position = new BABYLON.Vector3(0, 1, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
         var panel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(panel);  
@@ -405,6 +431,11 @@ class success extends gameState {
 
     cleanState() {
         this.scene.removeMesh(this.plane);
+
+        this.scene.removeMesh(this.P1);
+        this.scene.removeMesh(this.sun);
+        this.scene.removeMesh(this.plane);
+        this.scene.removeMesh(this.cube);
     }
 
 }
@@ -415,11 +446,19 @@ class success extends gameState {
 class fail extends gameState {
 
     plane = null;
+    P1 = null;
+    sun = null;
+    cube = null
 
     initState(prevState = null) {
+
+        this.cube = prevState.cube;
+        this.sun = prevState.sun;
+        this.P1 = prevState.P1;
+
         // Stack panel
         this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
-        this.plane.position = new BABYLON.Vector3(0, 1, 1);        
+        this.plane.position = new BABYLON.Vector3(0, 1, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
         var panel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(panel);  
@@ -444,10 +483,16 @@ class fail extends gameState {
             nextState = 1;
         });
         panel.addControl(clickMeButton);
+
     }
 
     cleanState() {
         this.scene.removeMesh(this.plane);
+
+        this.scene.removeMesh(this.P1);
+        this.scene.removeMesh(this.sun);
+        this.scene.removeMesh(this.plane);
+        this.scene.removeMesh(this.cube);
     }
 
 }

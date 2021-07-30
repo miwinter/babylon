@@ -3,7 +3,9 @@ class gameState {
     sun = null;
     scene = null;
     rightMotionController = null;
-    leftMotionController = null;   
+    leftMotionController = null;
+    manager = null;
+    panel = null;
 
     constructor(scene,xrHelper, rightMotionController, leftMotionController) {
         this.scene = scene;  
@@ -24,7 +26,37 @@ class gameState {
 // *******************************************************************
 
 class intro1 extends gameState {
+    button = null;
 
+    initState(prevState = null) {
+        this.manager = new BABYLON.GUI.GUI3DManager(this.scene);
+        //var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, this.scene);
+
+        this.panel = new BABYLON.GUI.StackPanel3D();
+        this.panel.margin = 0.02;
+    
+        this.manager.addControl(this.panel);
+        this.panel.position.z = 2;
+
+        this.button = new BABYLON.GUI.Button3D("start");
+        this.panel.addControl(this.button);
+        this.button.onPointerUpObservable.add(function(){
+            nextState = 1;
+        });   
+        
+        var text1 = new BABYLON.GUI.TextBlock();
+        text1.text = "change orientation";
+        text1.color = "white";
+        text1.fontSize = 24;
+        this.button.content = text1;  
+    }
+
+    cleanState() {
+        //this.scene.removeMesh(this.plane);
+        this.button.dispose();
+    }
+
+    /*
     plane = null;
 
     initState(prevState = null) {
@@ -62,6 +94,7 @@ class intro1 extends gameState {
         this.plane.dispose();
 
     }
+    */
 
 }
 
@@ -77,6 +110,9 @@ class state1 extends gameState {
     timer = 0;
     gl = null;
 
+    button = null;
+    panel = null;
+
     sunController() {
         var cpos = this.rightMotionController.rootMesh.getAbsolutePosition().clone();
         
@@ -84,6 +120,8 @@ class state1 extends gameState {
     }
 
     initState(prevState = null) {
+
+        this.panel = prevState.panel;
 
         // *********************
         // Création du soleil
@@ -189,6 +227,22 @@ class state1 extends gameState {
             p.getChildMeshes(false)[i].visibility = false; 
         }
 
+
+        this.button = new BABYLON.GUI.Button3D("start");
+        this.panel.addControl(this.button);
+        this.button.onPointerUpObservable.add(function(){
+            nextState = 1;
+        });   
+        
+        var text1 = new BABYLON.GUI.TextBlock();
+        text1.text = "change orientation";
+        text1.color = "white";
+        text1.fontSize = 24;
+        this.button.content = text1;  
+
+        this.timer = Date.now();
+
+        /*
         // *********************
         // affichage du timer
         this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
@@ -197,13 +251,14 @@ class state1 extends gameState {
         var panel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(panel);  
         this.header = new BABYLON.GUI.TextBlock();
-        this.timer = Date.now();
+        
         this.header.text = String();
         this.header.height = "100px";
         this.header.color = "white";
         this.header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         this.header.fontSize = "120"
         panel.addControl(this.header); 
+        */
     }
 
     cleanState() {
@@ -211,10 +266,13 @@ class state1 extends gameState {
         this.scene.removeMesh(this.header);
         this.scene.removeMesh(this.plane);
         this.scene.removeMesh(this.P1.arrow);
-        */
+        
         this.P1.arrow.dispose();
         this.header.dispose();
         this.plane.dispose();
+        */
+        this.P1.arrow.dispose();
+        this.button.dispose();
     }
 
     sceneRenderLoop() {
@@ -225,7 +283,7 @@ class state1 extends gameState {
             nextState = 2;
         }
         else {
-            this.header.text = String(s);
+            this.button.content.text = String(s);
             this.timer += 1;
         }
     }
@@ -276,19 +334,21 @@ class state2 extends gameState {
         this.P1 = prevState.P1;
         this.gl = prevState.gl;
 
+        this.panel = prevState.panel;
+
         this.time = 0;
         this.delta_time = 0.1;
         this.dist_vector = BABYLON.Vector3.Zero();
         this.gravity_force = BABYLON.Vector3.Zero();
         this.G = 0.000002;
 
-
+/*
         // *********************
         // affichage du timer
         this.plane = BABYLON.Mesh.CreatePlane("plane", 1, this.scene);
         this.plane.position = new BABYLON.Vector3(0, height-0.5, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.plane);
-        var panel = new BABYLON.GUI.StackPanel();    
+        this.panel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(panel);  
         this.header = new BABYLON.GUI.TextBlock();
         this.timer = Date.now();
@@ -297,7 +357,8 @@ class state2 extends gameState {
         this.header.color = "white";
         this.header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         this.header.fontSize = "120"
-        panel.addControl(this.header); 
+        this.panel.addControl(this.header); 
+        */
     }
 
     sceneRenderLoop() {
@@ -312,9 +373,9 @@ class state2 extends gameState {
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>height-1)&&(y<height)) {
             if(this.already_in){
                 s = Math.ceil(500 - (Date.now() - this.timer)/10)/100;
-                this.header.text = String(s.toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+                // this.header.text = String(s.toLocaleString(undefined,{ minimumFractionDigits: 2 }));
                 if(s <= 0){
-                    nextState = 3; // success
+                    nextState = 1; // success
                 }
             }
             else {
@@ -325,7 +386,7 @@ class state2 extends gameState {
         else{
             if(this.already_in){
                 this.already_in = false;
-                this.header.text = String((5).toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+                // this.header.text = String((5).toLocaleString(undefined,{ minimumFractionDigits: 2 }));
             }
         }
         
@@ -370,14 +431,15 @@ class state2 extends gameState {
             this.sun.material = sphereMaterials;
             this.P1.material = sphereMaterials;
 
-            nextState = 4; // fail
+            nextState = 1; // fail
         }
-
-        this.P1.momentum.addInPlace(  this.gravity_force.scale(this.delta_time));
-        //console.log(gravity_force.scale(delta_time));
-        //Earth.momentum.addInPlace( gravity_force.scale(-delta_time) );
-        this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
-        //Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
+        else{
+            this.P1.momentum.addInPlace(  this.gravity_force.scale(this.delta_time));
+            //console.log(gravity_force.scale(delta_time));
+            //Earth.momentum.addInPlace( gravity_force.scale(-delta_time) );
+            this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
+            //Earth.position.addInPlace( Earth.momentum.scale(delta_time / Earth.masse));
+        }
         
     }
 
@@ -401,7 +463,7 @@ class state2 extends gameState {
         this.xrHelper.pointerSelection.displaySelectionMesh = true;
 
         //this.scene.removeMesh(this.plane);
-        this.plane.dispose();
+        //this.plane.dispose();
 
         
     }

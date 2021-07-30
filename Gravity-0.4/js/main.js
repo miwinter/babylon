@@ -58,7 +58,9 @@ class intro1 extends gameState {
     }
 
     cleanState() {
-        this.scene.removeMesh(this.plane);
+        //this.scene.removeMesh(this.plane);
+        this.plane.dispose();
+
     }
 
 }
@@ -205,9 +207,14 @@ class state1 extends gameState {
     }
 
     cleanState() {
+        /*
         this.scene.removeMesh(this.header);
         this.scene.removeMesh(this.plane);
         this.scene.removeMesh(this.P1.arrow);
+        */
+        this.P1.arrow.dispose();
+        this.header.dispose();
+        this.plane.dispose();
     }
 
     sceneRenderLoop() {
@@ -393,7 +400,9 @@ class state2 extends gameState {
         this.xrHelper.pointerSelection.disablePointerLighting = true;
         this.xrHelper.pointerSelection.displaySelectionMesh = true;
 
-        this.scene.removeMesh(this.plane);
+        //this.scene.removeMesh(this.plane);
+        this.plane.dispose();
+
         
     }
 }
@@ -444,12 +453,15 @@ class success extends gameState {
     }
 
     cleanState() {
-        this.scene.removeMesh(this.plane);
-
+        this.P1.dispose();
+        this.sun.dispose();
+        this.plane.dispose();
+        this.cube.dispose();
+/*
         this.scene.removeMesh(this.P1);
         this.scene.removeMesh(this.sun);
         this.scene.removeMesh(this.plane);
-        this.scene.removeMesh(this.cube);
+        this.scene.removeMesh(this.cube);*/
     }
 
 }
@@ -501,12 +513,16 @@ class fail extends gameState {
     }
 
     cleanState() {
-        this.scene.removeMesh(this.plane);
-
+        this.P1.dispose();
+        this.sun.dispose();
+        this.plane.dispose();
+        this.cube.dispose();
+        /*
         this.scene.removeMesh(this.P1);
         this.scene.removeMesh(this.sun);
         this.scene.removeMesh(this.plane);
         this.scene.removeMesh(this.cube);
+        */
     }
 
 }

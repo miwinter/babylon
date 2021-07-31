@@ -104,8 +104,7 @@ class state1 extends gameState {
         material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
         material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
         this.sun.material = material;
-        this.sun.position = new BABYLON.Vector3(0,2,0.2);
-        this.sun.masse = 1000;
+
         
         this.gl = new BABYLON.GlowLayer("glow", this.scene);
         //gl.intensity = Math.floor(Math.random()*8+6);
@@ -122,6 +121,8 @@ class state1 extends gameState {
 
         // Liaison du soleil à la manette droite
         //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
+        //this.sun.position = new BABYLON.Vector3(0,2,0.2);
+        this.sun.masse = 1000;
         this.sun.position = this.sunController();
         this.xrHelper.pointerSelection.displayLaserPointer = false;
         this.xrHelper.pointerSelection.disablePointerLighting = false;
@@ -372,15 +373,17 @@ class state2 extends gameState {
                 set.start();
             });
             */
+           /*
             var sphereMaterials = new BABYLON.StandardMaterial("sphereMaterial", this.scene);
             sphereMaterials.ambiantColor = new BABYLON.Color3(0, 0.5, 0);
             sphereMaterials.diffuseColor = new BABYLON.Color3(5, 0, 0);
             sphereMaterials.specularColor = new BABYLON.Color3(0, 0, 0);
+
             this.gl.intensity = 0;
 
             this.sun.material = sphereMaterials;
             this.P1.material = sphereMaterials;
-
+*/
             nextState = 4; // fail
         }
         else{

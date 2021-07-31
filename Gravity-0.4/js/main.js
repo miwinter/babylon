@@ -93,7 +93,7 @@ class state1 extends gameState {
         // *********************
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, this.scene);
-        var material = new BABYLON.StandardMaterial("material", this.scene);
+    /*    var material = new BABYLON.StandardMaterial("material", this.scene);
         var noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 386, this.scene);
         
         noiseTexture.octaves = 7;
@@ -118,7 +118,7 @@ class state1 extends gameState {
                 result.set(0, 0, 0, 0);
             }
         }
-        
+        */
 
         // Liaison du soleil à la manette droite
         //this.sun.position = this.rightMotionController.rootMesh.getAbsolutePosition().clone().scaleInPlace(5);
@@ -156,12 +156,13 @@ class state1 extends gameState {
         //this.P1.material.ambiantColor = new BABYLON.Color3(0, 0.5, 5);
         //this.P1.material.diffuseColor = new BABYLON.Color3(5, 5, 0);
         //this.P1.material.specularColor = new BABYLON.Color3(1, 1, 1);
-
+/*
         var earthMaterial = new BABYLON.StandardMaterial("ground", this.scene);
         earthMaterial.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", this.scene);
         earthMaterial.diffuseTexture.vScale = -1;
 
         this.P1.material = earthMaterial;
+        */
     
         this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
         this.P1.position = new BABYLON.Vector3(0.2,height - 0.2,0.8);

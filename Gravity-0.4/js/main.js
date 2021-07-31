@@ -411,8 +411,8 @@ class state2 extends gameState {
         this.xrHelper.pointerSelection.disablePointerLighting = true;
         this.xrHelper.pointerSelection.displaySelectionMesh = true;
 
-        //this.scene.removeMesh(this.plane);
-        //this.plane.dispose();
+        this.scene.removeMesh(this.plane);
+        this.plane.dispose();
 
         
     }

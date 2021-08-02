@@ -199,6 +199,8 @@ class gameLevel {
                 break;
             case LEVEL_STATE_SUCCESS : 
                 theTimerPlane.setEnabled(false);
+                showControllers();
+                this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
                 theExplanationPlaneText.text = "You win !";
                 theExplanationPlaneButton.text = "Start again";
                 theExplanationPlaneTarget = LEVEL_STATE_WAIT;
@@ -206,6 +208,8 @@ class gameLevel {
                 break;
             case LEVEL_STATE_FAIL : 
                 theTimerPlane.setEnabled(false);
+                this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+                showControllers();
                 theExplanationPlaneText.text = "You failed !";
                 theExplanationPlaneButton.text = "Retry";
                 theExplanationPlaneTarget = LEVEL_STATE_WAIT;
@@ -424,7 +428,7 @@ var createScene = async function () {
         "./textures/8k_stars_milky_way.jpg",
         {
             resolution: 32,
-            size: 10
+            size: 100
         },
         theScene
     );

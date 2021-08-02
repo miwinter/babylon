@@ -275,14 +275,18 @@ class Level1 extends gameLevel {
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, theScene);
-        this.sun.material = new BABYLON.StandardMaterial("sunMat", theScene);
-        this.sun.material.diffuseTexture = new BABYLON.Texture("textures/2k_sun.jpg", theScene);
-        this.sun.material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
-        this.sun.material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
-        this.gl = new BABYLON.GlowLayer("glow", theScene);
+        //this.sun.material = new BABYLON.StandardMaterial("sunMat", theScene);
 
-        this.gl.intensity = 2;
+        //this.sun.material.diffuseTexture = new BABYLON.Texture("textures/2k_sun.jpg", theScene);
+
+        //this.sun.material.diffuseTexture = new BABYLON.VideoTexture("video", ["textures/sun-texture.mp4"],theScene);
+        //this.sun.material.diffuseTexture.vScale *= -2;
+
+        //this.sun.material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+        //this.sun.material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
         
+        this.gl = new BABYLON.GlowLayer("glow", theScene);
+        this.gl.intensity = 10;
         this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
             if (mesh.name === "sun") {
                 result.set(0.6259, 0.3056, 0.0619, 0.5);

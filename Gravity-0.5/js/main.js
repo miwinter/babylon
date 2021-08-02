@@ -23,12 +23,8 @@ theCurrentLevel = null;
 function createCubePlayground(){
 
     const xSize = 1, ySize = 1, zSize = 1;
-    
-    // l'environnement doit être correctement initialisé pour que la camera soit définie
-    theHeight = theXRHelper.baseExperience.camera.realWorldHeight;
-    //console.log("theHeight : " + theHeight);
 
-
+    console.log("theHeight : " + theHeight);
 
     var x = xSize / 2;
     var y = ySize / 2;

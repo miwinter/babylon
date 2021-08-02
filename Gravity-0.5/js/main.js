@@ -274,12 +274,30 @@ class Level1 extends gameLevel {
         this.G = 0.000002;
 
         // Création du soleil
-        this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, theScene);  
+        this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, theScene);
+        this.sun.material = new BABYLON.StandardMaterial("sunMat", theScene);
+        this.sun.material.diffuseTexture = new BABYLON.Texture("textures/2k_sun.jpg", theScene);
+        this.sun.material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+        this.sun.material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+        this.gl = new BABYLON.GlowLayer("glow", theScene);
+
+        this.gl.intensity = 2;
+        
+        this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
+            if (mesh.name === "sun") {
+                result.set(0.6259, 0.3056, 0.0619, 0.5);
+            } else {
+                result.set(0, 0, 0, 0);
+            }
+        }
+    
         this.sun.masse = 1000;
         this.sun.setEnabled(false);
 
         // création de la planete 1
         this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.05, segments: 32}, theScene);
+        this.P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
+        this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
     
         this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
         this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
@@ -396,6 +414,16 @@ var createScene = async function () {
    
 
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), theScene);
+
+    var dome = new BABYLON.PhotoDome(
+        "testdome",
+        "./textures/8k_stars_milky_way.jpg",
+        {
+            resolution: 32,
+            size: 10
+        },
+        theScene
+    );
 
     theXRHelper = await theScene.createDefaultXRExperienceAsync({});
     //const theXRHelper = await BABYLON.WebXRExperienceHelper.CreateAsync(theScene);

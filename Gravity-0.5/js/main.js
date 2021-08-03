@@ -300,6 +300,8 @@ class Level1 extends gameLevel {
         }
     
         this.sun.masse = 1000;
+        this.sunlight = new BABYLON.PointLight("pointLight", this.sun.position, theScene);
+        this.sunlight.setEnabled(false);
         this.sun.setEnabled(false);
 
         // création de la planete 1
@@ -324,6 +326,7 @@ class Level1 extends gameLevel {
 
     initPlayground(){
         this.sun.setEnabled(true);
+        this.sunlight.setEnabled(true);
         this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition();
 
         // création de la planete 1
@@ -420,15 +423,14 @@ var createScene = async function () {
 
     theScene = new BABYLON.Scene(engine);
    
-
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), theScene);
 
     var dome = new BABYLON.PhotoDome(
         "testdome",
         "./textures/8k_stars_milky_way.jpg",
         {
-            resolution: 32,
-            size: 100
+            resolution: 64,
+            size: 1000
         },
         theScene
     );

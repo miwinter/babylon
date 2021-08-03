@@ -5,47 +5,57 @@ const LEVEL_STATE_GAME = 2;
 const LEVEL_STATE_SUCCESS = 3;
 const LEVEL_STATE_FAIL = 4;
 
-theXRHelper = null;
-theHeight = 0;
-theScene = null;
-theExplanationPlane = null;
-theExplanationPlaneText = null;
-theExplanationPlaneButton = null;
-theExplanationPlaneTarget = LEVEL_STATE_UNDEFINED;
-theRightMotionController = null;
-theLeftMotionController = null;
-theTimerPlane = null;
-theTimerPlaneText = null;
-theCubePlayground = null;
-theCurrentLevel = null;
+var theXRHelper = null;
+var theHeight = 0;
+var theScene = null;
+var theExplanationPlane = null;
+var theExplanationPlaneText = null;
+var theExplanationPlaneButton = null;
+var theExplanationPlaneTarget = LEVEL_STATE_UNDEFINED;
+var theRightMotionController = null;
+var theLeftMotionController = null;
+var theTimerPlane = null;
+var theTimerPlaneText = null;
+var theCubePlayground = null;
+var theCurrentLevel = null;
+
+var xMin = -0.7; 
+var xMax = 0.7;
+var zMin = 0.05; 
+var zMax = 1.05;
+
+// yMin et yMax sont déterminés par la position du casque
+var yMin = -1; 
+var yMax = -1;
+var yRange = 1.3;
 
 
 function createCubePlayground(){
 
-    const xSize = 1, ySize = 1, zSize = 1;
 
     console.log("theHeight : " + theHeight);
 
-    var x = xSize / 2;
-    var y = ySize / 2;
+    yMax = theHeight + 0.2;
+    yMin = yMax - yRange;
+
 
     var cubePoints = [
-        new BABYLON.Vector3(-x, theHeight - ySize, 0),
-        new BABYLON.Vector3(-x, theHeight, 0),
-        new BABYLON.Vector3(x, theHeight, 0),
-        new BABYLON.Vector3(x, theHeight - ySize, 0),
-        new BABYLON.Vector3(-x, theHeight - ySize, 0),
-        new BABYLON.Vector3(-x, theHeight - ySize, zSize),
-        new BABYLON.Vector3(x,theHeight - ySize, zSize),
-        new BABYLON.Vector3(x,theHeight - ySize, 0),
-        new BABYLON.Vector3(x,theHeight, 0),
-        new BABYLON.Vector3(x,theHeight, zSize),
-        new BABYLON.Vector3(-x,theHeight, zSize),
-        new BABYLON.Vector3(-x,theHeight, 0),
-        new BABYLON.Vector3(-x,theHeight, zSize),
-        new BABYLON.Vector3(-x,theHeight - ySize, zSize),
-        new BABYLON.Vector3(x,theHeight - ySize, zSize),
-        new BABYLON.Vector3(x,theHeight, zSize),
+        new BABYLON.Vector3(xMin, yMin, zMin),
+        new BABYLON.Vector3(xMin, yMax, zMin),
+        new BABYLON.Vector3(xMax, yMax, zMin),
+        new BABYLON.Vector3(xMax, yMin, zMin),
+        new BABYLON.Vector3(xMin, yMin, zMin),
+        new BABYLON.Vector3(xMin, yMin, zMax),
+        new BABYLON.Vector3(xMax,yMin, zMax),
+        new BABYLON.Vector3(xMax,yMin, zMin),
+        new BABYLON.Vector3(xMax,yMax, zMin),
+        new BABYLON.Vector3(xMax,yMax, zMax),
+        new BABYLON.Vector3(xMin,yMax, zMax),
+        new BABYLON.Vector3(xMin,yMax, zMin),
+        new BABYLON.Vector3(xMin,yMax, zMax),
+        new BABYLON.Vector3(xMin,yMin, zMax),
+        new BABYLON.Vector3(xMax,yMin, zMax),
+        new BABYLON.Vector3(xMax,yMax, zMax),
     ]
 
     return theCubePlayground = BABYLON.MeshBuilder.CreateLines("lines", {points: cubePoints});
@@ -53,7 +63,7 @@ function createCubePlayground(){
 
 function createExplanationPlane(){
         var explanationPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-        explanationPlane.position = new BABYLON.Vector3(0, 1, 1);        
+        explanationPlane.position = new BABYLON.Vector3(0, 1, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(explanationPlane);
         var explanationPanel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(explanationPanel);  
@@ -183,6 +193,7 @@ class gameLevel {
                 theExplanationPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_WAIT :
+                theHLight.intensity = 0.3;
                 theExplanationPlane.setEnabled(false);
                 hideControllers();
 
@@ -198,6 +209,7 @@ class gameLevel {
                 this.timer = Date.now();
                 break;
             case LEVEL_STATE_SUCCESS : 
+                theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 showControllers();
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
@@ -207,6 +219,7 @@ class gameLevel {
                 theExplanationPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_FAIL : 
+                theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
                 showControllers();
@@ -279,15 +292,6 @@ class Level1 extends gameLevel {
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, theScene);
-        //this.sun.material = new BABYLON.StandardMaterial("sunMat", theScene);
-
-        //this.sun.material.diffuseTexture = new BABYLON.Texture("textures/2k_sun.jpg", theScene);
-
-        //this.sun.material.diffuseTexture = new BABYLON.VideoTexture("video", ["textures/sun-texture.mp4"],theScene);
-        //this.sun.material.diffuseTexture.vScale *= -2;
-
-        //this.sun.material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
-        //this.sun.material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
         
         this.gl = new BABYLON.GlowLayer("glow", theScene);
         this.gl.intensity = 10;
@@ -299,8 +303,13 @@ class Level1 extends gameLevel {
             }
         }
     
+        // pour tester les éclairages
+        //var test = BABYLON.MeshBuilder.CreateSphere("toto", {diameter: 0.2}, theScene);
+        //test.position = new BABYLON.Vector3(0,1,1);
+
         this.sun.masse = 1000;
         this.sunlight = new BABYLON.PointLight("pointLight", this.sun.position, theScene);
+        this.sunlight.intensity = 10;
         this.sunlight.setEnabled(false);
         this.sun.setEnabled(false);
 
@@ -325,9 +334,11 @@ class Level1 extends gameLevel {
     }
 
     initPlayground(){
+        
         this.sun.setEnabled(true);
         this.sunlight.setEnabled(true);
         this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition();
+        this.sunlight.position = this.sun.position;
 
         // création de la planete 1
         this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
@@ -378,13 +389,15 @@ class Level1 extends gameLevel {
         this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  distance2);
         //this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  this.dist_vector.length());
         
-        this.gravity_force.normalize().scaleInPlace(0.05);
+        //this.gravity_force.normalize().scaleInPlace(0.05);
 
-        if(this.gravity_force.length() > 0.05) {
-            this.gravity_force.normalize().scaleInPlace(0.05)
+        /*
+        if(this.gravity_force.length() > 0.07) {
+            this.gravity_force.normalize().scaleInPlace(0.07)
         }
-        if(this.gravity_force.length() < 0.005) {
-            this.gravity_force.normalize().scaleInPlace(0.005)
+        */
+        if(this.gravity_force.length() < 0.01) {
+            this.gravity_force.normalize().scaleInPlace(0.01)
         }
 
         if(this.sun.intersectsMesh(this.P1)){
@@ -395,7 +408,7 @@ class Level1 extends gameLevel {
             this.P1.momentum.addInPlace(  this.gravity_force.scale(this.delta_time));
             this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
         }
-        
+       
     }
 
 
@@ -416,6 +429,7 @@ var isWebXRInitialized = false;
 const GAME_STATE_WAINTING_WEBXR = -1;
 
 var currentLevel = GAME_STATE_WAINTING_WEBXR;
+var theHLight = null;
 
 var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
 
@@ -423,7 +437,7 @@ var createScene = async function () {
 
     theScene = new BABYLON.Scene(engine);
    
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), theScene);
+    theHLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), theScene);
 
     var dome = new BABYLON.PhotoDome(
         "testdome",

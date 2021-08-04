@@ -152,6 +152,36 @@ function createTimerPlane(){
 
 }
 
+function arrowTransform(VMomentum, VPointe, VATransformer){
+    var alpha = 0;
+    if(VMomentum.x == 0){
+        if(VMomentum.y > 0)
+            alpha = Math.PI/2;
+        else
+            alpha = -Math.PI/2;
+    }        
+    else
+        alpha = Math.atan(VMomentum.y/VMomentum.x);
+
+    var theta = 0;
+    if(VMomentum.x == 0){
+        if(VMomentum.z > 0)
+            theta = Math.PI/2;
+        else
+            theta = -Math.PI/2;
+    }        
+    else
+        theta = Math.atan(VMomentum.z/VMomentum.x);
+
+    var returnedVect = new BABYLON.Vector3();
+    var xprime =  VATransformer.x*Math.cos(alpha) - VATransformer.y*Math.sin(alpha);
+
+    returnedVect.x = VPointe.x + xprime*Math.cos(theta) - VATransformer.z*Math.sin(theta);
+    returnedVect.y = VPointe.y + VATransformer.x*Math.sin(alpha) + VATransformer.y*Math.cos(alpha);
+    returnedVect.z = VPointe.z + xprime*Math.sin(theta) + VATransformer.z*Math.cos(theta);
+
+    return returnedVect;
+}
 
 class gameLevel {
 
@@ -213,6 +243,7 @@ class gameLevel {
                 theTimerPlane.setEnabled(false);
                 showControllers();
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+                theHLight.position = this.sun.position;
                 theExplanationPlaneText.text = "You win !";
                 theExplanationPlaneButton.text = "Start again";
                 theExplanationPlaneTarget = LEVEL_STATE_WAIT;
@@ -222,6 +253,7 @@ class gameLevel {
                 theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+                theHLight.position = this.sun.position;
                 showControllers();
                 theExplanationPlaneText.text = "You failed !";
                 theExplanationPlaneButton.text = "Retry";
@@ -288,7 +320,7 @@ class Level1 extends gameLevel {
         this.delta_time = 0.1;
         this.dist_vector = BABYLON.Vector3.Zero();
         this.gravity_force = BABYLON.Vector3.Zero();
-        this.G = 0.000002;
+        this.G = 0.00001;// précédente : 0.000002
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.1}, theScene);
@@ -317,16 +349,23 @@ class Level1 extends gameLevel {
         this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.05, segments: 32}, theScene);
         this.P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
         this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
+        this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
     
-        this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
+        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,-0.1);
         this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
         this.P1.masse = 1;
 
         this.P1.setEnabled(false);
 
+        var arrowEndPoint = this.P1.position.clone().addInPlace(this.P1.momentum);
+        var arrowPoint1 = arrowTransform(this.P1.momentum, arrowEndPoint, new BABYLON.Vector3(0.05,0.03,0));
+        var arrowPoint2 = arrowTransform(this.P1.momentum, arrowEndPoint, new BABYLON.Vector3(0.05,-0.03,0));
         this.P1.arrow = BABYLON.Mesh.CreateLines("P1_arrow", [ 
-            this.P1.position.clone(), 
-            this.P1.position.clone().addInPlace(this.P1.momentum)
+            this.P1.position, 
+            arrowEndPoint,
+            arrowPoint1,
+            arrowEndPoint,
+            arrowPoint2
             ], this.scene);
         this.P1.arrow.color = new BABYLON.Color3(0, 1, 0);
 
@@ -361,8 +400,8 @@ class Level1 extends gameLevel {
 
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>theHeight-1)&&(y<theHeight)) {
             if(this.already_in){
-                s = Math.ceil(500 - (Date.now() - this.timer)/10)/100;
-                theTimerPlaneText.text = String(s.toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+                s = Math.ceil(50 - (Date.now() - this.timer)/100)/10;
+                theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
                 if(s <= 0){
                     this.stateChange = true;
                     this.nextState = LEVEL_STATE_SUCCESS; // success
@@ -376,7 +415,7 @@ class Level1 extends gameLevel {
         else{
             if(this.already_in){
                 this.already_in = false;
-                theTimerPlaneText.text = String((5).toLocaleString(undefined,{ minimumFractionDigits: 2 }));
+                theTimerPlaneText.text = String((5).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
             }
         }
         
@@ -389,7 +428,7 @@ class Level1 extends gameLevel {
         this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  distance2);
         //this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  this.dist_vector.length());
         
-        //this.gravity_force.normalize().scaleInPlace(0.05);
+        this.gravity_force.normalize().scaleInPlace(0.00);
 
         /*
         if(this.gravity_force.length() > 0.07) {

@@ -152,35 +152,22 @@ function createTimerPlane(){
 
 }
 
-function arrowTransform(VMomentum, VPointe, VATransformer){
-    var alpha = 0;
-    if(VMomentum.x == 0){
-        if(VMomentum.y > 0)
-            alpha = Math.PI/2;
-        else
-            alpha = -Math.PI/2;
-    }        
-    else
-        alpha = Math.atan(VMomentum.y/VMomentum.x);
+function arrowTransform(VMomentum, VCenter, VATransformer){
 
-    var theta = 0;
-    if(VMomentum.x == 0){
-        if(VMomentum.z > 0)
-            theta = Math.PI/2;
-        else
-            theta = -Math.PI/2;
-    }        
-    else
-        theta = Math.atan(VMomentum.z/VMomentum.x);
+    var alpha = Math.asin(VMomentum.y/VMomentum.length());
+    var theta = Math.atan2(VMomentum.z,VMomentum.x);
 
-    var returnedVect = new BABYLON.Vector3();
-    var xprime =  VATransformer.x*Math.cos(alpha) - VATransformer.y*Math.sin(alpha);
+    if((alpha > Math.PI/2)||(alpha < -Math.PI/2)) 
+        theta = -(Math.PI - theta);
+    
+    
+    var MZ = BABYLON.Matrix.RotationZ(alpha);
+    var MY = BABYLON.Matrix.RotationY(-theta);
+   
+    var T1 = BABYLON.Vector3.TransformCoordinates(VATransformer,MZ);
+    var T2 = BABYLON.Vector3.TransformCoordinates(T1,MY);
 
-    returnedVect.x = VPointe.x + xprime*Math.cos(theta) - VATransformer.z*Math.sin(theta);
-    returnedVect.y = VPointe.y + VATransformer.x*Math.sin(alpha) + VATransformer.y*Math.cos(alpha);
-    returnedVect.z = VPointe.z + xprime*Math.sin(theta) + VATransformer.z*Math.cos(theta);
-
-    return returnedVect;
+    return T2.addInPlace(VCenter);   
 }
 
 class gameLevel {
@@ -341,7 +328,7 @@ class Level1 extends gameLevel {
 
         this.sun.masse = 1000;
         this.sunlight = new BABYLON.PointLight("pointLight", this.sun.position, theScene);
-        this.sunlight.intensity = 10;
+        this.sunlight.intensity = 20;
         this.sunlight.setEnabled(false);
         this.sun.setEnabled(false);
 
@@ -358,14 +345,20 @@ class Level1 extends gameLevel {
         this.P1.setEnabled(false);
 
         var arrowEndPoint = this.P1.position.clone().addInPlace(this.P1.momentum);
-        var arrowPoint1 = arrowTransform(this.P1.momentum, arrowEndPoint, new BABYLON.Vector3(0.05,0.03,0));
-        var arrowPoint2 = arrowTransform(this.P1.momentum, arrowEndPoint, new BABYLON.Vector3(0.05,-0.03,0));
+        var lg = this.P1.momentum.length();
+        
+        var arrowPoint1 = arrowTransform(this.P1.momentum, this.P1.position, new BABYLON.Vector3(lg-0.03,0.01,0));
+        var arrowPoint2 = arrowTransform(this.P1.momentum, this.P1.position, new BABYLON.Vector3(lg-0.03,-0.01,0));
+        var arrowPoint3 = arrowTransform(this.P1.momentum, this.P1.position, new BABYLON.Vector3(lg-0.03,0,0.01));
+        var arrowPoint4 = arrowTransform(this.P1.momentum, this.P1.position, new BABYLON.Vector3(lg-0.03,0,-0.01));
+        
         this.P1.arrow = BABYLON.Mesh.CreateLines("P1_arrow", [ 
             this.P1.position, 
-            arrowEndPoint,
-            arrowPoint1,
-            arrowEndPoint,
-            arrowPoint2
+            arrowEndPoint 
+            , arrowPoint1,
+            arrowEndPoint, arrowPoint2,
+            arrowEndPoint, arrowPoint3,
+            arrowEndPoint, arrowPoint4 
             ], this.scene);
         this.P1.arrow.color = new BABYLON.Color3(0, 1, 0);
 
@@ -380,8 +373,8 @@ class Level1 extends gameLevel {
         this.sunlight.position = this.sun.position;
 
         // création de la planete 1
-        this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
-        this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
+        //this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
+        //this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
 
         this.P1.setEnabled(true);
 
@@ -428,7 +421,7 @@ class Level1 extends gameLevel {
         this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  distance2);
         //this.gravity_force = this.dist_vector.scale(- this.G * this.sun.masse * this.P1.masse /  this.dist_vector.length());
         
-        this.gravity_force.normalize().scaleInPlace(0.00);
+        //this.gravity_force.normalize().scaleInPlace(0.05);
 
         /*
         if(this.gravity_force.length() > 0.07) {

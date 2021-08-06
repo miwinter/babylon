@@ -210,7 +210,7 @@ class gameLevel {
                 theExplanationPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_WAIT :
-                theHLight.intensity = 0.3;
+                theHLight.intensity = 0.5;
                 theExplanationPlane.setEnabled(false);
                 hideControllers();
 
@@ -254,7 +254,7 @@ class gameLevel {
     levelRenderLoop() {
         if(this.stateChange)
         {
-            console.log(this.nextState);
+            //console.log(this.nextState);
             this.initState(this.nextState);
             this.state = this.nextState;
             this.nextState = LEVEL_STATE_UNDEFINED;
@@ -371,10 +371,7 @@ class Level1 extends gameLevel {
         this.sunlight.setEnabled(true);
         this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition();
         this.sunlight.position = this.sun.position;
-
-        // création de la planete 1
-        //this.P1.momentum = new BABYLON.Vector3(-0,-0.001,-0.1);
-        //this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
+        this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
 
         this.P1.setEnabled(true);
 

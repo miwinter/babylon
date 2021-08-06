@@ -338,7 +338,7 @@ class Level1 extends gameLevel {
         this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
         this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
     
-        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,-0.1);
+        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,-0.1); // également dans initPlayground
         this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
         this.P1.masse = 1;
 
@@ -372,7 +372,7 @@ class Level1 extends gameLevel {
         this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition();
         this.sunlight.position = this.sun.position;
         this.P1.position = new BABYLON.Vector3(0.2,theHeight - 0.2,0.8);
-
+        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,-0.1);
         this.P1.setEnabled(true);
 
         this.P1.arrow.setEnabled(true);

@@ -143,6 +143,23 @@ function newMenuButton(){
     return button;
 }
 
+function newNextLevelButton(){
+    var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Next");
+    button.width = "200px";
+    button.height = "200px";
+    button.color = "white";
+    button.fontSize = 50;
+    button.cornerRadius = 50;
+    button.background = "green";
+    button.paddingRight = "10px";
+
+    button.onPointerUpObservable.add(function() {
+        levelChange = LEVEL_CHANGE_FLAG.NEXT_LEVEL;
+    });
+
+    return button;
+}
+
 function createFailPlane(){
     var failPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
     failPlane.position = new BABYLON.Vector3(0, 1, 2);        
@@ -181,21 +198,34 @@ function createSuccessPlane(){
     var successPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
     successPlane.position = new BABYLON.Vector3(0, 1, 2);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(successPlane);
-    var successPanel = new BABYLON.GUI.StackPanel();    
+    var successPanel = new BABYLON.GUI.StackPanel();
+    successPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     advancedTexture.addControl(successPanel);  
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "fghj fg";
+    header.text = "You Won !!!";
     header.textWrapping= true;
     header.width = "1000px";
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "50"
+    header.fontSize = "50";
+
     successPanel.addControl(header);
     theSuccessPlaneText = header;
 
-    successPanel.addControl(newRetryButton());
-    successPanel.addControl(newMenuButton());
+    var buttonPanel = new BABYLON.GUI.StackPanel();  
+      
+    buttonPanel.isVertical = false;
+    buttonPanel.width = "650px";
+    buttonPanel.height = "200px";
+    buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    successPanel.addControl(buttonPanel);  
+
+    buttonPanel.addControl(newRetryButton());
+    if(currentLevelID < LEVELS_NUMBER) {
+        buttonPanel.addControl(newNextLevelButton());
+    }
+    buttonPanel.addControl(newMenuButton());
 
     theSuccessPlane = successPlane;
     successPlane.setEnabled(false);
@@ -329,7 +359,9 @@ class gameLevel {
 
     // création des objets spécifiques au niveau
     // cube, panels et sun sont construit au niveau global
-    initLevel(){}
+    initLevel(){
+
+    }
 
     // setup et affichage des objets pendant le compte à rebours
     initPlayground(){}
@@ -340,6 +372,7 @@ class gameLevel {
     // nettoyage des meshs spécifiques au niveau
     cleanLevel(){
         theFailPlane.setEnabled(false);
+        theSuccessPlane.setEnabled(false);
     }
 
     // configuration du level en fonction de son état (suite à un stateChange)
@@ -347,14 +380,17 @@ class gameLevel {
         switch(state)
         {
             case LEVEL_STATE_INTRO : 
+                console.log("LEVEL_STATE_INTRO");
                 theExplanationPlaneText.text = "Let's go !";
                 theExplanationPlaneButton.text = "Start";
                 theExplanationPlaneTarget = LEVEL_STATE_WAIT;
                 theExplanationPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_WAIT :
+                console.log("LEVEL_STATE_WAIT");
                 theHLight.intensity = 0.5;
                 theFailPlane.setEnabled(false);
+                theSuccessPlane.setEnabled(false);
                 theExplanationPlane.setEnabled(false);
                 hideControllers();
                 theTimerPlane.setEnabled(true);
@@ -363,24 +399,24 @@ class gameLevel {
                 this.timer = Date.now();
                 break;
             case LEVEL_STATE_GAME :
+                console.log("LEVEL_STATE_GAME");
                 theExplanationPlaneTarget = LEVEL_STATE_WAIT;
                 theExplanationPlane.setEnabled(false);
-                theTimerPlane.setEnabled(false);
+                theTimerPlane.setEnabled(true);
                 this.launchGame();
                 this.timer = Date.now();
                 break;
             case LEVEL_STATE_SUCCESS : 
+                console.log("LEVEL_STATE_SUCCESS");
                 theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 showControllers();
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
                 theHLight.position = this.sun.position;
-                theExplanationPlaneText.text = "You win !";
-                theExplanationPlaneButton.text = "Start again";
-                theExplanationPlaneTarget = LEVEL_STATE_WAIT;
-                theExplanationPlane.setEnabled(true);
+                theSuccessPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_FAIL : 
+                console.log("LEVEL_STATE_FAIL");
                 theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
@@ -521,7 +557,8 @@ class Level1 extends gameLevel {
     }
 
     launchGame(){
-        this.P1.arrow.setEnabled(false);
+        //this.P1.arrow.setEnabled(false);
+        this.P1.arrow.dispose();
     }
 
     gameLoop(){
@@ -532,7 +569,7 @@ class Level1 extends gameLevel {
 
         if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>theHeight-1)&&(y<theHeight)) {
             if(this.already_in){
-                s = Math.ceil(50 - (Date.now() - this.timer)/100)/10;
+                s = Math.ceil(1 - (Date.now() - this.timer)/100)/10;
                 theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
                 if(s <= 0){
                     this.stateChange = true;
@@ -580,6 +617,13 @@ class Level1 extends gameLevel {
             this.P1.position.addInPlace(  this.P1.momentum.scale(this.delta_time / this.P1.masse));
         }
        
+    }
+
+    cleanLevel(){
+        super.cleanLevel();
+
+        this.P1.dispose();
+        this.sun.dispose();
     }
 
 
@@ -674,7 +718,7 @@ class Level2 extends gameLevel {
     }
 
     launchGame(){
-        this.P1.arrow.setEnabled(false);
+        this.P1.arrow.dispose();
     }
 
     gameLoop(){
@@ -735,6 +779,12 @@ class Level2 extends gameLevel {
        
     }
 
+    cleanLevel(){
+        super.cleanLevel();
+
+        this.P1.dispose();
+        this.sun.dispose();
+    }
 
 } // end class Level2
 
@@ -833,6 +883,7 @@ var createScene = async function () {
             createTimerPlane();
             createCubePlayground();
             createFailPlane();
+            createSuccessPlane();
 
             currentLevelID = 0;
             theCurrentLevel = levels[0];
@@ -842,6 +893,7 @@ var createScene = async function () {
         {
             switch(levelChange){
                 case LEVEL_CHANGE_FLAG.MENU :
+                    console.log("LEVEL_CHANGE_FLAG.MENU");
                     theCurrentLevel.cleanLevel();
                     theCurrentLevel = levels[ 0 ];
                     theCurrentLevel.initLevel();
@@ -849,12 +901,16 @@ var createScene = async function () {
                     levelChange = LEVEL_CHANGE_FLAG.NO_CHANGE;
                     break;
                 case LEVEL_CHANGE_FLAG.NEXT_LEVEL :
+                    console.log("LEVEL_CHANGE_FLAG.NEXT_LEVEL");
                     targetLevelID = currentLevelID + 1;
                 case LEVEL_CHANGE_FLAG.GOTO_LEVEL :
+                    console.log("LEVEL_CHANGE_FLAG.GOTO_LEVEL");
                     theCurrentLevel.cleanLevel();
                     theCurrentLevel = levels[ targetLevelID ];
                     console.log("in switch "+targetLevelID);
                     theCurrentLevel.initLevel();
+                    theCurrentLevel.stateChange = true;
+                    theCurrentLevel.nextState = LEVEL_STATE_INTRO;
                     currentLevelID = targetLevelID;
                     levelChange = LEVEL_CHANGE_FLAG.NO_CHANGE;
                     break;

@@ -1,0 +1,2 @@
+Essayer d'augmenter la taille en démultipliant le déplacement du soleil
+Mettre des indicateurs qd une planete approche du bord : ideal : gardien, sinon approchant : le plan change de couleur progressivement

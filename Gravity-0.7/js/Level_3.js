@@ -102,9 +102,9 @@ class Level3 extends gameLevel {
         delta.addInPlace(this.centralPoint);
         this.sun.position = delta;
         */
-        var x0 = 0 ,
-            y0 = theHeight / 1.8,
-            z0 = 0.1;
+        var x0 = 0.1 ,
+            y0 = theHeight / 1.2,
+            z0 = 0.2;
        
         var xc = theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
         var yc = theRightMotionController.rootMesh.getAbsolutePosition().y;
@@ -114,7 +114,7 @@ class Level3 extends gameLevel {
 
         xs = (xc - x0)*2.5 + x0;
         ys = (yc - y0)*2.5 + y0;
-        zs = (zc - z0)*(8 + 2*(zc - z0)) + z0;
+        zs = (zc - z0)*(8 + 4*(zc - z0)) + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

@@ -1,3 +1,4 @@
 - Essayer d'augmenter la taille en démultipliant le déplacement du soleil
-- Mettre des indicateurs qd une planete approche du bord : ideal : gardien, sinon approchant : le plan change de couleur progressivement
+- Mettre des indicateurs qd une planete approche du bord : ideal : gardien, sinon approchant : le plan change de couleur progressivement (visibility de la mesh)
 - Tester la jouabilité des différents types de gravité
+- essayer de borner la position du soleil à la limite de la cage

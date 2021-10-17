@@ -104,7 +104,7 @@ class Level3 extends gameLevel {
         */
         var x0 = 0.1 ,
             y0 = theHeight - 0.3,
-            z0 = 0.2;
+            z0 = 0;
        
         var xc = theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
         var yc = theRightMotionController.rootMesh.getAbsolutePosition().y;
@@ -112,9 +112,9 @@ class Level3 extends gameLevel {
 
         var xs, ys, zs; // S pour sun
 
-        xs = (xc - x0)*(2.5 + 2*Math.abs(xc - x0)) + x0;
-        ys = (yc - y0)*(2.5 + 2*Math.abs(yc - y0)) + y0;
-        zs = (zc - z0)*(8   + 4*Math.abs(zc - z0)) + z0;
+        xs = (xc - x0)*(3 + 3*Math.abs(xc - x0)) + x0;
+        ys = (yc - y0)*(3 + 3*Math.abs(yc - y0)) + y0;
+        zs = (zc - z0)*(10 + 5*Math.abs(zc - z0)) + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

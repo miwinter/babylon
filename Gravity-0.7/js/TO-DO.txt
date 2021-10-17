@@ -1,2 +1,3 @@
-Essayer d'augmenter la taille en démultipliant le déplacement du soleil
-Mettre des indicateurs qd une planete approche du bord : ideal : gardien, sinon approchant : le plan change de couleur progressivement
+- Essayer d'augmenter la taille en démultipliant le déplacement du soleil
+- Mettre des indicateurs qd une planete approche du bord : ideal : gardien, sinon approchant : le plan change de couleur progressivement
+- Tester la jouabilité des différents types de gravité

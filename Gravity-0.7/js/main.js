@@ -26,6 +26,7 @@ var theFailPlaneText = null;
 var theSuccessPlane = null;
 var theSuccessPlaneText = null;
 
+/*
 var xMin = -0.7; 
 var xMax = 0.7;
 var zMin = 0.05; 
@@ -35,6 +36,19 @@ var zMax = 1.05;
 var yMin = -1; 
 var yMax = -1;
 var yRange = 1.3;
+*/
+
+
+var xMin = -2; 
+var xMax = 2;
+var zMin = 0.05; 
+var zMax = 4;
+
+// yMin et yMax sont déterminés par la position du casque
+var yMin = -1; 
+var yMax = -1;
+var yRange = 4;
+
 
 
 

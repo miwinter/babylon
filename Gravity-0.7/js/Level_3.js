@@ -43,7 +43,7 @@ class Level3 extends gameLevel {
         this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
         this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
     
-        this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,0.8);
+        this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2);
         this.P1.momentum = new BABYLON.Vector3(0.1,-0.1,-0.1);
         this.P1.masse = 1;
 
@@ -90,13 +90,8 @@ class Level3 extends gameLevel {
         this.P1.arrow.dispose();
     }
 
-    gameLoop(){
-        var x = this.P1.position.x;
-        var y = this.P1.position.y;
-        var z = this.P1.position.z;
-        var s = 0;
 
-        
+    computeSunPosition(){
         //this.sun.position = (theRightMotionController.rootMesh.getAbsolutePosition() - this.centralPoint)*2 +  this.centralPoint;
         var delta = this.centralPoint.clone();
         delta.scaleInPlace(-1);
@@ -104,8 +99,17 @@ class Level3 extends gameLevel {
         delta.scaleInPlace(2);
         delta.addInPlace(this.centralPoint);
         this.sun.position = delta;
+    }
 
-        if((x>-0.5)&&(x<0.5)&&(z>0)&&(z<1)&&(y>theHeight-1)&&(y<theHeight)) {
+    gameLoop(){
+        var x = this.P1.position.x;
+        var y = this.P1.position.y;
+        var z = this.P1.position.z;
+        var s = 0;
+
+        this.computeSunPosition();
+
+        if((x>xMin)&&(x<xMax)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
             if(this.already_in){
                 s = Math.ceil(50 - (Date.now() - this.timer)/100)/10;
                 theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));

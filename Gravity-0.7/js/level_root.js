@@ -109,6 +109,8 @@ class gameLevel {
 
     }
 
+    computeSunPosition(){}
+
     // loop utilisée uniquement lors du compte à rebours
     timerLoop(){
         var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
@@ -120,6 +122,7 @@ class gameLevel {
             theTimerPlaneText.text = String(s);
             this.timer += 1;
         }
+        this.computeSunPosition();
     }
 
     // loop utilisée pour la phase de jeu

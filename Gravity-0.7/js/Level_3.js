@@ -112,9 +112,9 @@ class Level3 extends gameLevel {
 
         var xs, ys, zs; // S pour sun
 
-        xs = (xc - x0)*(2.5 + 2*abs(xc - x0)) + x0;
-        ys = (yc - y0)*(2.5 + 2*abs(yc - y0)) + y0;
-        zs = (zc - z0)*(8   + 4*abs(zc - z0)) + z0;
+        xs = (xc - x0)*(2.5 + 2*Math.abs(xc - x0)) + x0;
+        ys = (yc - y0)*(2.5 + 2*Math.abs(yc - y0)) + y0;
+        zs = (zc - z0)*(8   + 4*Math.abs(zc - z0)) + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

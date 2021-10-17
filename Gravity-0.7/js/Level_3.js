@@ -40,8 +40,9 @@ class Level3 extends gameLevel {
         // création de la planete 1
         this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.05, segments: 32}, theScene);
         this.P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
-        this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
-        this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
+        //this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
+        //this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
+        this.P1.material.emissiveColor = new BABYLON.Color3.Blue;
     
         this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2);
         this.P1.momentum = new BABYLON.Vector3(0.1,-0.1,-0.1);
@@ -102,7 +103,7 @@ class Level3 extends gameLevel {
         this.sun.position = delta;
         */
         var x0 = 0 ,
-            y0 = theHeight / 2,
+            y0 = theHeight / 1.8,
             z0 = 0.1;
        
         var xc = theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
@@ -113,7 +114,7 @@ class Level3 extends gameLevel {
 
         xs = (xc - x0)*2.5 + x0;
         ys = (yc - y0)*2.5 + y0;
-        zs = (zc - z0)*8 + z0;
+        zs = (zc - z0)*(8 + 2*(zc - z0)) + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

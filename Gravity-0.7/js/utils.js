@@ -45,8 +45,9 @@ function createCubePlayground(){
 
     console.log("theHeight : " + theHeight);
 
-    yMax = theHeight + 0.2;
-    yMin = yMax - yRange;
+    //yMax = theHeight + 0.2;
+    yMin = 0;
+    yMax = yMin + yRange;
 
 
     var cubePoints = [

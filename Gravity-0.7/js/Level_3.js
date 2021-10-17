@@ -93,12 +93,31 @@ class Level3 extends gameLevel {
 
     computeSunPosition(){
         //this.sun.position = (theRightMotionController.rootMesh.getAbsolutePosition() - this.centralPoint)*2 +  this.centralPoint;
+        /*
         var delta = this.centralPoint.clone();
         delta.scaleInPlace(-1);
         delta.addInPlace(theRightMotionController.rootMesh.getAbsolutePosition());
         delta.scaleInPlace(2);
         delta.addInPlace(this.centralPoint);
         this.sun.position = delta;
+        */
+        var x0 = 0 ,
+            y0 = theHeight / 2,
+            z0 = 0.1;
+       
+        var xc = theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
+        var yc = theRightMotionController.rootMesh.getAbsolutePosition().y;
+        var zc = theRightMotionController.rootMesh.getAbsolutePosition().z;
+
+        var xs, ys, zs; // S pour sun
+
+        xs = (xc - x0)*2 + x0;
+        ys = (yc - y0)*2 + y0;
+        zs = (zc - z0)*4 + z0;
+
+        this.sun.position.x = xs;
+        this.sun.position.y = ys;
+        this.sun.position.z = zs;
     }
 
     gameLoop(){

@@ -42,7 +42,7 @@ var yRange = 1.3;
 var xMin = -2; 
 var xMax = 2;
 var zMin = 0.05; 
-var zMax = 4;
+var zMax = 5;
 
 // yMin et yMax sont déterminés par la position du casque
 var yMin = -1; 

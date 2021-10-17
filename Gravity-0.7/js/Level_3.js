@@ -111,9 +111,9 @@ class Level3 extends gameLevel {
 
         var xs, ys, zs; // S pour sun
 
-        xs = (xc - x0)*2 + x0;
-        ys = (yc - y0)*2 + y0;
-        zs = (zc - z0)*4 + z0;
+        xs = (xc - x0)*2.5 + x0;
+        ys = (yc - y0)*2.5 + y0;
+        zs = (zc - z0)*8 + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;
@@ -130,7 +130,7 @@ class Level3 extends gameLevel {
 
         if((x>xMin)&&(x<xMax)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
             if(this.already_in){
-                s = Math.ceil(50 - (Date.now() - this.timer)/100)/10;
+                s = Math.ceil(100 - (Date.now() - this.timer)/100)/10;
                 theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
                 if(s <= 0){
                     this.stateChange = true;
@@ -145,7 +145,7 @@ class Level3 extends gameLevel {
         else{
             if(this.already_in){
                 this.already_in = false;
-                theTimerPlaneText.text = String((5).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+                theTimerPlaneText.text = String((10).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
             }
         }
         
@@ -165,8 +165,8 @@ class Level3 extends gameLevel {
             this.gravity_force.normalize().scaleInPlace(0.07)
         }
         */
-        if(this.gravity_force.length() < 0.01) {
-            this.gravity_force.normalize().scaleInPlace(0.01)
+        if(this.gravity_force.length() < 0.02) {
+            this.gravity_force.normalize().scaleInPlace(0.02)
         }
 
         if(this.sun.intersectsMesh(this.P1)){

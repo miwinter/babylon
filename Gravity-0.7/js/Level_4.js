@@ -1,5 +1,5 @@
 
-class Level3 extends gameLevel {
+class Level4 extends gameLevel {
 
     delta_time = 0;
     dist_vector = null;

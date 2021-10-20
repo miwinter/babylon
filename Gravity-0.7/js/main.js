@@ -5,7 +5,7 @@ const LEVEL_STATE_GAME = 2;
 const LEVEL_STATE_SUCCESS = 3;
 const LEVEL_STATE_FAIL = 4;
 
-const LEVELS_NUMBER = 3;
+const LEVELS_NUMBER = 4;
 
 var theXRHelper = null;
 var theHeight = 0;
@@ -117,6 +117,7 @@ var createScene = async function () {
     levels[1] = new Level1();
     levels[2] = new Level2();
     levels[3] = new Level3();
+    levels[4] = new Level4();
 
     theScene.registerBeforeRender(() => {  
         if(! isWebXRInitialized) return;

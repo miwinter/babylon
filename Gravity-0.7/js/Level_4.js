@@ -145,11 +145,12 @@ class Level4 extends gameLevel {
         theta = Math.acos(z/ro);
         alpha = Math.atan2(y,x);
 
-        ro = 5*ro;
+        //x*(1+abs((3*x)^4))
+        ro = ro * (1 + Math.pow(3*ro,4));
 
-        xs = ro * Math.sin(theta) * Math.cos(alpha);
-        ys = ro * Math.sin(theta) * Math.sin(alpha);
-        zs = ro * Math.cos(theta);
+        xs = ro * Math.sin(theta) * Math.cos(alpha) + x0;
+        ys = ro * Math.sin(theta) * Math.sin(alpha) + y0;
+        zs = ro * Math.cos(theta) + z0;
 
         xs = (xs > xMax) ? xMax : xs;
         xs = (xs < xMin) ? xMin : xs;

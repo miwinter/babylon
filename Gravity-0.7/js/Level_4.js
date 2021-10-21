@@ -129,9 +129,27 @@ class Level4 extends gameLevel {
         ys = (yc - y0)*(3 + 3*Math.abs(yc - y0)) + y0;
         zs = (zc - z0)*(10 + 5*Math.abs(zc - z0)) + z0;
         */
+       /*
         xs = (xc - x0)*(1+ 10*Math.abs(Math.pow(2*(xc - x0),4))) + x0;
         ys = (yc - y0)*(1+ 10*Math.abs(Math.pow(2*(yc - y0),4))) + y0;
         zs = (zc - z0)*(1+ 10*Math.abs(Math.pow(2*(zc - z0),4))) + z0;
+        */
+
+        var x,y,z;
+        x = (xc - x0);
+        y = (yc - y0);
+        z = (zc - z0);
+
+        var ro, theta, alpha;
+        ro = Math.sqrt(x*x + y*y + z*z);
+        theta = Math.acos(z/ro);
+        alpha = Math.atan2(y,x);
+
+        ro = 5*ro;
+
+        xs = ro * Math.sin(theta) * Math.cos(alpha);
+        ys = ro * Math.sin(theta) * Math.sin(alpha);
+        zs = ro * Math.cos(theta);
 
         xs = (xs > xMax) ? xMax : xs;
         xs = (xs < xMin) ? xMin : xs;

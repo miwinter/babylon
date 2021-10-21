@@ -16,11 +16,12 @@ class Level4 extends gameLevel {
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.2}, theScene);
+        /*
         var material = new BABYLON.StandardMaterial(theScene);
         material.alpha = 1;
         material.diffuseColor = new BABYLON.Color3(1, 1, 0);
         this.sun.material = material;
-        
+        */
         /*
         this.gl = new BABYLON.GlowLayer("glow", theScene);
         this.gl.intensity = 10;
@@ -40,13 +41,23 @@ class Level4 extends gameLevel {
         //test.position = new BABYLON.Vector3(0,1,1);
 
         this.sun.masse = 1000;
-        
+        /*
         this.sunlight = new BABYLON.PointLight("pointLight", this.sun.position, theScene);
         this.sunlight.diffuse = new BABYLON.Color3(1, 1, 0);
         this.sunlight.specular = new BABYLON.Color3(0.5, 0.5, 0);
         this.sunlight.groundColor = new BABYLON.Color3(1, 1,0);
         this.sunlight.intensity = 20;
         this.sunlight.setEnabled(false);
+        */
+
+        var sunMaterial = new BABYLON.StandardMaterial('sunMaterial', theScene);
+
+        this.sunlight = new BABYLON.PointLight('sunLight', new BABYLON.Vector3.Zero(), theScene);
+        sunMaterial.emissiveTexture = new BABYLON.Texture('textures/sun.jpg', theScene);
+        sunMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        sunMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        this.sun.material = sunMaterial;
+        this.sunlight.intensity = 15;
         
         this.sun.setEnabled(false);
 
@@ -105,6 +116,7 @@ class Level4 extends gameLevel {
     }
 
 
+    sunAngle = 0;
     computeSunPosition(){
         //this.sun.position = (theRightMotionController.rootMesh.getAbsolutePosition() - this.centralPoint)*2 +  this.centralPoint;
         /*
@@ -162,6 +174,9 @@ class Level4 extends gameLevel {
         this.sun.position.x = xs;
         this.sun.position.y = ys;
         this.sun.position.z = zs;
+        this.sunAngle += 0.01;
+        this.sun.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
+
     }
 
     gameLoop(){

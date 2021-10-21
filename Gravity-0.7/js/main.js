@@ -84,7 +84,10 @@ var createScene = async function () {
 
     theScene = new BABYLON.Scene(engine);
    
-    theHLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 2, 0), theScene);
+    theHLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 5, 0), theScene);
+    theHLight.diffuse = new BABYLON.Color3(1, 1, 1);
+	theHLight.specular = new BABYLON.Color3(0, 0, 0);
+	theHLight.groundColor = new BABYLON.Color3(0.5,0.5,0.5);
 
     var dome = new BABYLON.PhotoDome(
         "testdome",
@@ -95,6 +98,7 @@ var createScene = async function () {
         },
         theScene
     );
+    
 
     theXRHelper = await theScene.createDefaultXRExperienceAsync({});
     

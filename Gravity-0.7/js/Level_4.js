@@ -16,7 +16,12 @@ class Level4 extends gameLevel {
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.2}, theScene);
+        var material = new BABYLON.StandardMaterial(theScene);
+        material.alpha = 1;
+        material.diffuseColor = new BABYLON.Color3(1, 1, 0);
+        this.sun.material = material;
         
+        /*
         this.gl = new BABYLON.GlowLayer("glow", theScene);
         this.gl.intensity = 10;
         this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
@@ -28,22 +33,28 @@ class Level4 extends gameLevel {
                 result.set(0, 0, 0, 0);
             }
         }
+        */
     
         // pour tester les éclairages
         //var test = BABYLON.MeshBuilder.CreateSphere("toto", {diameter: 0.2}, theScene);
         //test.position = new BABYLON.Vector3(0,1,1);
 
         this.sun.masse = 1000;
+        
         this.sunlight = new BABYLON.PointLight("pointLight", this.sun.position, theScene);
+        this.sunlight.diffuse = new BABYLON.Color3(1, 1, 0);
+        this.sunlight.specular = new BABYLON.Color3(0.5, 0.5, 0);
+        this.sunlight.groundColor = new BABYLON.Color3(1, 1,0);
         this.sunlight.intensity = 20;
         this.sunlight.setEnabled(false);
+        
         this.sun.setEnabled(false);
 
         // création de la planete 1
         this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.1, segments: 32}, theScene);
         this.P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
         this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
-        this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
+        //this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
         //this.P1.material.emissiveColor = new BABYLON.Color3.Blue;
     
         this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2); // à deux endroits
@@ -113,10 +124,14 @@ class Level4 extends gameLevel {
         var zc = theRightMotionController.rootMesh.getAbsolutePosition().z;
 
         var xs, ys, zs; // S pour sun
-
+        /*
         xs = (xc - x0)*(3 + 3*Math.abs(xc - x0)) + x0;
         ys = (yc - y0)*(3 + 3*Math.abs(yc - y0)) + y0;
         zs = (zc - z0)*(10 + 5*Math.abs(zc - z0)) + z0;
+        */
+        xs = (xc - x0)*(1+ Math.abs(Math.pow((xc - x0),3))) + x0;
+        ys = (yc - y0)*(1+ Math.abs(Math.pow((yc - y0),3))) + y0;
+        zs = (zc - z0)*(1+ 2*Math.abs(Math.pow((zc - z0),3))) + z0;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

@@ -46,7 +46,7 @@ class gameLevel {
                 break;
             case LEVEL_STATE_WAIT :
                 console.log("LEVEL_STATE_WAIT");
-                theHLight.intensity = 0.5;
+                theHLight.intensity = 1;
                 theFailPlane.setEnabled(false);
                 theSuccessPlane.setEnabled(false);
                 theExplanationPlane.setEnabled(false);

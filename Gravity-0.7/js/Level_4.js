@@ -133,12 +133,12 @@ class Level4 extends gameLevel {
         ys = (yc - y0)*(1+ 10*Math.abs(Math.pow((yc - y0),4))) + y0;
         zs = (zc - z0)*(1+ 15*Math.abs(Math.pow((zc - z0),4))) + z0;
 
-        xs = (xs > xMax) xMax ? xs;
-        xs = (xs < xMin) xMin ? xs;
-        ys = (ys > yMax) yMax ? ys;
-        ys = (ys < yMin) yMin ? ys;
-        zs = (zs > zMax) zMax ? zs;
-        zs = (zs < zMin) zMin ? zs;
+        xs = (xs > xMax) ? xMax : xs;
+        xs = (xs < xMin) ? xMin : xs;
+        ys = (ys > yMax) ? yMax : ys;
+        ys = (ys < yMin) ? yMin : ys;
+        zs = (zs > zMax) ? zMax : zs;
+        zs = (zs < zMin) ? zMin : zs;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;

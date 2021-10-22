@@ -64,12 +64,12 @@ class Level4 extends gameLevel {
         // création de la planete 1
         this.P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.1, segments: 32}, theScene);
         this.P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
-        this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth.jpg", theScene);
+        this.P1.material.diffuseTexture = new BABYLON.Texture("textures/earth2.jpg", theScene);
         //this.P1.material.specularColor = new BABYLON.Color3(0, 0, 0);
         //this.P1.material.emissiveColor = new BABYLON.Color3.Blue;
     
         this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2); // à deux endroits
-        this.P1.momentum = new BABYLON.Vector3(0.1,-0.1,-0.1);
+        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,0.1);
         this.P1.masse = 1;
 
         this.P1.setEnabled(false);
@@ -105,7 +105,7 @@ class Level4 extends gameLevel {
 
         this.sunlight.position = this.sun.position;
         this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2);  // à deux endroits
-        this.P1.momentum = new BABYLON.Vector3(0.1,-0.1,-0.1);
+        this.P1.momentum = new BABYLON.Vector3(-0.1,-0.1,0.1);
         this.P1.setEnabled(true);
 
         this.P1.arrow.setEnabled(true);
@@ -179,6 +179,22 @@ class Level4 extends gameLevel {
 
     }
 
+    d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : 0});
+    drawLeftCircle() {
+        this.d.dispose();
+        this.d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(this.P1.position.x - xMin)/2});
+        this.d.material = new BABYLON.StandardMaterial("MoonMaterial", theScene);
+        this.d.material.ambiantColor = new BABYLON.Color3(1,0,0);
+        this.d.material.diffuseColor = new BABYLON.Color3(1,0,0);
+        this.d.material.specularColor = new BABYLON.Color3(1,0,0);
+        //this.sun.material = sunMaterial;
+        this.d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
+        this.d.position.x = xMin;
+        this.d.position.y = this.P1.position.y;
+        this.d.position.z = this.P1.position.z;
+        this.d.visibility = Math.max(0, (0.5 - Math.abs(this.P1.position.x - xMin))) ;
+    }
+
     gameLoop(){
         var x = this.P1.position.x;
         var y = this.P1.position.y;
@@ -207,6 +223,11 @@ class Level4 extends gameLevel {
                 theTimerPlaneText.text = String((10).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
             }
         }
+
+        if(((x-xMin)<0.5)&&((x-xMin)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
+            this.drawLeftCircle();
+        }
+        
         
         this.dist_vector = this.P1.position.subtract(this.sun.position);
 

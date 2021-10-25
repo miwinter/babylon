@@ -7,6 +7,8 @@ const LEVEL_STATE_FAIL = 4;
 
 const LEVELS_NUMBER = 4;
 
+const DISC_DIST = 1; // distance par rapport aux bords à partir de laquelle les disc apparaissent
+
 var theXRHelper = null;
 var theHeight = 0;
 var theScene = null;

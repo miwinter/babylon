@@ -9,10 +9,10 @@ class Level4 extends gameLevel {
 
     initLevel(){
         this.time = 0;
-        this.delta_time = 0.1;
+        this.delta_time = 0.08;
         this.dist_vector = BABYLON.Vector3.Zero();
         this.gravity_force = BABYLON.Vector3.Zero();
-        this.G = 0.0002;// précédente : 0.000001
+        this.G = 0.0001;// précédente : 0.000001
 
         // Création du soleil
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.2}, theScene);
@@ -308,17 +308,18 @@ class Level4 extends gameLevel {
         
         //this.gravity_force.normalize().scaleInPlace(0.05);
 
-        
+        /*
         if(this.gravity_force.length() > 1) {
             this.gravity_force.normalize().scaleInPlace(1);
-            console.log('+');
+            // console.log('+');
         }
+        */
         
         if(this.gravity_force.length() < 0.02) {
             this.gravity_force.normalize().scaleInPlace(0.02);
-            console.log('-');
+            // console.log('-');
         }
-        // console.log(this.gravity_force.length());
+        
 
         if(this.sun.intersectsMesh(this.P1)){
             this.stateChange = true;

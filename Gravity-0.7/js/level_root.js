@@ -15,6 +15,9 @@ class gameLevel {
 
     timer = 0;
 
+    // liste des disques qui signalent le rapprochement d'une paroi
+    discs = [];
+
     // création des objets spécifiques au niveau
     // cube, panels et sun sont construit au niveau global
     initLevel(){
@@ -69,16 +72,16 @@ class gameLevel {
                 theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
                 showControllers();
-                this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
-                theHLight.position = this.sun.position;
+                //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+                //theHLight.position = this.sun.position;
                 theSuccessPlane.setEnabled(true);
                 break;
             case LEVEL_STATE_FAIL : 
                 console.log("LEVEL_STATE_FAIL");
                 theHLight.intensity = 1;
                 theTimerPlane.setEnabled(false);
-                this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
-                theHLight.position = this.sun.position;
+                //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+                //theHLight.position = this.sun.position;
                 showControllers();
                 theFailPlaneText = "You failed !";
                 theFailPlane.setEnabled(true);
@@ -185,7 +188,7 @@ class gameLevel {
         this.sun.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
     }
 
-    discs = [];
+    
 
     drawFrontCircle(planet) {
         var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.z - zMax)/2});

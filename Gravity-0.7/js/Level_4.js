@@ -62,8 +62,8 @@ class Level4 extends gameLevel {
         this.sun.setEnabled(true);
         this.sunlight.setEnabled(true);
         //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition();
-        this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
-        this.centralPoint = this.sun.position.clone();
+        //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
+        //this.centralPoint = this.sun.position.clone();
 
         this.sunlight.position = this.sun.position;
         this.P1.position = new BABYLON.Vector3(0,theHeight - 0.2,2);  // à deux endroits
@@ -74,13 +74,20 @@ class Level4 extends gameLevel {
     }
 
     launchGame(){
+        this.P1.arrow.setEnabled(false);
+    }
+
+    cleanLevel(){
+        super.cleanLevel();
+
         this.P1.arrow.dispose();
+        this.P1.dispose();
     }
 
 
     gameLoop(){
         /* ************************************************************* 
-        Mise à jour de la position du soleil et de LA planet
+        Mise à jour de la position du soleil et des disques de proximité
         ************************************************************* */
         this.computeSunPosition();
         this.manageDiscs(this.P1);

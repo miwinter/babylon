@@ -33,10 +33,10 @@ class Level4 extends gameLevel {
 
     initLevel(){
         this.time = 0;
-        this.delta_time = 0.08;
+        this.delta_time = 0.1;
         this.dist_vector = BABYLON.Vector3.Zero();
         this.gravity_force = BABYLON.Vector3.Zero();
-        this.G = 0.0001;// précédente : 0.000001
+        this.G = 0.00001;
 
         // Création du soleil
         this.initSun();  

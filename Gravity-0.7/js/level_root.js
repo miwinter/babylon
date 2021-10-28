@@ -287,9 +287,6 @@ class gameLevel {
         var y = planet.position.y;
         var z = planet.position.z;
 
-        if(this.discs.length > 0)
-        this.cleanDiscs();
-
         if(((x-xMin)<DISC_DIST)&&((x-xMin)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
             this.drawLeftCircle(planet);
         }

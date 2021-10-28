@@ -110,13 +110,17 @@ class Level4 extends gameLevel {
         ************************************************************* */
         this.computeSunPosition();
 
+        if(this.discs.length > 0)
+            this.cleanDiscs();
+
         for(let i = 1; i < this.planets.length; i++) {
             this.manageDiscs(this.planets[i]);
         }
 
         /* ************************************************************* 
-        Calcul spécifique du timer pour le gain de la partie
+        Calcul de la sortie d'une planete
         ************************************************************* */
+
         // i=0 -> sun
         for(let i = 1; i < this.planets.length; i++) {
             let x = this.planets[i].position.x;
@@ -129,6 +133,10 @@ class Level4 extends gameLevel {
                 console.log("Fail #1");
             }
         }
+
+        /* ************************************************************* 
+        Calcul spécifique du timer pour le gain de la partie
+        ************************************************************* */
 
         let s = Math.ceil(10*this.levelDuration - (Date.now() - this.timer)/100)/10;
         theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
@@ -172,7 +180,7 @@ class Level4 extends gameLevel {
             }
             if(sum_gravity_force_for_i.length() > 1) {
                 sum_gravity_force_for_i.normalize().scaleInPlace(1);
-                console.log('+');
+                //console.log('+');
             }
             if(sum_gravity_force_for_i.length() < 0.02) {
                 sum_gravity_force_for_i.normalize().scaleInPlace(0.02);
@@ -196,13 +204,6 @@ class Level4 extends gameLevel {
                 }
             }
         }
-    }
-
-    cleanLevel(){
-        super.cleanLevel();
-
-        planet.dispose();
-        this.sun.dispose();
     }
 
 } // end class Level2

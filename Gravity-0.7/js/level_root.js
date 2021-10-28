@@ -258,6 +258,29 @@ class gameLevel {
         }
     }
 
+    drawPlanetMomentum(planet){
+        
+        var arrowEndPoint = planet.position.clone().addInPlace(planet.momentum);
+        var lg = planet.momentum.length();
+        
+        var arrowPoint1 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0.01,0));
+        var arrowPoint2 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,-0.01,0));
+        var arrowPoint3 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,0.01));
+        var arrowPoint4 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,-0.01));
+        
+        var returnedArrow = BABYLON.Mesh.CreateLines("planet_arrow", [ 
+            planet.position, 
+            arrowEndPoint 
+            , arrowPoint1,
+            arrowEndPoint, arrowPoint2,
+            arrowEndPoint, arrowPoint3,
+            arrowEndPoint, arrowPoint4 
+            ], this.scene);
+        returnedArrow.color = new BABYLON.Color3(0, 1, 0);
+
+        return returnedArrow;
+    }
+
     manageDiscs(planet)
     {
         var x = planet.position.x;
@@ -268,19 +291,19 @@ class gameLevel {
         this.cleanDiscs();
 
         if(((x-xMin)<DISC_DIST)&&((x-xMin)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
-            this.drawLeftCircle(this.P1);
+            this.drawLeftCircle(planet);
         }
         if(((xMax-x)<DISC_DIST)&&((xMax-x)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
-            this.drawRightCircle(this.P1);
+            this.drawRightCircle(planet);
         }
         if(((yMax-y)<DISC_DIST)&&((yMax-y)>0)&&(z>zMin)&&(z<zMax)&&(x>xMin)&&(x<xMax)) {
-            this.drawTopCircle(this.P1);
+            this.drawTopCircle(planet);
         }
         if(((y-yMin)<DISC_DIST)&&((y-yMin)>0)&&(z>zMin)&&(z<zMax)&&(x>xMin)&&(x<xMax)) {
-            this.drawBottomCircle(this.P1);
+            this.drawBottomCircle(planet);
         }
         if(((zMax-z)<DISC_DIST)&&((zMax-z)>0)&&(x>xMin)&&(x<xMax)&&(y>yMin)&&(y<yMax)) {
-            this.drawFrontCircle(this.P1);
+            this.drawFrontCircle(planet);
         }
         
     }

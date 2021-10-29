@@ -2,38 +2,51 @@
 
 function createMenuPlane(){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
-    menuPlane.position = new BABYLON.Vector3(0, 1, 2);        
+    menuPlane.position = new BABYLON.Vector3(0, 2, 1);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(menuPlane);
-    var menuStackPanel = new BABYLON.GUI.StackPanel();    
-    advancedTexture.addControl(menuStackPanel);  
+    advancedTexture.idealHeight = 1600;
+    var menuStackPanel = new BABYLON.GUI.StackPanel();
+    advancedTexture.addControl(menuStackPanel); 
+    menuStackPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+    
+
     var header = new BABYLON.GUI.TextBlock();
     header.text = "Start Menu";
     header.textWrapping= true;
-    header.width = "500px";
-    header.height = "100px";
+    header.width = "1000px";
+    header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "50"
+    header.fontSize = "200"
     menuStackPanel.addControl(header);
    
+    var buttonPanel = new BABYLON.GUI.StackPanel();  
+      
+    buttonPanel.isVertical = false;
+    //buttonPanel.width = "450px";
+    buttonPanel.height = "200px";
+    buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    menuStackPanel.addControl(buttonPanel);  
 
     for (let i = 1; i <= LEVELS_NUMBER; i++) {
 
-        var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i, "Level "+i);
+        var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i, i);
         button.width = "200px";
         button.height = "200px";
-        button.color = "white";
-        button.fontSize = 50;
+        button.color = "yellow";
+        button.thickness = 8;
+        button.fontSize = 100;
         button.background = "green";
         button.paddingTop = "10px";
         button.cornerRadius = 50;
-        
+        button.paddingRight = "10px";
         
         button.onPointerUpObservable.add(function() {
             levelChange = LEVEL_CHANGE_FLAG.GOTO_LEVEL;
             targetLevelID = i;
         });
-        menuStackPanel.addControl(button);
+        buttonPanel.addControl(button);
     }
     theMenuPlane = menuPlane;
     theMenuPlane.setEnabled(false);

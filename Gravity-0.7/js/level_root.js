@@ -70,10 +70,13 @@ class gameLevel {
         theFailPlane.setEnabled(false);
         theSuccessPlane.setEnabled(false);
 
+        for(let i = 1; i < this.planets.length; i++) {
+            this.planets[ i ].arrow.dispose();
+        }
+
         var p;
         while(this.planets.length > 0){
             p = this.planets.pop();
-            p.arrow.dispose();
             p.dispose();
         }
 
@@ -233,7 +236,7 @@ class gameLevel {
         this.sun.position.x = xs;
         this.sun.position.y = ys;
         this.sun.position.z = zs;
-        this.sunAngle += 0.01;
+        this.sunAngle += 0.02;
         this.sun.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
     }
 
@@ -368,6 +371,11 @@ class gameLevel {
             this.timer += 1;
         }
         this.computeSunPosition();
+
+        for(let i = 1; i < this.planets.length; i++) {
+            this.planets[i].angle.addInPlace(this.planets[i].angleSpeed);
+            this.planets[i].rotation = this.planets[i].angle;
+        }
     }
 
     // loop utilisée pour la phase de jeu
@@ -458,6 +466,8 @@ class gameLevel {
             this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
             this.planets[i].position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
 
+            this.planets[i].angle.addInPlace(this.planets[i].angleSpeed);
+            this.planets[i].rotation = this.planets[i].angle;
         }
 
         /* ************************************************************* 

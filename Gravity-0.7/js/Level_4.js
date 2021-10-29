@@ -13,6 +13,7 @@ class Level4 extends gameLevel {
         // création de la planete 1
         var P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.15, segments: 32}, theScene);
         P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
+        P1.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
         P1.material.diffuseTexture = new BABYLON.Texture("textures/earth2.jpg", theScene);
         P1.initialMaterial = P1.material;
         
@@ -22,6 +23,8 @@ class Level4 extends gameLevel {
         P1.momentum = P1.initialMomentum.clone();
         P1.masse = 1;
         P1.radius = 0.075; // necessaire pour la collision parfaite
+        P1.angle = new BABYLON.Vector3(0,0,0);
+        P1.angleSpeed = new BABYLON.Vector3(0,-0.01,0);
 
         P1.setEnabled(false);
         
@@ -34,6 +37,7 @@ class Level4 extends gameLevel {
         var P2 = BABYLON.MeshBuilder.CreateSphere("P2", {diameter: 0.1, segments: 32}, theScene);
         P2.material = new BABYLON.StandardMaterial("mercure", theScene);
         P2.material.diffuseTexture = new BABYLON.Texture("textures/neptune.jpg", theScene);
+        P2.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
         P2.initialMaterial = P2.material;
     
         P2.initialPosition = new BABYLON.Vector3(1,theHeight - 0.2,2.5);
@@ -42,6 +46,8 @@ class Level4 extends gameLevel {
         P2.momentum = P2.initialMomentum.clone();
         P2.masse = 1;
         P2.radius = 0.05; // necessaire pour la collision parfaite
+        P2.angle = new BABYLON.Vector3(0,0,0);
+        P2.angleSpeed = new BABYLON.Vector3(0,0.3,0);
 
         P2.setEnabled(false);
         
@@ -51,13 +57,4 @@ class Level4 extends gameLevel {
         this.planets.push(P2);
     }
 
-    
-
-    
-
-    
-
-
-    
-
-} // end class Level2
+} // end class

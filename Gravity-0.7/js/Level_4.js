@@ -23,8 +23,10 @@ class Level4 extends gameLevel {
         P1.momentum = P1.initialMomentum.clone();
         P1.masse = 1;
         P1.radius = 0.075; // necessaire pour la collision parfaite
-        P1.angle = new BABYLON.Vector3(0,0,0);
-        P1.angleSpeed = new BABYLON.Vector3(0,-0.01,0);
+
+        P1.angleSpeed = -0.01;
+        P1.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
+        //P1.axis = new BABYLON.Vector3(1, 3, 0);
 
         P1.setEnabled(false);
         
@@ -46,8 +48,10 @@ class Level4 extends gameLevel {
         P2.momentum = P2.initialMomentum.clone();
         P2.masse = 1;
         P2.radius = 0.05; // necessaire pour la collision parfaite
-        P2.angle = new BABYLON.Vector3(0,0,0);
-        P2.angleSpeed = new BABYLON.Vector3(0,0.3,0);
+        P2.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
+        P2.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
+        //P2.axis = new BABYLON.Vector3(1, 3, 1);
+        P2.angleSpeed = 0.1;
 
         P2.setEnabled(false);
         

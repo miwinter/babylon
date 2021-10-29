@@ -373,8 +373,8 @@ class gameLevel {
         this.computeSunPosition();
 
         for(let i = 1; i < this.planets.length; i++) {
-            this.planets[i].angle.addInPlace(this.planets[i].angleSpeed);
-            this.planets[i].rotation = this.planets[i].angle;
+            this.planets[i].rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
+            //this.planets[i].rotate(this.planets[i].axis,this.planets[i].angleSpeed, BABYLON.Space.WORLD);
         }
     }
 
@@ -466,8 +466,8 @@ class gameLevel {
             this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
             this.planets[i].position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
 
-            this.planets[i].angle.addInPlace(this.planets[i].angleSpeed);
-            this.planets[i].rotation = this.planets[i].angle;
+            //this.planets[i].rotate(this.planets[i].axis,this.planets[i].angleSpeed, BABYLON.Space.WORLD);
+            this.planets[i].rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
         }
 
         /* ************************************************************* 

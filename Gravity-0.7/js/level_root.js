@@ -49,6 +49,10 @@ class gameLevel {
             this.planets[i].setEnabled(true);
             this.planets[i].arrow.setEnabled(true);
         }
+
+        // il peut rester un ou plusieurs disque de sortie
+        if(this.discs.length > 0)
+            this.cleanDiscs();
     }
 
     launchGame(){
@@ -156,6 +160,7 @@ class gameLevel {
     initSun(){
         this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.2}, theScene);
         this.sun.masse = 1000;
+        this.sun.radius = 0.1; // necessaire pour la collision parfaite
         
         var sunMaterial = new BABYLON.StandardMaterial('sunMaterial', theScene);
 
@@ -167,6 +172,7 @@ class gameLevel {
         this.sun.material = sunMaterial;
         this.sun.initialMaterial = sunMaterial;
         this.sunlight.intensity = 15;
+        
     }
 
     sunAngle = 0;
@@ -459,7 +465,8 @@ class gameLevel {
         ************************************************************* */
         for(let i = 0; i < this.planets.length; i++) {
             for(let j = 0; j < i; j++) {
-                if((i != j)&&(this.planets[i].intersectsMesh(this.planets[j]))){
+                //if((i != j)&&(this.planets[i].intersectsMesh(this.planets[j]))){
+                if((i != j) && this.collide(this.planets[i],this.planets[j])) {
                     console.log(i+" "+j);
                     this.showCollision(this.planets[i],this.planets[j]);
                     this.stateChange = true;
@@ -477,6 +484,15 @@ class gameLevel {
         material.specularColor = new BABYLON.Color3(1,0,0);
         planet1.material = material;
         planet2.material = material;
+    }
+
+    collide(planet1,planet2){
+        var dist = Math.sqrt(
+            Math.pow(planet1.position.x - planet2.position.x,2) +
+            Math.pow(planet1.position.y - planet2.position.y,2) +
+            Math.pow(planet1.position.z - planet2.position.z,2)
+        );
+        return ( dist < (planet1.radius + planet2.radius));
     }
 
     showExitPoint(planet)

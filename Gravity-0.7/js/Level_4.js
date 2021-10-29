@@ -15,13 +15,13 @@ class Level4 extends gameLevel {
         P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
         P1.material.diffuseTexture = new BABYLON.Texture("textures/earth2.jpg", theScene);
         P1.initialMaterial = P1.material;
-    
         
         P1.initialPosition = new BABYLON.Vector3(0,theHeight - 0.2,2); // à deux endroits
         P1.position = P1.initialPosition.clone();
         P1.initialMomentum = new BABYLON.Vector3(-0.1,-0.1,0.1);
         P1.momentum = P1.initialMomentum.clone();
         P1.masse = 1;
+        P1.radius = 0.075; // necessaire pour la collision parfaite
 
         P1.setEnabled(false);
         
@@ -41,6 +41,7 @@ class Level4 extends gameLevel {
         P2.initialMomentum = new BABYLON.Vector3(-0.01,0.01,-0.1);
         P2.momentum = P2.initialMomentum.clone();
         P2.masse = 1;
+        P2.radius = 0.05; // necessaire pour la collision parfaite
 
         P2.setEnabled(false);
         

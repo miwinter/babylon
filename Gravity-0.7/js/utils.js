@@ -88,13 +88,15 @@ function createCubePlayground(){
 
 function newRetryButton(){
     var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Retry");
-    button.width = "200px";
-    button.height = "200px";
-    button.color = "white";
-    button.fontSize = 50;
-    button.cornerRadius = 50;
-    button.background = "green";
-    button.paddingRight = "10px";
+        button.width = "400px";
+        button.height = "200px";
+        button.color = "yellow";
+        button.thickness = 8;
+        button.fontSize = 100;
+        button.background = "green";
+        button.paddingTop = "10px";
+        button.cornerRadius = 50;
+        button.paddingRight = "20px";
 
     button.onPointerUpObservable.add(function() {
         theCurrentLevel.stateChange = true;
@@ -106,13 +108,15 @@ function newRetryButton(){
 
 function newMenuButton(){
     var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Menu");
-    button.width = "200px";
+    button.width = "400px";
     button.height = "200px";
-    button.color = "white";
-    button.fontSize = 50;
-    button.cornerRadius = 50;
+    button.color = "yellow";
+    button.thickness = 8;
+    button.fontSize = 100;
     button.background = "green";
-    button.paddingRight = "10px";
+    button.paddingTop = "10px";
+    button.cornerRadius = 50;
+    button.paddingRight = "20px";
 
     button.onPointerUpObservable.add(function() {
         levelChange = LEVEL_CHANGE_FLAG.MENU;
@@ -122,14 +126,16 @@ function newMenuButton(){
 }
 
 function newNextLevelButton(){
-    var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Next");
-    button.width = "200px";
+    button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Next");
+    button.width = "400px";
     button.height = "200px";
-    button.color = "white";
-    button.fontSize = 50;
-    button.cornerRadius = 50;
+    button.color = "yellow";
+    button.thickness = 8;
+    button.fontSize = 100;
     button.background = "green";
-    button.paddingRight = "10px";
+    button.paddingTop = "10px";
+    button.cornerRadius = 50;
+    button.paddingRight = "20px";
 
     button.onPointerUpObservable.add(function() {
         levelChange = LEVEL_CHANGE_FLAG.NEXT_LEVEL;
@@ -140,10 +146,11 @@ function newNextLevelButton(){
 
 function createFailPlane(){
     var failPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-    failPlane.position = new BABYLON.Vector3(0, 1, 2);        
+    failPlane.position = new BABYLON.Vector3(0, 1.5, zMax);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(failPlane);
+    advancedTexture.idealHeight = 1600;
     var failPanel = new BABYLON.GUI.StackPanel();
-    failPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    failPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     advancedTexture.addControl(failPanel);  
     var header = new BABYLON.GUI.TextBlock();
     header.text = "You Loose !!!";
@@ -153,6 +160,7 @@ function createFailPlane(){
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     header.fontSize = "50";
+    header.background = "cyan";
 
     failPanel.addControl(header);
     theFailPlaneText = header;
@@ -174,10 +182,19 @@ function createFailPlane(){
 
 function createSuccessPlane(){
     var successPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-    successPlane.position = new BABYLON.Vector3(0, 1, 2);        
+    successPlane.position.z = zMax;
+    successPlane.position.y = 2;
+    
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(successPlane);
+    //advancedTexture.idealHeight = 2000;
+    //advancedTexture.idealWidth = 2000;
+    //advancedTexture.background = "green";  
+    
     var successPanel = new BABYLON.GUI.StackPanel();
-    successPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    successPanel.isVertical = true; 
+    successPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+    //successPanel.background = "red"; 
+
     advancedTexture.addControl(successPanel);  
     var header = new BABYLON.GUI.TextBlock();
     header.text = "You Won !!!";
@@ -186,24 +203,27 @@ function createSuccessPlane(){
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "50";
+    header.fontSize = "100";
+    //header.background = "cyan";
 
     successPanel.addControl(header);
     theSuccessPlaneText = header;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
-      
-    buttonPanel.isVertical = false;
-    buttonPanel.width = "650px";
-    buttonPanel.height = "200px";
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    successPanel.addControl(buttonPanel);  
+    //buttonPanel.background = "pink";
+    buttonPanel.isVertical = false;
+    //buttonPanel.width = "2000px";
+    buttonPanel.height = "500px";
+
 
     buttonPanel.addControl(newRetryButton());
     if(currentLevelID < LEVELS_NUMBER) {
         buttonPanel.addControl(newNextLevelButton());
     }
     buttonPanel.addControl(newMenuButton());
+    
+    successPanel.addControl(buttonPanel);  
 
     theSuccessPlane = successPlane;
     successPlane.setEnabled(false);
@@ -211,12 +231,12 @@ function createSuccessPlane(){
 
 function createExplanationPlane(){
         var explanationPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-        explanationPlane.position = new BABYLON.Vector3(0, 1, 2);        
+        explanationPlane.position = new BABYLON.Vector3(0, 1.5, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(explanationPlane);
         var explanationPanel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(explanationPanel);  
         var header = new BABYLON.GUI.TextBlock();
-        header.text = "gj gjh";
+        header.text = "YES !!!";
         header.textWrapping= true;
         header.width = "1000px";
         header.height = "500px";
@@ -227,12 +247,15 @@ function createExplanationPlane(){
         theExplanationPlaneText = header;
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Start");
-        button.width = "200px";
-        button.height = "100px";
-        button.color = "white";
-        button.fontSize = 50;
-        button.cornerRadius = 50;
+        button.width = "400px";
+        button.height = "200px";
+        button.color = "yellow";
+        button.thickness = 8;
+        button.fontSize = 100;
         button.background = "green";
+        button.paddingTop = "10px";
+        button.cornerRadius = 50;
+        button.paddingRight = "20px";
         theExplanationPlaneButton = button.children[0];
         
         button.onPointerUpObservable.add(function() {
@@ -284,7 +307,7 @@ function showControllers(){
 
 function createTimerPlane(){
     theTimerPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-    theTimerPlane.position = new BABYLON.Vector3(0, 1, 2);        
+    theTimerPlane.position = new BABYLON.Vector3(0, 1.5, zMax);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(theTimerPlane);
     var panel = new BABYLON.GUI.StackPanel();    
     advancedTexture.addControl(panel);  
@@ -294,7 +317,7 @@ function createTimerPlane(){
     theTimerPlaneText.height = "100px";
     theTimerPlaneText.color = "white";
     theTimerPlaneText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    theTimerPlaneText.fontSize = "120";
+    theTimerPlaneText.fontSize = 200;
     panel.addControl(theTimerPlaneText);
 
     theTimerPlane.setEnabled(false);

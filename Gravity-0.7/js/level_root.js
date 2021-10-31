@@ -524,7 +524,7 @@ class gameLevel {
             d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
             d.position.x = xMax;
         } else if(planet.position.y < yMin) {
-            d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
+            d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
             d.position.y = yMin;
         } else if(planet.position.y > yMax) {
             d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);

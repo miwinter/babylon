@@ -2,7 +2,7 @@
 
 function createMenuPlane(){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
-    menuPlane.position = new BABYLON.Vector3(0, 2, 1);        
+    menuPlane.position = new BABYLON.Vector3(0, theHeight, 2);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(menuPlane);
     advancedTexture.idealHeight = 1600;
     var menuStackPanel = new BABYLON.GUI.StackPanel();
@@ -145,77 +145,72 @@ function newNextLevelButton(){
 }
 
 function createFailPlane(){
-    var failPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-    failPlane.position = new BABYLON.Vector3(0, 1.5, zMax);        
+    var failPlane = BABYLON.Mesh.CreatePlane("plane", 4, theScene);
+    failPlane.position.z = zMax;
+    failPlane.position.y = theHeight;
+    
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(failPlane);
-    advancedTexture.idealHeight = 1600;
+    advancedTexture.idealHeight = 2000;
+    advancedTexture.idealWidth = 2000;
+    
     var failPanel = new BABYLON.GUI.StackPanel();
-    failPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    failPanel.isVertical = true; 
+    failPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+
     advancedTexture.addControl(failPanel);  
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "You Loose !!!";
+    header.text = "Too bad !!!";
     header.textWrapping= true;
-    header.width = "1000px";
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "50";
-    header.background = "cyan";
+    header.fontSize = "100";
 
     failPanel.addControl(header);
     theFailPlaneText = header;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
-      
-    buttonPanel.isVertical = false;
-    buttonPanel.width = "450px";
-    buttonPanel.height = "200px";
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    failPanel.addControl(buttonPanel);  
+    buttonPanel.isVertical = false;
+    buttonPanel.height = "500px";
 
     buttonPanel.addControl(newRetryButton());
     buttonPanel.addControl(newMenuButton());
+    failPanel.addControl(buttonPanel);  
 
     theFailPlane = failPlane;
-    failPlane.setEnabled(false);
+    theFailPlane.setEnabled(false);
 }
 
 function createSuccessPlane(){
-    var successPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
+    var successPlane = BABYLON.Mesh.CreatePlane("plane", 4, theScene);
     successPlane.position.z = zMax;
-    successPlane.position.y = 2;
+    successPlane.position.y = theHeight;
     
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(successPlane);
-    //advancedTexture.idealHeight = 2000;
-    //advancedTexture.idealWidth = 2000;
-    //advancedTexture.background = "green";  
+    advancedTexture.idealHeight = 2000;
+    advancedTexture.idealWidth = 2000;
     
     var successPanel = new BABYLON.GUI.StackPanel();
     successPanel.isVertical = true; 
     successPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-    //successPanel.background = "red"; 
 
     advancedTexture.addControl(successPanel);  
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "You Won !!!";
+    header.text = "You did it !!!";
     header.textWrapping= true;
-    header.width = "1000px";
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     header.fontSize = "100";
-    //header.background = "cyan";
 
     successPanel.addControl(header);
     theSuccessPlaneText = header;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    //buttonPanel.background = "pink";
     buttonPanel.isVertical = false;
-    //buttonPanel.width = "2000px";
     buttonPanel.height = "500px";
-
 
     buttonPanel.addControl(newRetryButton());
     if(currentLevelID < LEVELS_NUMBER) {

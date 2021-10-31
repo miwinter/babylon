@@ -1,5 +1,3 @@
-
-
 function createMenuPlane(){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
     menuPlane.position = new BABYLON.Vector3(0, theHeight, 2);        
@@ -9,16 +7,15 @@ function createMenuPlane(){
     advancedTexture.addControl(menuStackPanel); 
     menuStackPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
-    
-
     var header = new BABYLON.GUI.TextBlock();
     header.text = "Start Menu";
     header.textWrapping= true;
-    header.width = "1000px";
+    header.width = "1200px";
     header.height = "500px";
     header.color = "white";
+    header.fontFamily = 'Righteous';
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "200"
+    header.fontSize = 200;
     menuStackPanel.addControl(header);
    
     var buttonPanel = new BABYLON.GUI.StackPanel();  
@@ -41,6 +38,7 @@ function createMenuPlane(){
         button.paddingTop = "10px";
         button.cornerRadius = 50;
         button.paddingRight = "10px";
+        button.fontFamily = 'Righteous';
         
         button.onPointerUpObservable.add(function() {
             levelChange = LEVEL_CHANGE_FLAG.GOTO_LEVEL;
@@ -54,7 +52,6 @@ function createMenuPlane(){
 }
 
 function createCubePlayground(){
-
 
     console.log("theHeight : " + theHeight);
 
@@ -145,7 +142,7 @@ function newNextLevelButton(){
 }
 
 function createFailPlane(){
-    var failPlane = BABYLON.Mesh.CreatePlane("plane", 4, theScene);
+    var failPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
     failPlane.position.z = zMax;
     failPlane.position.y = theHeight;
     
@@ -164,7 +161,7 @@ function createFailPlane(){
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "100";
+    header.fontSize = 200;
 
     failPanel.addControl(header);
     theFailPlaneText = header;
@@ -183,7 +180,7 @@ function createFailPlane(){
 }
 
 function createSuccessPlane(){
-    var successPlane = BABYLON.Mesh.CreatePlane("plane", 4, theScene);
+    var successPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
     successPlane.position.z = zMax;
     successPlane.position.y = theHeight;
     
@@ -202,7 +199,7 @@ function createSuccessPlane(){
     header.height = "500px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = "100";
+    header.fontSize = 200;
 
     successPanel.addControl(header);
     theSuccessPlaneText = header;
@@ -261,8 +258,7 @@ function createExplanationPlane(){
         });
         explanationPanel.addControl(button);
         theExplanationPlane = explanationPlane;
-        explanationPlane.setEnabled(false);
-        //return explanationPlane;
+        theExplanationPlane.setEnabled(false);
 }
 
 function hideControllers(){
@@ -280,7 +276,6 @@ function hideControllers(){
     theXRHelper.pointerSelection.displayLaserPointer = false;
     theXRHelper.pointerSelection.disablePointerLighting = false;
     theXRHelper.pointerSelection.displaySelectionMesh = false;
-
 }
 
 function showControllers(){
@@ -316,7 +311,6 @@ function createTimerPlane(){
     panel.addControl(theTimerPlaneText);
 
     theTimerPlane.setEnabled(false);
-
 }
 
 function arrowTransform(VMomentum, VCenter, VATransformer){

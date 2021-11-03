@@ -1,12 +1,12 @@
 
 class Menu {
     initLevel(){
-        theMenuPlane.setEnabled(true);
-        theCubePlayground.setEnabled(false);
+        SOLAR.theMenuPlane.setEnabled(true);
+        SOLAR.theCubePlayground.setEnabled(false);
     }
     cleanLevel(){
-        theMenuPlane.setEnabled(false);
-        theCubePlayground.setEnabled(true);
+        SOLAR.theMenuPlane.setEnabled(false);
+        SOLAR.theCubePlayground.setEnabled(true);
     }
 
     levelRenderLoop() {}

@@ -1,3 +1,4 @@
+var SOLAR = SOLAR || {};
 
 class gameLevel {
 
@@ -8,14 +9,14 @@ class gameLevel {
     3 : fin-gagné 
     4 : fin-perdu
     */
-    state = LEVEL_STATE_UNDEFINED;
+    state = SOLAR.LEVEL_STATE_UNDEFINED;
 
     dist_vector = [];
     gravity_force = [];
     planets = [];
 
     stateChange = true;
-    nextState = LEVEL_STATE_INTRO;
+    nextState = SOLAR.LEVEL_STATE_INTRO;
 
     timer = 0;
     delta_time = 0.1;
@@ -62,13 +63,13 @@ class gameLevel {
         }
 
         this.timer = Date.now();
-        theTimerPlaneText.text = String((this.levelDuration).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+        SOLAR.theTimerPlaneText.text = String((this.levelDuration).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
     }
 
     // nettoyage des meshs spécifiques au niveau
     cleanLevel(){
-        theFailPlane.setEnabled(false);
-        theSuccessPlane.setEnabled(false);
+        SOLAR.theFailPlane.setEnabled(false);
+        SOLAR.theSuccessPlane.setEnabled(false);
 
         for(let i = 1; i < this.planets.length; i++) {
             this.planets[ i ].arrow.dispose();
@@ -88,51 +89,41 @@ class gameLevel {
     initState(state){
         switch(state)
         {
-            case LEVEL_STATE_INTRO : 
+            case SOLAR.LEVEL_STATE_INTRO : 
                 console.log("LEVEL_STATE_INTRO");
-                theExplanationPlaneText.text = "Let's go !";
-                theExplanationPlaneButton.text = "Start";
-                theExplanationPlaneTarget = LEVEL_STATE_WAIT;
-                theExplanationPlane.setEnabled(true);
+                SOLAR.theExplanationPlane.setEnabled(true);
                 break;
-            case LEVEL_STATE_WAIT :
+            case SOLAR.LEVEL_STATE_WAIT :
                 console.log("LEVEL_STATE_WAIT");
-                theHLight.intensity = 1;
-                theFailPlane.setEnabled(false);
-                theSuccessPlane.setEnabled(false);
-                theExplanationPlane.setEnabled(false);
-                hideControllers();
-                theTimerPlane.setEnabled(true);
-                theCubePlayground.setEnabled(true);
+                SOLAR.theFailPlane.setEnabled(false);
+                SOLAR.theSuccessPlane.setEnabled(false);
+                SOLAR.theExplanationPlane.setEnabled(false);
+                SOLAR.hideControllers();
+                SOLAR.theTimerPlane.setEnabled(true);
+                SOLAR.theCubePlayground.setEnabled(true);
                 this.initPlayground();
                 this.timer = Date.now();
                 break;
-            case LEVEL_STATE_GAME :
+            case SOLAR.LEVEL_STATE_GAME :
                 console.log("LEVEL_STATE_GAME");
-                theExplanationPlaneTarget = LEVEL_STATE_WAIT;
-                theExplanationPlane.setEnabled(false);
-                theTimerPlane.setEnabled(true);
+                SOLAR.theExplanationPlane.setEnabled(false);
+                SOLAR.theTimerPlane.setEnabled(true);
                 this.launchGame();
                 this.timer = Date.now();
                 break;
-            case LEVEL_STATE_SUCCESS : 
+            case SOLAR.LEVEL_STATE_SUCCESS : 
                 console.log("LEVEL_STATE_SUCCESS");
-                theHLight.intensity = 1;
-                theTimerPlane.setEnabled(false);
-                showControllers();
-                //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
-                //theHLight.position = this.sun.position;
-                theSuccessPlane.setEnabled(true);
+                SOLAR.theTimerPlane.setEnabled(false);
+                SOLAR.showControllers();
+                SOLAR.theSuccessPlane.setEnabled(true);
                 break;
-            case LEVEL_STATE_FAIL : 
+            case SOLAR.LEVEL_STATE_FAIL : 
                 console.log("LEVEL_STATE_FAIL");
-                theHLight.intensity = 1;
-                theTimerPlane.setEnabled(false);
-                //this.sun.position = theRightMotionController.rootMesh.getAbsolutePosition().clone();
-                //theHLight.position = this.sun.position;
-                showControllers();
-                theFailPlaneText = "You failed !";
-                theFailPlane.setEnabled(true);
+
+                SOLAR.theTimerPlane.setEnabled(false);
+                SOLAR.showControllers();
+                SOLAR.theFailPlaneText = "You failed !";
+                SOLAR.theFailPlane.setEnabled(true);
                 break;
         }
     }
@@ -144,16 +135,16 @@ class gameLevel {
             //console.log(this.nextState);
             this.initState(this.nextState);
             this.state = this.nextState;
-            this.nextState = LEVEL_STATE_UNDEFINED;
+            this.nextState = SOLAR.LEVEL_STATE_UNDEFINED;
             this.stateChange = false;
         }
 
         switch(this.state)
         {
-            case LEVEL_STATE_WAIT : 
+            case SOLAR.LEVEL_STATE_WAIT : 
                 this.timerLoop();
                 break;
-            case LEVEL_STATE_GAME :
+            case SOLAR.LEVEL_STATE_GAME :
                 this.gameLoop();
                 break;
         }
@@ -190,12 +181,12 @@ class gameLevel {
         this.sun.position = delta;
         */
         var x0 = 0.1 ,
-            y0 = theHeight - 0.3,
+            y0 = SOLAR.theHeight - 0.3,
             z0 = 0;
        
-        var xc = theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
-        var yc = theRightMotionController.rootMesh.getAbsolutePosition().y;
-        var zc = theRightMotionController.rootMesh.getAbsolutePosition().z;
+        var xc = SOLAR.theRightMotionController.rootMesh.getAbsolutePosition().x; // c pour controller
+        var yc = SOLAR.theRightMotionController.rootMesh.getAbsolutePosition().y;
+        var zc = SOLAR.theRightMotionController.rootMesh.getAbsolutePosition().z;
 
         var xs, ys, zs; // S pour sun
         /*
@@ -226,12 +217,12 @@ class gameLevel {
         ys = ro * Math.sin(theta) * Math.sin(alpha) + y0;
         zs = ro * Math.cos(theta) + z0;
 
-        xs = (xs > xMax) ? xMax : xs;
-        xs = (xs < xMin) ? xMin : xs;
-        ys = (ys > yMax) ? yMax : ys;
-        ys = (ys < yMin) ? yMin : ys;
-        zs = (zs > zMax) ? zMax : zs;
-        zs = (zs < zMin) ? zMin : zs;
+        xs = (xs > SOLAR.xMax) ? SOLAR.xMax : xs;
+        xs = (xs < SOLAR.xMin) ? SOLAR.xMin : xs;
+        ys = (ys > SOLAR.yMax) ? SOLAR.yMax : ys;
+        ys = (ys < SOLAR.yMin) ? SOLAR.yMin : ys;
+        zs = (zs > SOLAR.zMax) ? SOLAR.zMax : zs;
+        zs = (zs < SOLAR.zMin) ? SOLAR.zMin : zs;
 
         this.sun.position.x = xs;
         this.sun.position.y = ys;
@@ -243,7 +234,7 @@ class gameLevel {
     
 
     drawFrontCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.z - zMax)/2});
+        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.z - SOLAR.zMax)/2});
         /*
         d.material = new BABYLON.StandardMaterial("MoonMaterial", theScene);
         d.material.ambiantColor = new BABYLON.Color3(1,0,0);
@@ -253,52 +244,52 @@ class gameLevel {
 
         d.position.x = planet.position.x;
         d.position.y = planet.position.y;
-        d.position.z = zMax;
-        d.visibility = Math.pow((DISC_DIST - Math.abs(planet.position.z - zMax))/DISC_DIST,2) ;
+        d.position.z = SOLAR.zMax;
+        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.z - SOLAR.zMax))/SOLAR.DISC_DIST,2) ;
         this.discs.push(d);
     }
 
     drawTopCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - yMax)/2});
+        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - SOLAR.yMax)/2});
         
         d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
         d.position.x = planet.position.x;
-        d.position.y = yMax;
+        d.position.y = SOLAR.yMax;
         d.position.z = planet.position.z;
-        d.visibility = Math.pow((DISC_DIST - Math.abs(planet.position.y - yMax))/DISC_DIST,2) ;
+        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.y - SOLAR.yMax))/SOLAR.DISC_DIST,2) ;
         this.discs.push(d);
     }
 
     drawBottomCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - yMin)/2});
+        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - SOLAR.yMin)/2});
         
         d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
         d.position.x = planet.position.x;
-        d.position.y = yMin;
+        d.position.y = SOLAR.yMin;
         d.position.z = planet.position.z;
-        d.visibility = Math.pow((DISC_DIST - Math.abs(planet.position.y - yMin))/DISC_DIST,2) ;
+        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.y - SOLAR.yMin))/SOLAR.DISC_DIST,2) ;
         this.discs.push(d);
     }
 
     drawLeftCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - xMin)/2});
+        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - SOLAR.xMin)/2});
         
         d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
-        d.position.x = xMin;
+        d.position.x = SOLAR.xMin;
         d.position.y = planet.position.y;
         d.position.z = planet.position.z;
-        d.visibility = Math.pow((DISC_DIST - Math.abs(planet.position.x - xMin))/DISC_DIST,2) ;
+        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.x - SOLAR.xMin))/SOLAR.DISC_DIST,2) ;
         this.discs.push(d);
     }
 
     drawRightCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - xMax)/2});
+        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - SOLAR.xMax)/2});
         
         d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
-        d.position.x = xMax;
+        d.position.x = SOLAR.xMax;
         d.position.y = planet.position.y;
         d.position.z = planet.position.z;
-        d.visibility = Math.pow((DISC_DIST - Math.abs(planet.position.x - xMax))/DISC_DIST,2) ;
+        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.x - SOLAR.xMax))/SOLAR.DISC_DIST,2) ;
         this.discs.push(d);
     }
 
@@ -318,19 +309,19 @@ class gameLevel {
         var y = planet.position.y;
         var z = planet.position.z;
 
-        if(((x-xMin)<DISC_DIST)&&((x-xMin)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
+        if(((x-SOLAR.xMin)<SOLAR.DISC_DIST)&&((x-SOLAR.xMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
             this.drawLeftCircle(planet);
         }
-        if(((xMax-x)<DISC_DIST)&&((xMax-x)>0)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax)) {
+        if(((SOLAR.xMax-x)<SOLAR.DISC_DIST)&&((SOLAR.xMax-x)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
             this.drawRightCircle(planet);
         }
-        if(((yMax-y)<DISC_DIST)&&((yMax-y)>0)&&(z>zMin)&&(z<zMax)&&(x>xMin)&&(x<xMax)) {
+        if(((SOLAR.yMax-y)<SOLAR.DISC_DIST)&&((SOLAR.yMax-y)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
             this.drawTopCircle(planet);
         }
-        if(((y-yMin)<DISC_DIST)&&((y-yMin)>0)&&(z>zMin)&&(z<zMax)&&(x>xMin)&&(x<xMax)) {
+        if(((y-SOLAR.yMin)<SOLAR.DISC_DIST)&&((y-SOLAR.yMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
             this.drawBottomCircle(planet);
         }
-        if(((zMax-z)<DISC_DIST)&&((zMax-z)>0)&&(x>xMin)&&(x<xMax)&&(y>yMin)&&(y<yMax)) {
+        if(((SOLAR.zMax-z)<SOLAR.DISC_DIST)&&((SOLAR.zMax-z)>0)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
             this.drawFrontCircle(planet);
         }
         
@@ -341,10 +332,10 @@ class gameLevel {
         var arrowEndPoint = planet.position.clone().addInPlace(planet.momentum);
         var lg = planet.momentum.length();
         
-        var arrowPoint1 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0.01,0));
-        var arrowPoint2 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,-0.01,0));
-        var arrowPoint3 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,0.01));
-        var arrowPoint4 = arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,-0.01));
+        var arrowPoint1 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0.01,0));
+        var arrowPoint2 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,-0.01,0));
+        var arrowPoint3 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,0.01));
+        var arrowPoint4 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,-0.01));
         
         var returnedArrow = BABYLON.Mesh.CreateLines("planet_arrow", [ 
             planet.position, 
@@ -364,10 +355,10 @@ class gameLevel {
         var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
         if(s == 0){
             this.stateChange = true;
-            this.nextState = LEVEL_STATE_GAME;
+            this.nextState = SOLAR.LEVEL_STATE_GAME;
         }
         else {
-            theTimerPlaneText.text = String(s);
+            SOLAR.theTimerPlaneText.text = String(s);
             this.timer += 1;
         }
         this.computeSunPosition();
@@ -402,9 +393,9 @@ class gameLevel {
             let y = this.planets[i].position.y;
             let z = this.planets[i].position.z;
 
-            if (!((x>xMin)&&(x<xMax)&&(z>zMin)&&(z<zMax)&&(y>yMin)&&(y<yMax))) {
+            if (!((x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax))) {
                 this.stateChange = true;
-                this.nextState = LEVEL_STATE_FAIL; // fail
+                this.nextState = SOLAR.LEVEL_STATE_FAIL; // fail
                 console.log("Fail #1");
                 this.showExitPoint(this.planets[i]);
             }
@@ -415,11 +406,11 @@ class gameLevel {
         ************************************************************* */
 
         let s = Math.ceil(10*this.levelDuration - (Date.now() - this.timer)/100)/10;
-        theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+        SOLAR.theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
         if(s <= 0){
             this.stateChange = true;
-            this.nextState = LEVEL_STATE_SUCCESS; // success
-            theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+            this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
+            SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
         }
 
         /* ************************************************************* 
@@ -517,22 +508,22 @@ class gameLevel {
         d.position.y = planet.position.y;
         d.position.z = planet.position.z;
 
-        if(planet.position.x < xMin) {
+        if(planet.position.x < SOLAR.xMin) {
             d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
-            d.position.x = xMin;
-        } else if(planet.position.x > xMax) {
+            d.position.x = SOLAR.xMin;
+        } else if(planet.position.x > SOLAR.xMax) {
             d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
-            d.position.x = xMax;
-        } else if(planet.position.y < yMin) {
+            d.position.x = SOLAR.xMax;
+        } else if(planet.position.y < SOLAR.yMin) {
             d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
-            d.position.y = yMin;
-        } else if(planet.position.y > yMax) {
+            d.position.y = SOLAR.yMin;
+        } else if(planet.position.y > SOLAR.yMax) {
             d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
-            d.position.y = yMax;
-        } else if(planet.position.z > zMax) {
-            d.position.z = zMax;
-        }  else if(planet.position.z < zMin) {
-            d.position.z = zMin;
+            d.position.y = SOLAR.yMax;
+        } else if(planet.position.z > SOLAR.zMax) {
+            d.position.z = SOLAR.zMax;
+        }  else if(planet.position.z < SOLAR.zMin) {
+            d.position.z = SOLAR.zMin;
         } 
 
         this.discs.push(d);

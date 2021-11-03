@@ -5,6 +5,8 @@ class Level4 extends gameLevel {
         this.delta_time = 0.1;
         this.G = 0.00001;
 
+        SOLAR.theExplanationPlaneText.text = "Welcome to Level 4 !!!\n2 planets to mange.";
+
         // Création du soleil
         this.initSun();  
         this.sun.setEnabled(false);
@@ -17,7 +19,7 @@ class Level4 extends gameLevel {
         P1.material.diffuseTexture = new BABYLON.Texture("textures/earth2.jpg", theScene);
         P1.initialMaterial = P1.material;
         
-        P1.initialPosition = new BABYLON.Vector3(0,theHeight - 0.2,2); // à deux endroits
+        P1.initialPosition = new BABYLON.Vector3(0,SOLAR.theHeight - 0.2,2); // à deux endroits
         P1.position = P1.initialPosition.clone();
         P1.initialMomentum = new BABYLON.Vector3(-0.1,-0.1,0.1);
         P1.momentum = P1.initialMomentum.clone();
@@ -42,7 +44,7 @@ class Level4 extends gameLevel {
         P2.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
         P2.initialMaterial = P2.material;
     
-        P2.initialPosition = new BABYLON.Vector3(1,theHeight - 0.2,2.5);
+        P2.initialPosition = new BABYLON.Vector3(1,SOLAR.theHeight - 0.2,2.5);
         P2.position =  P2.initialPosition.clone();
         P2.initialMomentum = new BABYLON.Vector3(-0.01,0.01,-0.1);
         P2.momentum = P2.initialMomentum.clone();

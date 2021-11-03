@@ -1,6 +1,65 @@
-function createMenuPlane(){
+var SOLAR = {
+
+    LEVEL_STATE_UNDEFINED : -1,
+    LEVEL_STATE_INTRO : 0,
+    LEVEL_STATE_WAIT : 1,
+    LEVEL_STATE_GAME : 2,
+    LEVEL_STATE_SUCCESS : 3,
+    LEVEL_STATE_FAIL : 4,
+
+    LEVELS_NUMBER : 4,
+
+    DISC_DIST : 1, // distance par rapport aux bords à partir de laquelle les disc apparaissent
+
+    theXRHelper : null,
+    theHeight : 0,
+    theScene : null,
+    theMenuPlane : null,
+    theExplanationPlane : null,
+    theExplanationPlaneText : null,
+    theRightMotionController : null,
+    theLeftMotionController : null,
+    theTimerPlane : null,
+    theTimerPlaneText : null,
+    theCubePlayground : null,
+    theCurrentLevel : null,
+    theFailPlane : null,
+    theFailPlaneText : null,
+    theSuccessPlane : null,
+    theSuccessPlaneText : null,
+
+    xMin : -2, 
+    xMax : 2,
+    zMin : 0.05, 
+    zMax : 5,
+
+    // SOLAR.yMin et SOLAR.yMax sont déterminés par la position du casque
+    yMin : -1, 
+    yMax : -1,
+    yRange : 4,
+
+    LEVEL_CHANGE_FLAG : {
+        UNDEFINED : -1,
+        NO_CHANGE : 0,
+        MENU : 1,
+        NEXT_LEVEL : 2,
+        GOTO_LEVEL : 3,
+    },
+
+    GAME_STATE_WAINTING_WEBXR : -1,
+    
+    currentLevel : null,
+    levels : null,
+    targetLevelID : 0,
+}
+
+SOLAR.currentLevelID = SOLAR.GAME_STATE_WAINTING_WEBXR;
+SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.UNDEFINED;
+
+
+SOLAR.createMenuPlane = function (){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
-    menuPlane.position = new BABYLON.Vector3(0, theHeight, 2);        
+    menuPlane.position = new BABYLON.Vector3(0, SOLAR.theHeight, 2);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(menuPlane);
     advancedTexture.idealHeight = 1600;
     var menuStackPanel = new BABYLON.GUI.StackPanel();
@@ -26,7 +85,7 @@ function createMenuPlane(){
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     menuStackPanel.addControl(buttonPanel);  
 
-    for (let i = 1; i <= LEVELS_NUMBER; i++) {
+    for (let i = 1; i <= SOLAR.LEVELS_NUMBER; i++) {
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i, i);
         button.width = "200px";
@@ -41,49 +100,49 @@ function createMenuPlane(){
         button.fontFamily = 'Righteous';
         
         button.onPointerUpObservable.add(function() {
-            levelChange = LEVEL_CHANGE_FLAG.GOTO_LEVEL;
-            targetLevelID = i;
+            SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.GOTO_LEVEL;
+            SOLAR.targetLevelID = i;
         });
         buttonPanel.addControl(button);
     }
-    theMenuPlane = menuPlane;
-    theMenuPlane.setEnabled(false);
+    SOLAR.theMenuPlane = menuPlane;
+    SOLAR.theMenuPlane.setEnabled(false);
     //return explanationPlane;
 }
 
-function createCubePlayground(){
+SOLAR.createCubePlayground = function (){
 
-    console.log("theHeight : " + theHeight);
+    console.log("theHeight : " + SOLAR.theHeight);
 
-    //yMax = theHeight + 0.2;
-    yMin = -0.5;
-    yMax = yMin + yRange;
+    //SOLAR.yMax = theHeight + 0.2;
+    SOLAR.yMin = -0.5;
+    SOLAR.yMax = SOLAR.yMin + SOLAR.yRange;
 
 
     var cubePoints = [
-        new BABYLON.Vector3(xMin, yMin, zMin),
-        new BABYLON.Vector3(xMin, yMax, zMin),
-        new BABYLON.Vector3(xMax, yMax, zMin),
-        new BABYLON.Vector3(xMax, yMin, zMin),
-        new BABYLON.Vector3(xMin, yMin, zMin),
-        new BABYLON.Vector3(xMin, yMin, zMax),
-        new BABYLON.Vector3(xMax,yMin, zMax),
-        new BABYLON.Vector3(xMax,yMin, zMin),
-        new BABYLON.Vector3(xMax,yMax, zMin),
-        new BABYLON.Vector3(xMax,yMax, zMax),
-        new BABYLON.Vector3(xMin,yMax, zMax),
-        new BABYLON.Vector3(xMin,yMax, zMin),
-        new BABYLON.Vector3(xMin,yMax, zMax),
-        new BABYLON.Vector3(xMin,yMin, zMax),
-        new BABYLON.Vector3(xMax,yMin, zMax),
-        new BABYLON.Vector3(xMax,yMax, zMax),
+        new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMin, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMax, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMax, SOLAR.yMax, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMax, SOLAR.yMin, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMin, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMin, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMin, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMin, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMax, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMax, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMin,SOLAR.yMax, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMin,SOLAR.yMax, SOLAR.zMin),
+        new BABYLON.Vector3(SOLAR.xMin,SOLAR.yMax, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMin,SOLAR.yMin, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMin, SOLAR.zMax),
+        new BABYLON.Vector3(SOLAR.xMax,SOLAR.yMax, SOLAR.zMax),
     ]
 
-    theCubePlayground = BABYLON.MeshBuilder.CreateLines("lines", {points: cubePoints});
-    theCubePlayground.setEnabled(false);
+    SOLAR.theCubePlayground = BABYLON.MeshBuilder.CreateLines("lines", {points: cubePoints});
+    SOLAR.theCubePlayground.setEnabled(false);
 }
 
-function newRetryButton(){
+SOLAR.newRetryButton = function (){
     var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Retry");
         button.width = "400px";
         button.height = "200px";
@@ -94,16 +153,17 @@ function newRetryButton(){
         button.paddingTop = "10px";
         button.cornerRadius = 50;
         button.paddingRight = "20px";
+        button.fontFamily = 'Righteous';
 
     button.onPointerUpObservable.add(function() {
-        theCurrentLevel.stateChange = true;
-        theCurrentLevel.nextState = LEVEL_STATE_WAIT;
+        SOLAR.theCurrentLevel.stateChange = true;
+        SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_WAIT;
     });
 
     return button;
 }
 
-function newMenuButton(){
+SOLAR.newMenuButton = function (){
     var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Menu");
     button.width = "400px";
     button.height = "200px";
@@ -114,15 +174,16 @@ function newMenuButton(){
     button.paddingTop = "10px";
     button.cornerRadius = 50;
     button.paddingRight = "20px";
+    button.fontFamily = 'Righteous';
 
     button.onPointerUpObservable.add(function() {
-        levelChange = LEVEL_CHANGE_FLAG.MENU;
+        SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.MENU;
     });
 
     return button;
 }
 
-function newNextLevelButton(){
+SOLAR.newNextLevelButton = function (){
     button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Next");
     button.width = "400px";
     button.height = "200px";
@@ -133,18 +194,19 @@ function newNextLevelButton(){
     button.paddingTop = "10px";
     button.cornerRadius = 50;
     button.paddingRight = "20px";
+    button.fontFamily = 'Righteous';
 
     button.onPointerUpObservable.add(function() {
-        levelChange = LEVEL_CHANGE_FLAG.NEXT_LEVEL;
+        SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.NEXT_LEVEL;
     });
 
     return button;
 }
 
-function createFailPlane(){
+SOLAR.createFailPlane = function (){
     var failPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
-    failPlane.position.z = zMax;
-    failPlane.position.y = theHeight;
+    failPlane.position.z = SOLAR.zMax;
+    failPlane.position.y = SOLAR.theHeight;
     
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(failPlane);
     advancedTexture.idealHeight = 2000;
@@ -164,25 +226,25 @@ function createFailPlane(){
     header.fontSize = 200;
 
     failPanel.addControl(header);
-    theFailPlaneText = header;
+    SOLAR.theFailPlaneText = header;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     buttonPanel.isVertical = false;
     buttonPanel.height = "500px";
 
-    buttonPanel.addControl(newRetryButton());
-    buttonPanel.addControl(newMenuButton());
+    buttonPanel.addControl(SOLAR.newRetryButton());
+    buttonPanel.addControl(SOLAR.newMenuButton());
     failPanel.addControl(buttonPanel);  
 
-    theFailPlane = failPlane;
-    theFailPlane.setEnabled(false);
+    SOLAR.theFailPlane = failPlane;
+    SOLAR.theFailPlane.setEnabled(false);
 }
 
-function createSuccessPlane(){
+SOLAR.createSuccessPlane = function (){
     var successPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
-    successPlane.position.z = zMax;
-    successPlane.position.y = theHeight;
+    successPlane.position.z = SOLAR.zMax;
+    successPlane.position.y = SOLAR.theHeight;
     
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(successPlane);
     advancedTexture.idealHeight = 2000;
@@ -202,41 +264,42 @@ function createSuccessPlane(){
     header.fontSize = 200;
 
     successPanel.addControl(header);
-    theSuccessPlaneText = header;
+    SOLAR.theSuccessPlaneText = header;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     buttonPanel.isVertical = false;
     buttonPanel.height = "500px";
 
-    buttonPanel.addControl(newRetryButton());
-    if(currentLevelID < LEVELS_NUMBER) {
-        buttonPanel.addControl(newNextLevelButton());
+    buttonPanel.addControl(SOLAR.newRetryButton());
+    if(SOLAR.currentLevelID < SOLAR.LEVELS_NUMBER) {
+        buttonPanel.addControl(SOLAR.newNextLevelButton());
     }
-    buttonPanel.addControl(newMenuButton());
+    buttonPanel.addControl(SOLAR.newMenuButton());
     
     successPanel.addControl(buttonPanel);  
 
-    theSuccessPlane = successPlane;
+    SOLAR.theSuccessPlane = successPlane;
     successPlane.setEnabled(false);
 }
 
-function createExplanationPlane(){
+SOLAR.createExplanationPlane = function (){
         var explanationPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
         explanationPlane.position = new BABYLON.Vector3(0, 1.5, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(explanationPlane);
         var explanationPanel = new BABYLON.GUI.StackPanel();    
         advancedTexture.addControl(explanationPanel);  
         var header = new BABYLON.GUI.TextBlock();
-        header.text = "YES !!!";
+        header.text = "<Level explanation text>";
         header.textWrapping= true;
         header.width = "1000px";
         header.height = "500px";
+        header.fontFamily = 'Righteous';
         header.color = "white";
-        header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         header.fontSize = "50"
         explanationPanel.addControl(header);
-        theExplanationPlaneText = header;
+        SOLAR.theExplanationPlaneText = header;
 
         var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Start");
         button.width = "400px";
@@ -248,26 +311,26 @@ function createExplanationPlane(){
         button.paddingTop = "10px";
         button.cornerRadius = 50;
         button.paddingRight = "20px";
-        theExplanationPlaneButton = button.children[0];
+        button.fontFamily = 'Righteous';
         
         button.onPointerUpObservable.add(function() {
             // if (xr) { xr.displayLaserPointer = !xr.displayLaserPointer; }
             // button.children[0].text = "C'est parti !!!";
-            theCurrentLevel.nextState = theExplanationPlaneTarget;
-            theCurrentLevel.stateChange = true;
+            SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_WAIT;
+            SOLAR.theCurrentLevel.stateChange = true;
         });
         explanationPanel.addControl(button);
-        theExplanationPlane = explanationPlane;
-        theExplanationPlane.setEnabled(false);
+        SOLAR.theExplanationPlane = explanationPlane;
+        SOLAR.theExplanationPlane.setEnabled(false);
 }
 
-function hideControllers(){
-    var p = theRightMotionController.rootMesh;
+SOLAR.hideControllers = function (){
+    var p = SOLAR.theRightMotionController.rootMesh;
     p.visibility = false; 
     for (var i = 0; i < p.getChildMeshes(false).length; i++){			
         p.getChildMeshes(false)[i].visibility = false; 
     }
-    var p = theLeftMotionController.rootMesh;
+    var p = SOLAR.theLeftMotionController.rootMesh;
     p.visibility = false; 
     for (var i = 0; i < p.getChildMeshes(false).length; i++){			
         p.getChildMeshes(false)[i].visibility = false; 
@@ -278,13 +341,13 @@ function hideControllers(){
     theXRHelper.pointerSelection.displaySelectionMesh = false;
 }
 
-function showControllers(){
-    var p = theRightMotionController.rootMesh;
+SOLAR.showControllers = function (){
+    var p = SOLAR.theRightMotionController.rootMesh;
     p.visibility = true; 
     for (var i = 0; i < p.getChildMeshes(false).length; i++){			
         p.getChildMeshes(false)[i].visibility = true; 
     }
-    var p = theLeftMotionController.rootMesh;
+    var p = SOLAR.theLeftMotionController.rootMesh;
     p.visibility = true; 
     for (var i = 0; i < p.getChildMeshes(false).length; i++){			
         p.getChildMeshes(false)[i].visibility = true; 
@@ -295,25 +358,26 @@ function showControllers(){
     theXRHelper.pointerSelection.displaySelectionMesh = true;
 }
 
-function createTimerPlane(){
-    theTimerPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
-    theTimerPlane.position = new BABYLON.Vector3(0, 1.5, zMax);        
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(theTimerPlane);
+SOLAR.createTimerPlane = function (){
+    SOLAR.theTimerPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
+    SOLAR.theTimerPlane.position = new BABYLON.Vector3(0, 1.5, SOLAR.zMax);        
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(SOLAR.theTimerPlane);
     var panel = new BABYLON.GUI.StackPanel();    
     advancedTexture.addControl(panel);  
-    theTimerPlaneText = new BABYLON.GUI.TextBlock();
+    SOLAR.theTimerPlaneText = new BABYLON.GUI.TextBlock();
     
-    theTimerPlaneText.text = String("toto");
-    theTimerPlaneText.height = "100px";
-    theTimerPlaneText.color = "white";
-    theTimerPlaneText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    theTimerPlaneText.fontSize = 200;
-    panel.addControl(theTimerPlaneText);
+    SOLAR.theTimerPlaneText.text = String("toto");
+    SOLAR.theTimerPlaneText.height = "300px";
+    SOLAR.theTimerPlaneText.color = "white";
+    SOLAR.theTimerPlaneText.fontFamily = 'Righteous';
+    SOLAR.theTimerPlaneText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    SOLAR.theTimerPlaneText.fontSize = 300;
+    panel.addControl(SOLAR.theTimerPlaneText);
 
-    theTimerPlane.setEnabled(false);
+    SOLAR.theTimerPlane.setEnabled(false);
 }
 
-function arrowTransform(VMomentum, VCenter, VATransformer){
+SOLAR.arrowTransform = function (VMomentum, VCenter, VATransformer){
 
     var alpha = Math.asin(VMomentum.y/VMomentum.length());
     var theta = Math.atan2(VMomentum.z,VMomentum.x);

@@ -7,58 +7,28 @@ class Level4 extends gameLevel {
 
         SOLAR.theExplanationPlaneText.text = "Welcome to Level 4 !!!\n2 planets to mange.";
 
-        // Création du soleil
-        this.initSun();  
-        this.sun.setEnabled(false);
-        this.planets.push(this.sun);
-
         // création de la planete 1
-        var P1 = BABYLON.MeshBuilder.CreateSphere("P1", {diameter: 0.15, segments: 32}, theScene);
-        P1.material = new BABYLON.StandardMaterial("earthMat", theScene);
-        P1.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
-        P1.material.diffuseTexture = new BABYLON.Texture("textures/earth2.jpg", theScene);
-        P1.initialMaterial = P1.material;
-        
-        P1.initialPosition = new BABYLON.Vector3(0,SOLAR.theHeight - 0.2,2); // à deux endroits
-        P1.position = P1.initialPosition.clone();
-        P1.initialMomentum = new BABYLON.Vector3(-0.1,-0.1,0.1);
-        P1.momentum = P1.initialMomentum.clone();
-        P1.masse = 1;
-        P1.radius = 0.075; // necessaire pour la collision parfaite
+        var P1 = new planet(0.075, // radius
+                1, // mass
+                "earth2.jpg", // texture file
+                new BABYLON.Vector3(0,SOLAR.theHeight - 0.2,2), // initial position
+                new BABYLON.Vector3(-0.1,-0.1,0.1)); // initial momentum
 
         P1.angleSpeed = -0.01;
-        P1.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
-        //P1.axis = new BABYLON.Vector3(1, 3, 0);
-
-        P1.setEnabled(false);
-        
-        P1.arrow = this.drawPlanetMomentum(P1);
-        P1.arrow.setEnabled(false);
+        P1.mesh.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
 
         this.planets.push(P1);
 
         // création de la planete 2
-        var P2 = BABYLON.MeshBuilder.CreateSphere("P2", {diameter: 0.1, segments: 32}, theScene);
-        P2.material = new BABYLON.StandardMaterial("mercure", theScene);
-        P2.material.diffuseTexture = new BABYLON.Texture("textures/neptune.jpg", theScene);
-        P2.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
-        P2.initialMaterial = P2.material;
-    
-        P2.initialPosition = new BABYLON.Vector3(1,SOLAR.theHeight - 0.2,2.5);
-        P2.position =  P2.initialPosition.clone();
-        P2.initialMomentum = new BABYLON.Vector3(-0.01,0.01,-0.1);
-        P2.momentum = P2.initialMomentum.clone();
-        P2.masse = 1;
-        P2.radius = 0.05; // necessaire pour la collision parfaite
-        P2.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
-        P2.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
-        //P2.axis = new BABYLON.Vector3(1, 3, 1);
-        P2.angleSpeed = 0.1;
+        var P2 = new planet(0.1, // radius
+            1, // mass
+            "neptune.jpg", // texture file
+            new BABYLON.Vector3(1,SOLAR.theHeight - 0.2,2.5), // initial position
+            new BABYLON.Vector3(-0.01,0.01,-0.1)); // initial momentum
 
-        P2.setEnabled(false);
-        
-        P2.arrow = this.drawPlanetMomentum(P2);
-        P2.arrow.setEnabled(false);
+        P2.angleSpeed = 0.1;
+        P2.mesh.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
+        P2.mesh.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
 
         this.planets.push(P2);
     }

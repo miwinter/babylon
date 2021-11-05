@@ -23,37 +23,31 @@ class gameLevel {
     G = 0.00001;
     levelDuration = 10;
 
-    // liste des disques qui signalent le rapprochement d'une paroi
-    discs = [];
 
     // création des objets spécifiques au niveau
     // cube, panels et sun sont construit au niveau global
     initLevel(){
-
     }
 
     // setup et affichage des objets pendant le compte à rebours
     initPlayground(){
-        
-        this.sun.setEnabled(true);
+        this.sun.mesh.setEnabled(true);
         this.sunlight.setEnabled(true);
 
-        this.sunlight.position = this.sun.position;
-        this.sun.material = this.sun.initialMaterial;
+        this.sunlight.position = this.sun.mesh.position;
+        this.sun.mesh.material = this.sun.initialMaterial;
 
         // i=0 -> sun   
         for(let i = 1; i < this.planets.length; i++) {
-            this.planets[i].position = this.planets[i].initialPosition.clone();
-            this.planets[i].momentum = this.planets[i].initialMomentum.clone();
-            this.planets[i].material = this.planets[i].initialMaterial;
-
-            this.planets[i].setEnabled(true);
-            this.planets[i].arrow.setEnabled(true);
+            this.planets[i].reset();
+            // used to know if a planet starts outside the playground
+            // false by default
+            this.planets[i].alreadyIn = false;
         }
 
-        // il peut rester un ou plusieurs disque de sortie
-        if(this.discs.length > 0)
-            this.cleanDiscs();
+        // il peut rester un ou plusieurs disque de à cause de la sortie d'une planete
+        if(SOLAR.discs.length > 0)
+            SOLAR.cleanDiscs();
     }
 
     launchGame(){
@@ -71,18 +65,14 @@ class gameLevel {
         SOLAR.theFailPlane.setEnabled(false);
         SOLAR.theSuccessPlane.setEnabled(false);
 
-        for(let i = 1; i < this.planets.length; i++) {
-            this.planets[ i ].arrow.dispose();
-        }
-
         var p;
         while(this.planets.length > 0){
             p = this.planets.pop();
             p.dispose();
         }
 
-        if(this.discs.length > 0)
-            this.cleanDiscs();
+        if(SOLAR.discs.length > 0)
+            SOLAR.cleanDiscs();
     }
 
     // configuration du level en fonction de son état (suite à un stateChange)
@@ -115,6 +105,10 @@ class gameLevel {
                 console.log("LEVEL_STATE_SUCCESS");
                 SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.showControllers();
+                if(SOLAR.currentLevelID  < SOLAR.LEVELS_NUMBER)
+                    SOLAR.theNextButton.isEnabled = true;
+                else
+                    SOLAR.theNextButton.isEnabled = false;
                 SOLAR.theSuccessPlane.setEnabled(true);
                 break;
             case SOLAR.LEVEL_STATE_FAIL : 
@@ -122,7 +116,6 @@ class gameLevel {
 
                 SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.showControllers();
-                SOLAR.theFailPlaneText = "You failed !";
                 SOLAR.theFailPlane.setEnabled(true);
                 break;
         }
@@ -152,34 +145,22 @@ class gameLevel {
     }
 
     initSun(){
-        this.sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 0.2}, theScene);
-        this.sun.masse = 1000;
-        this.sun.radius = 0.1; // necessaire pour la collision parfaite
-        
-        var sunMaterial = new BABYLON.StandardMaterial('sunMaterial', theScene);
-
+        // création de la planete 1
+        this.sun = new planet(0.1, // radius
+            1000, // mass
+            "sun.jpg", // texture file
+            new BABYLON.Vector3.Zero(), // initial position
+            new BABYLON.Vector3.Zero()); // initial momentum
 
         this.sunlight = new BABYLON.PointLight('sunLight', new BABYLON.Vector3.Zero(), theScene);
-        sunMaterial.emissiveTexture = new BABYLON.Texture('textures/sun.jpg', theScene);
-        sunMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-        sunMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        this.sun.material = sunMaterial;
-        this.sun.initialMaterial = sunMaterial;
-        this.sunlight.intensity = 15;
-        
+        this.sunlight.intensity = 15;      
+
+        this.planets.push(this.sun);
     }
 
     sunAngle = 0;
     computeSunPosition(){
-        //this.sun.position = (theRightMotionController.rootMesh.getAbsolutePosition() - this.centralPoint)*2 +  this.centralPoint;
-        /*
-        var delta = this.centralPoint.clone();
-        delta.scaleInPlace(-1);
-        delta.addInPlace(theRightMotionController.rootMesh.getAbsolutePosition());
-        delta.scaleInPlace(2);
-        delta.addInPlace(this.centralPoint);
-        this.sun.position = delta;
-        */
+        
         var x0 = 0.1 ,
             y0 = SOLAR.theHeight - 0.3,
             z0 = 0;
@@ -189,16 +170,6 @@ class gameLevel {
         var zc = SOLAR.theRightMotionController.rootMesh.getAbsolutePosition().z;
 
         var xs, ys, zs; // S pour sun
-        /*
-        xs = (xc - x0)*(3 + 3*Math.abs(xc - x0)) + x0;
-        ys = (yc - y0)*(3 + 3*Math.abs(yc - y0)) + y0;
-        zs = (zc - z0)*(10 + 5*Math.abs(zc - z0)) + z0;
-        */
-       /*
-        xs = (xc - x0)*(1+ 10*Math.abs(Math.pow(2*(xc - x0),4))) + x0;
-        ys = (yc - y0)*(1+ 10*Math.abs(Math.pow(2*(yc - y0),4))) + y0;
-        zs = (zc - z0)*(1+ 10*Math.abs(Math.pow(2*(zc - z0),4))) + z0;
-        */
 
         var x,y,z;
         x = (xc - x0);
@@ -224,130 +195,11 @@ class gameLevel {
         zs = (zs > SOLAR.zMax) ? SOLAR.zMax : zs;
         zs = (zs < SOLAR.zMin) ? SOLAR.zMin : zs;
 
-        this.sun.position.x = xs;
-        this.sun.position.y = ys;
-        this.sun.position.z = zs;
+        this.sun.mesh.position.x = xs;
+        this.sun.mesh.position.y = ys;
+        this.sun.mesh.position.z = zs;
         this.sunAngle += 0.02;
         this.sun.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
-    }
-
-    
-
-    drawFrontCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.z - SOLAR.zMax)/2});
-        /*
-        d.material = new BABYLON.StandardMaterial("MoonMaterial", theScene);
-        d.material.ambiantColor = new BABYLON.Color3(1,0,0);
-        d.material.diffuseColor = new BABYLON.Color3(1,0,0);
-        d.material.specularColor = new BABYLON.Color3(1,0,0);
-        */
-
-        d.position.x = planet.position.x;
-        d.position.y = planet.position.y;
-        d.position.z = SOLAR.zMax;
-        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.z - SOLAR.zMax))/SOLAR.DISC_DIST,2) ;
-        this.discs.push(d);
-    }
-
-    drawTopCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - SOLAR.yMax)/2});
-        
-        d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
-        d.position.x = planet.position.x;
-        d.position.y = SOLAR.yMax;
-        d.position.z = planet.position.z;
-        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.y - SOLAR.yMax))/SOLAR.DISC_DIST,2) ;
-        this.discs.push(d);
-    }
-
-    drawBottomCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.y - SOLAR.yMin)/2});
-        
-        d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
-        d.position.x = planet.position.x;
-        d.position.y = SOLAR.yMin;
-        d.position.z = planet.position.z;
-        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.y - SOLAR.yMin))/SOLAR.DISC_DIST,2) ;
-        this.discs.push(d);
-    }
-
-    drawLeftCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - SOLAR.xMin)/2});
-        
-        d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
-        d.position.x = SOLAR.xMin;
-        d.position.y = planet.position.y;
-        d.position.z = planet.position.z;
-        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.x - SOLAR.xMin))/SOLAR.DISC_DIST,2) ;
-        this.discs.push(d);
-    }
-
-    drawRightCircle(planet) {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.position.x - SOLAR.xMax)/2});
-        
-        d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
-        d.position.x = SOLAR.xMax;
-        d.position.y = planet.position.y;
-        d.position.z = planet.position.z;
-        d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.position.x - SOLAR.xMax))/SOLAR.DISC_DIST,2) ;
-        this.discs.push(d);
-    }
-
-    cleanDiscs(){
-        var d;
-        while(this.discs.length > 0){
-            d = this.discs.pop();
-            d.dispose();
-        }
-    }
-
-    
-
-    manageDiscs(planet)
-    {
-        var x = planet.position.x;
-        var y = planet.position.y;
-        var z = planet.position.z;
-
-        if(((x-SOLAR.xMin)<SOLAR.DISC_DIST)&&((x-SOLAR.xMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
-            this.drawLeftCircle(planet);
-        }
-        if(((SOLAR.xMax-x)<SOLAR.DISC_DIST)&&((SOLAR.xMax-x)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
-            this.drawRightCircle(planet);
-        }
-        if(((SOLAR.yMax-y)<SOLAR.DISC_DIST)&&((SOLAR.yMax-y)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
-            this.drawTopCircle(planet);
-        }
-        if(((y-SOLAR.yMin)<SOLAR.DISC_DIST)&&((y-SOLAR.yMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
-            this.drawBottomCircle(planet);
-        }
-        if(((SOLAR.zMax-z)<SOLAR.DISC_DIST)&&((SOLAR.zMax-z)>0)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
-            this.drawFrontCircle(planet);
-        }
-        
-    }
-
-    drawPlanetMomentum(planet){
-        
-        var arrowEndPoint = planet.position.clone().addInPlace(planet.momentum);
-        var lg = planet.momentum.length();
-        
-        var arrowPoint1 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0.01,0));
-        var arrowPoint2 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,-0.01,0));
-        var arrowPoint3 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,0.01));
-        var arrowPoint4 = SOLAR.arrowTransform(planet.momentum, planet.position, new BABYLON.Vector3(lg-0.03,0,-0.01));
-        
-        var returnedArrow = BABYLON.Mesh.CreateLines("planet_arrow", [ 
-            planet.position, 
-            arrowEndPoint 
-            , arrowPoint1,
-            arrowEndPoint, arrowPoint2,
-            arrowEndPoint, arrowPoint3,
-            arrowEndPoint, arrowPoint4 
-            ], this.scene);
-        returnedArrow.color = new BABYLON.Color3(0, 1, 0);
-
-        return returnedArrow;
     }
 
     // loop utilisée uniquement lors du compte à rebours
@@ -364,9 +216,8 @@ class gameLevel {
         this.computeSunPosition();
 
         for(let i = 1; i < this.planets.length; i++) {
-            this.planets[i].rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
-            //this.planets[i].rotate(this.planets[i].axis,this.planets[i].angleSpeed, BABYLON.Space.WORLD);
-        }
+            this.planets[i].mesh.rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
+         }
     }
 
     // loop utilisée pour la phase de jeu
@@ -376,11 +227,11 @@ class gameLevel {
         ************************************************************* */
         this.computeSunPosition();
 
-        if(this.discs.length > 0)
-            this.cleanDiscs();
+        if(SOLAR.discs.length > 0)
+            SOLAR.cleanDiscs();
 
         for(let i = 1; i < this.planets.length; i++) {
-            this.manageDiscs(this.planets[i]);
+            SOLAR.manageDiscs(this.planets[i]);
         }
 
         /* ************************************************************* 
@@ -389,15 +240,20 @@ class gameLevel {
 
         // i=0 -> sun
         for(let i = 1; i < this.planets.length; i++) {
-            let x = this.planets[i].position.x;
-            let y = this.planets[i].position.y;
-            let z = this.planets[i].position.z;
+            let x = this.planets[i].mesh.position.x;
+            let y = this.planets[i].mesh.position.y;
+            let z = this.planets[i].mesh.position.z;
 
-            if (!((x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax))) {
-                this.stateChange = true;
-                this.nextState = SOLAR.LEVEL_STATE_FAIL; // fail
-                console.log("Fail #1");
-                this.showExitPoint(this.planets[i]);
+            if (!((x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&y<SOLAR.yMax)) {
+                if(this.planets[i].alreadyIn){
+                    this.stateChange = true;
+                    this.nextState = SOLAR.LEVEL_STATE_FAIL; // fail
+                    console.log("Fail #1");
+                    SOLAR.showExitPoint(this.planets[i]);
+                    return;
+                }
+            } else {
+                this.planets[i].alreadyIn = true;
             }
         }
 
@@ -424,7 +280,7 @@ class gameLevel {
 
         for(let i = 0; i < this.planets.length; i++) {
             for(let j = 0; j < i; j++) {
-                dist_vector = this.planets[j].position.subtract(this.planets[i].position);
+                dist_vector = this.planets[j].mesh.position.subtract(this.planets[i].mesh.position);
                 distance2 = Math.pow(dist_vector.length(),2);
                 gravity_force[i][j] = dist_vector.scale( this.G * this.planets[i].masse * this.planets[j].masse /  distance2);
                 gravity_force[j][i] = gravity_force[i][j].scale( - 1);
@@ -455,10 +311,9 @@ class gameLevel {
             }
 
             this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
-            this.planets[i].position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
+            this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
 
-            //this.planets[i].rotate(this.planets[i].axis,this.planets[i].angleSpeed, BABYLON.Space.WORLD);
-            this.planets[i].rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
+            this.planets[i].mesh.rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
         }
 
         /* ************************************************************* 
@@ -468,10 +323,9 @@ class gameLevel {
             for(let j = 0; j < i; j++) {
                 //if((i != j)&&(this.planets[i].intersectsMesh(this.planets[j]))){
                 if((i != j) && this.collide(this.planets[i],this.planets[j])) {
-                    console.log(i+" "+j);
                     this.showCollision(this.planets[i],this.planets[j]);
                     this.stateChange = true;
-                    this.nextState = LEVEL_STATE_FAIL; // fail
+                    this.nextState = SOLAR.LEVEL_STATE_FAIL; // fail
                 }
             }
         }
@@ -483,52 +337,23 @@ class gameLevel {
         material.ambiantColor = new BABYLON.Color3(1,0,0);
         material.diffuseColor = new BABYLON.Color3(1,0,0);
         material.specularColor = new BABYLON.Color3(1,0,0);
-        planet1.material = material;
-        planet2.material = material;
+        planet1.mesh.material = material;
+        planet2.mesh.material = material;
     }
 
     collide(planet1,planet2){
         var dist = Math.sqrt(
-            Math.pow(planet1.position.x - planet2.position.x,2) +
-            Math.pow(planet1.position.y - planet2.position.y,2) +
-            Math.pow(planet1.position.z - planet2.position.z,2)
+            Math.pow(planet1.mesh.position.x - planet2.mesh.position.x,2) +
+            Math.pow(planet1.mesh.position.y - planet2.mesh.position.y,2) +
+            Math.pow(planet1.mesh.position.z - planet2.mesh.position.z,2)
         );
+        if(dist < (planet1.radius + planet2.radius))
+        {
+            console.log(dist + " : " + planet1.radius + " : " + planet2.radius)   ;
+        } 
         return ( dist < (planet1.radius + planet2.radius));
     }
 
-    showExitPoint(planet)
-    {
-        var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : 0.25});
-        d.material = new BABYLON.StandardMaterial("mat", theScene);
-        d.material.ambiantColor = new BABYLON.Color3(1,0,0);
-        d.material.diffuseColor = new BABYLON.Color3(1,0,0);
-        d.material.specularColor = new BABYLON.Color3(1,0,0);
-        
-        d.position.x = planet.position.x;
-        d.position.y = planet.position.y;
-        d.position.z = planet.position.z;
-
-        if(planet.position.x < SOLAR.xMin) {
-            d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
-            d.position.x = SOLAR.xMin;
-        } else if(planet.position.x > SOLAR.xMax) {
-            d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
-            d.position.x = SOLAR.xMax;
-        } else if(planet.position.y < SOLAR.yMin) {
-            d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
-            d.position.y = SOLAR.yMin;
-        } else if(planet.position.y > SOLAR.yMax) {
-            d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
-            d.position.y = SOLAR.yMax;
-        } else if(planet.position.z > SOLAR.zMax) {
-            d.position.z = SOLAR.zMax;
-        }  else if(planet.position.z < SOLAR.zMin) {
-            d.position.z = SOLAR.zMin;
-        } 
-
-        this.discs.push(d);
-           
-    }
 
 } // end class gameLevel
 

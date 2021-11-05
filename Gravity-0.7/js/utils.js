@@ -19,6 +19,7 @@ var SOLAR = {
     theExplanationPlaneText : null,
     theRightMotionController : null,
     theLeftMotionController : null,
+    theNextButton : null,
     theTimerPlane : null,
     theTimerPlaneText : null,
     theCubePlayground : null,
@@ -51,6 +52,9 @@ var SOLAR = {
     currentLevel : null,
     levels : null,
     targetLevelID : 0,
+
+    // liste des disques qui signalent le rapprochement d'une paroi
+    discs : []
 }
 
 SOLAR.currentLevelID = SOLAR.GAME_STATE_WAINTING_WEBXR;
@@ -273,8 +277,10 @@ SOLAR.createSuccessPlane = function (){
 
     buttonPanel.addControl(SOLAR.newRetryButton());
     if(SOLAR.currentLevelID < SOLAR.LEVELS_NUMBER) {
-        buttonPanel.addControl(SOLAR.newNextLevelButton());
+        SOLAR.theNextButton = SOLAR.newNextLevelButton();
+        buttonPanel.addControl(SOLAR.theNextButton);
     }
+    
     buttonPanel.addControl(SOLAR.newMenuButton());
     
     successPanel.addControl(buttonPanel);  
@@ -314,8 +320,6 @@ SOLAR.createExplanationPlane = function (){
         button.fontFamily = 'Righteous';
         
         button.onPointerUpObservable.add(function() {
-            // if (xr) { xr.displayLaserPointer = !xr.displayLaserPointer; }
-            // button.children[0].text = "C'est parti !!!";
             SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_WAIT;
             SOLAR.theCurrentLevel.stateChange = true;
         });
@@ -377,20 +381,132 @@ SOLAR.createTimerPlane = function (){
     SOLAR.theTimerPlane.setEnabled(false);
 }
 
-SOLAR.arrowTransform = function (VMomentum, VCenter, VATransformer){
-
-    var alpha = Math.asin(VMomentum.y/VMomentum.length());
-    var theta = Math.atan2(VMomentum.z,VMomentum.x);
-
-    if((alpha > Math.PI/2)||(alpha < -Math.PI/2)) 
-        theta = -(Math.PI - theta);
+SOLAR.showExitPoint = function (planet)
+{
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : 0.25});
+    d.material = new BABYLON.StandardMaterial("mat", theScene);
+    d.material.ambiantColor = new BABYLON.Color3(1,0,0);
+    d.material.diffuseColor = new BABYLON.Color3(1,0,0);
+    d.material.specularColor = new BABYLON.Color3(1,0,0);
     
-    
-    var MZ = BABYLON.Matrix.RotationZ(alpha);
-    var MY = BABYLON.Matrix.RotationY(-theta);
-   
-    var T1 = BABYLON.Vector3.TransformCoordinates(VATransformer,MZ);
-    var T2 = BABYLON.Vector3.TransformCoordinates(T1,MY);
+    d.position.x = planet.mesh.position.x;
+    d.position.y = planet.mesh.position.y;
+    d.position.z = planet.mesh.position.z;
 
-    return T2.addInPlace(VCenter);   
+    if(planet.mesh.position.x < SOLAR.xMin) {
+        d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
+        d.position.x = SOLAR.xMin;
+        planet.mesh.position.x = SOLAR.xMin;
+    } else if(planet.mesh.position.x > SOLAR.xMax) {
+        d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
+        d.position.x = SOLAR.xMax;
+        planet.mesh.position.x = SOLAR.xMax;
+    } else if(planet.mesh.position.y < SOLAR.yMin) {
+        d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
+        d.position.y = SOLAR.yMin;
+        planet.mesh.position.y = SOLAR.yMin;
+    } else if(planet.mesh.position.y > SOLAR.yMax) {
+        d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
+        d.position.y = SOLAR.yMax;
+        planet.mesh.position.y = SOLAR.yMax;
+    } else if(planet.mesh.position.z > SOLAR.zMax) {
+        d.position.z = SOLAR.zMax;
+        planet.mesh.position.z = SOLAR.yMax;
+    }  else if(planet.mesh.position.z < SOLAR.zMin) {
+        d.position.z = SOLAR.zMin;
+    } 
+
+    SOLAR.discs.push(d);   
 }
+
+SOLAR.drawFrontCircle = function(planet) { 
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.z - SOLAR.zMax)/2});
+    /*
+    d.material = new BABYLON.StandardMaterial("MoonMaterial", theScene);
+    d.material.ambiantColor = new BABYLON.Color3(1,0,0);
+    d.material.diffuseColor = new BABYLON.Color3(1,0,0);
+    d.material.specularColor = new BABYLON.Color3(1,0,0);
+    */
+
+    d.position.x = planet.mesh.position.x;
+    d.position.y = planet.mesh.position.y;
+    d.position.z = SOLAR.zMax;
+    d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.mesh.position.z - SOLAR.zMax))/SOLAR.DISC_DIST,2) ;
+    SOLAR.discs.push(d);
+}
+
+SOLAR.drawTopCircle = function(planet)  {
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.y - SOLAR.yMax)/2});
+    
+    d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
+    d.position.x = planet.mesh.position.x;
+    d.position.y = SOLAR.yMax;
+    d.position.z = planet.mesh.position.z;
+    d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.mesh.position.y - SOLAR.yMax))/SOLAR.DISC_DIST,2) ;
+    SOLAR.discs.push(d);
+}
+
+SOLAR.drawBottomCircle = function(planet){
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.y - SOLAR.yMin)/2});
+    
+    d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
+    d.position.x = planet.mesh.position.x;
+    d.position.y = SOLAR.yMin;
+    d.position.z = planet.mesh.position.z;
+    d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.mesh.position.y - SOLAR.yMin))/SOLAR.DISC_DIST,2) ;
+    SOLAR.discs.push(d);
+}
+
+SOLAR.drawLeftCircle = function(planet){
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.x - SOLAR.xMin)/2});
+    
+    d.rotation = new BABYLON.Vector3(0,-Math.PI / 2,0);
+    d.position.x = SOLAR.xMin;
+    d.position.y = planet.mesh.position.y;
+    d.position.z = planet.mesh.position.z;
+    d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.mesh.position.x - SOLAR.xMin))/SOLAR.DISC_DIST,2) ;
+    SOLAR.discs.push(d);
+}
+
+SOLAR.drawRightCircle = function(planet){
+    var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.x - SOLAR.xMax)/2});
+    
+    d.rotation = new BABYLON.Vector3(0,Math.PI / 2,0);
+    d.position.x = SOLAR.xMax;
+    d.position.y = planet.mesh.position.y;
+    d.position.z = planet.mesh.position.z;
+    d.visibility = Math.pow((SOLAR.DISC_DIST - Math.abs(planet.mesh.position.x - SOLAR.xMax))/SOLAR.DISC_DIST,2) ;
+    SOLAR.discs.push(d);
+}
+
+SOLAR.cleanDiscs = function(){
+    var d;
+    while(SOLAR.discs.length > 0){
+        d = SOLAR.discs.pop();
+        d.dispose();
+    }
+}
+
+SOLAR.manageDiscs = function(planet)
+{
+    var x = planet.mesh.position.x;
+    var y = planet.mesh.position.y;
+    var z = planet.mesh.position.z;
+
+    if(((x-SOLAR.xMin)<SOLAR.DISC_DIST)&&((x-SOLAR.xMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
+        this.drawLeftCircle(planet);
+    }
+    if(((SOLAR.xMax-x)<SOLAR.DISC_DIST)&&((SOLAR.xMax-x)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
+        this.drawRightCircle(planet);
+    }
+    if(((SOLAR.yMax-y)<SOLAR.DISC_DIST)&&((SOLAR.yMax-y)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
+        this.drawTopCircle(planet);
+    }
+    if(((y-SOLAR.yMin)<SOLAR.DISC_DIST)&&((y-SOLAR.yMin)>0)&&(z>SOLAR.zMin)&&(z<SOLAR.zMax)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)) {
+        this.drawBottomCircle(planet);
+    }
+    if(((SOLAR.zMax-z)<SOLAR.DISC_DIST)&&((SOLAR.zMax-z)>0)&&(x>SOLAR.xMin)&&(x<SOLAR.xMax)&&(y>SOLAR.yMin)&&(y<SOLAR.yMax)) {
+        this.drawFrontCircle(planet);
+    }
+}
+

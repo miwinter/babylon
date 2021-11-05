@@ -52,7 +52,7 @@ var createScene = async function () {
     levels[0] = new Menu();
     levels[1] = new Level4();
     levels[2] = new Level4();
-    levels[3] = new Level4();
+    levels[3] = new Level3();
     levels[4] = new Level4();
 
     theScene.registerBeforeRender(() => {  
@@ -91,6 +91,7 @@ var createScene = async function () {
                     SOLAR.theCurrentLevel.cleanLevel();
                     SOLAR.theCurrentLevel = levels[ SOLAR.targetLevelID ];
                     console.log("in switch "+SOLAR.targetLevelID);
+                    SOLAR.theCurrentLevel.initSun();
                     SOLAR.theCurrentLevel.initLevel();
                     SOLAR.theCurrentLevel.stateChange = true;
                     SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_INTRO;

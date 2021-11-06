@@ -4,12 +4,12 @@ class Level2 extends gameLevel {
     initLevel(){
         this.delta_time = 0.1;
         this.G = 0.001;
-        this.du
+        this.levelDuration = 40;
 
         SOLAR.theExplanationPlaneText.text = "Welcome to Level 4 !!!\n2 planets to mange.";
 
         // création de la planete 1
-        var P1 = new planet(0.075, // radius
+        var P1 = new planet(0.5, // radius
                 10, // mass
                 "mars.jpg", // texture file
                 new BABYLON.Vector3(SOLAR.xMin+0.2,SOLAR.theHeight,2), // initial position
@@ -21,7 +21,7 @@ class Level2 extends gameLevel {
         this.planets.push(P1);
 
         // création de la planete 2
-        var P2 = new planet(0.1, // radius
+        var P2 = new planet(0.05, // radius
             10, // mass
             "venus.jpg", // texture file
             new BABYLON.Vector3(SOLAR.xMin+0.2,SOLAR.theHeight - 0.3,2), // initial position
@@ -33,7 +33,7 @@ class Level2 extends gameLevel {
 
         this.planets.push(P2);
 
-        this.sun.masse = 100;
+        this.sun.masse = 10;
     }
 
 } // end class

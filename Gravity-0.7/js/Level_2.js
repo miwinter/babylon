@@ -9,7 +9,7 @@ class Level2 extends gameLevel {
         SOLAR.theExplanationPlaneText.text = "Welcome to Level 4 !!!\n2 planets to mange.";
 
         // création de la planete 1
-        var P1 = new planet(0.5, // radius
+        var P1 = new planet(0.05, // radius
                 10, // mass
                 "mars.jpg", // texture file
                 new BABYLON.Vector3(SOLAR.xMin+0.2,SOLAR.theHeight,2), // initial position

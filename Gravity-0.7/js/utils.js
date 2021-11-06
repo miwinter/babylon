@@ -421,13 +421,7 @@ SOLAR.showExitPoint = function (planet)
 
 SOLAR.drawFrontCircle = function(planet) { 
     var d = BABYLON.MeshBuilder.CreateDisc("disc", {radius : Math.abs(planet.mesh.position.z - SOLAR.zMax)/2});
-    /*
-    d.material = new BABYLON.StandardMaterial("MoonMaterial", theScene);
-    d.material.ambiantColor = new BABYLON.Color3(1,0,0);
-    d.material.diffuseColor = new BABYLON.Color3(1,0,0);
-    d.material.specularColor = new BABYLON.Color3(1,0,0);
-    */
-
+    
     d.position.x = planet.mesh.position.x;
     d.position.y = planet.mesh.position.y;
     d.position.z = SOLAR.zMax;

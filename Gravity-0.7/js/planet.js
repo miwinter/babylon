@@ -13,7 +13,7 @@ class planet {
     arrow = null;
 
     constructor(radius, masse, texture, initialPosition, initialMomentum) {
-        this.mesh = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: radius, segments: 32}, theScene);
+        this.mesh = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: 2*radius, segments: 32}, theScene);
         this.mesh.material = new BABYLON.StandardMaterial("planetMat", theScene);
         this.mesh.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
         this.mesh.material.diffuseTexture = new BABYLON.Texture("textures/"+texture, theScene);

@@ -20,7 +20,7 @@ class Level4 extends gameLevel {
         this.planets.push(P1);
 
         // création de la planete 2
-        var P2 = new planet(0.1, // radius
+        var P2 = new planet(0.05, // radius
             1, // mass
             "neptune.jpg", // texture file
             new BABYLON.Vector3(1,SOLAR.theHeight - 0.2,2.5), // initial position

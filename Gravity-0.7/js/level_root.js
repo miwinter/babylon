@@ -58,6 +58,9 @@ class gameLevel {
 
         this.timer = Date.now();
         SOLAR.theTimerPlaneText.text = String((this.levelDuration).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+
+        // for Score experiment
+        this.score = 0;
     }
 
     // nettoyage des meshs spécifiques au niveau
@@ -146,7 +149,7 @@ class gameLevel {
 
     initSun(){
         // création de la planete 1
-        this.sun = new planet(0.1, // radius
+        this.sun = new planet(0.12, // radius
             1000, // mass
             "sun.jpg", // texture file
             new BABYLON.Vector3.Zero(), // initial position
@@ -156,6 +159,9 @@ class gameLevel {
         this.sunlight.intensity = 15;      
 
         this.planets.push(this.sun);
+
+        // for Score experiment
+        this.sunPosPrec = this.sun.mesh.position.clone();
     }
 
     sunAngle = 0;
@@ -220,12 +226,27 @@ class gameLevel {
          }
     }
 
+    // for Score experiment
+    sunPosPrec = null;
+    score = 0;
+    computeScore(){
+        var dist = this.sun.mesh.position.subtract(this.sunPosPrec).length();
+        if(dist < 0.01) this.score += 10;
+        else if(dist < 0.05) this.score += 5;
+        else if(dist < 0.1) this.score += 1;
+
+        this.sunPosPrec = this.sun.mesh.position.clone();
+    }
+
     // loop utilisée pour la phase de jeu
     gameLoop(){
         /* ************************************************************* 
         Mise à jour de la position du soleil et des disques de proximité
         ************************************************************* */
         this.computeSunPosition();
+
+        // for Score experiment
+        this.computeScore();
 
         if(SOLAR.discs.length > 0)
             SOLAR.cleanDiscs();
@@ -267,6 +288,8 @@ class gameLevel {
             this.stateChange = true;
             this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
             SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
+            var score = Math.round(this.score / this.levelDuration * 100);
+            SOLAR.theSuccessPlaneText.text = "SCORE : "+String(this.score);
         }
 
         /* ************************************************************* 

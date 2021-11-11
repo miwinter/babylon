@@ -61,6 +61,7 @@ class gameLevel {
 
         // for Score experiment
         this.score = 0;
+        this.sunDistPrec = 0;
     }
 
     // nettoyage des meshs spécifiques au niveau
@@ -162,6 +163,7 @@ class gameLevel {
 
         // for Score experiment
         this.sunPosPrec = this.sun.mesh.position.clone();
+        this.sunDistPrec = 0;
     }
 
     sunAngle = 0;
@@ -229,13 +231,18 @@ class gameLevel {
     // for Score experiment
     sunPosPrec = null;
     score = 0;
+    sunDistPrec = 0;
     computeScore(){
         var dist = this.sun.mesh.position.subtract(this.sunPosPrec).length();
-        if(dist < 0.01) this.score += 10;
-        else if(dist < 0.05) this.score += 5;
-        else if(dist < 0.1) this.score += 1;
+        var speed = Math.abs(dist - this.sunDistPrec);
+        if(speed < 0.3) {
+            this.score += 10*Math.pow(1-3*speed,4);
+        }
 
         this.sunPosPrec = this.sun.mesh.position.clone();
+        this.sunDistPrec = dist;
+
+        console.log(speed);
     }
 
     // loop utilisée pour la phase de jeu
@@ -288,8 +295,8 @@ class gameLevel {
             this.stateChange = true;
             this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
             SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
-            var score = Math.round(this.score / this.levelDuration * 100);
-            SOLAR.theSuccessPlaneText.text = "SCORE : "+String(this.score);
+            var score = 10 * Math.round(this.score / this.levelDuration * 100 );
+            SOLAR.theSuccessPlaneText.text = "SCORE : "+String(score);
         }
 
         /* ************************************************************* 
@@ -370,10 +377,7 @@ class gameLevel {
             Math.pow(planet1.mesh.position.y - planet2.mesh.position.y,2) +
             Math.pow(planet1.mesh.position.z - planet2.mesh.position.z,2)
         );
-        if(dist < (planet1.radius + planet2.radius))
-        {
-            console.log(dist + " : " + planet1.radius + " : " + planet2.radius)   ;
-        } 
+
         return ( dist < (planet1.radius + planet2.radius));
     }
 

@@ -12,7 +12,7 @@ class planet {
     angleSpeed = 0;
     arrow = null;
 
-    constructor(radius, masse, texture, initialPosition, initialMomentum) {
+    constructor(radius, masse, texture, initialPosition, initialMomentum, arrowRatio = 1) {
         this.mesh = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: 2*radius, segments: 32}, theScene);
         this.mesh.material = new BABYLON.StandardMaterial("planetMat", theScene);
         this.mesh.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
@@ -28,7 +28,7 @@ class planet {
         this.radius = radius; // necessaire pour la collision parfaite
 
         this.mesh.setEnabled(false);
-        this.drawPlanetMomentum();
+        this.drawPlanetMomentum(arrowRatio);
         this.arrow.setEnabled(false);
 
     }
@@ -50,10 +50,13 @@ class planet {
         return T2.addInPlace(VCenter);   
     }
 
-    drawPlanetMomentum(){
+    drawPlanetMomentum(size = 1){
         
-        var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum);
-        var lg = this.initialMomentum.length();
+        // var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum);
+        // var lg = this.initialMomentum.length();
+        var lg = this.radius + 0.05 * size;
+        var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum.clone().normalize().scaleInPlace(lg));
+        console.log(this.radius + " : " + 0.15*size)
         
         var arrowPoint1 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.03,0.01,0));
         var arrowPoint2 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.03,-0.01,0));

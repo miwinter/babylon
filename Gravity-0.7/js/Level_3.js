@@ -8,7 +8,7 @@ class Level3 extends gameLevel {
         SOLAR.theExplanationPlaneText.text = "A high speed planet coming from the left.";
 
         // création de la planete 1
-        var P1 = new planet(0.1, // radius
+        var P1 = new planet(0.05, // radius
                 1, // mass
                 "mercury.png", // texture file
                 new BABYLON.Vector3(SOLAR.xMin-1,SOLAR.theHeight+1,2), // initial position

@@ -262,10 +262,10 @@ SOLAR.createSuccessPlane = function (){
     var header = new BABYLON.GUI.TextBlock();
     header.text = "You did it !!!";
     header.textWrapping= true;
-    header.height = "500px";
+    header.height = "1200px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = 200;
+    header.fontSize = 100;
 
     successPanel.addControl(header);
     SOLAR.theSuccessPlaneText = header;

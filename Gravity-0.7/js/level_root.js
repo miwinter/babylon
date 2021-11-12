@@ -60,7 +60,9 @@ class gameLevel {
         SOLAR.theTimerPlaneText.text = String((this.levelDuration).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
 
         // for Score experiment
-        this.score = 0;
+        for(let i = 0; i < 50; i++) {
+            this.score[ i ] = 0;
+         }
         this.sunDistPrec = 0;
     }
 
@@ -164,6 +166,10 @@ class gameLevel {
         // for Score experiment
         this.sunPosPrec = this.sun.mesh.position.clone();
         this.sunDistPrec = 0;
+
+        for(let i = 0; i < 50; i++) {
+            this.score[ i ] = 0;
+         }
     }
 
     sunAngle = 0;
@@ -229,14 +235,15 @@ class gameLevel {
     }
 
     // for Score experiment
-    sunPosPrec = null;
-    score = 0;
+    sunPosPrec = [];
+    score = [];
     sunDistPrec = 0;
     computeScore(){
         var dist = this.sun.mesh.position.subtract(this.sunPosPrec).length();
         var speed = Math.abs(dist - this.sunDistPrec);
-        if(speed < 0.3) {
-            this.score += 10*Math.pow(1-3*speed,4);
+        if(speed < 2) {
+            let index = Math.floor(speed * 50);
+            this.score[index] += 1;
         }
 
         this.sunPosPrec = this.sun.mesh.position.clone();
@@ -295,8 +302,13 @@ class gameLevel {
             this.stateChange = true;
             this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
             SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
-            var score = 10 * Math.round(this.score / this.levelDuration * 100 );
-            SOLAR.theSuccessPlaneText.text = "SCORE : "+String(score);
+            //var score = 10 * Math.round(this.score / this.levelDuration * 100 );
+            var msg = "";
+            for(let i = 0; i < 50; i++) {
+                msg = msg + " : " + this.score[ i ];
+                if(((i+1)%10) == 0) msg = msg + "\n";
+             }
+            SOLAR.theSuccessPlaneText.text = msg;
         }
 
         /* ************************************************************* 

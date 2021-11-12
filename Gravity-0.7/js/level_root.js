@@ -241,8 +241,8 @@ class gameLevel {
     computeScore(){
         var dist = this.sun.mesh.position.subtract(this.sunPosPrec).length();
         var speed = Math.abs(dist - this.sunDistPrec);
-        if(speed < 2) {
-            let index = Math.floor(speed * 50);
+        if(speed < 0.5) {
+            let index = Math.floor(speed * 200);
             this.score[index] += 1;
         }
 

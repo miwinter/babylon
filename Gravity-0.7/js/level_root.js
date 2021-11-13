@@ -23,6 +23,12 @@ class gameLevel {
     G = 0.00001;
     levelDuration = 10;
 
+    // for Score calculation
+    sunPosPrec = [];
+    score = 0;
+    sunSpeedPrec = 0;
+    timePrec = 0;
+
 
     // création des objets spécifiques au niveau
     // cube, panels et sun sont construit au niveau global
@@ -69,6 +75,8 @@ class gameLevel {
     cleanLevel(){
         SOLAR.theFailPlane.setEnabled(false);
         SOLAR.theSuccessPlane.setEnabled(false);
+
+        this.sunlight.dispose();
 
         var p;
         while(this.planets.length > 0){
@@ -204,8 +212,9 @@ class gameLevel {
         this.sun.mesh.position.x = xs;
         this.sun.mesh.position.y = ys;
         this.sun.mesh.position.z = zs;
+        
         this.sunAngle += 0.02;
-        this.sun.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
+        this.sun.mesh.rotation = new BABYLON.Vector3(0,this.sunAngle,0);
     }
 
     // loop utilisée uniquement lors du compte à rebours
@@ -226,11 +235,6 @@ class gameLevel {
          }
     }
 
-    // for Score experiment
-    sunPosPrec = [];
-    score = 0;
-    sunSpeedPrec = 0;
-    timePrec = 0;
     computeScore(){
         var speed = 0;
         var timeNow = Date.now() / 1000;
@@ -240,8 +244,6 @@ class gameLevel {
             speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime; // speed in m/s
             var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime; // acc in m / s2 
             this.score += 100*Math.exp(-acc/50);
-            
-            //console.log(this.score[0]);
         } 
         
         this.sunPosPrec = this.sun.mesh.position.clone();

@@ -241,14 +241,17 @@ class gameLevel {
             var deltaTime = timeNow - this.timePrec; 
             speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime;
             var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime;
+            this.score[0] += Math.floor(100*Math.exp(-acc/50));
+            /*
             if(acc < 100) {
                 let index = Math.floor(acc / 2);
                 this.score[index] += 1;
             } else {
                 this.score[49] += 1;
             }
-            console.log(this.sun.mesh.position.subtract(this.sunPosPrec).length() + " : " +
-            deltaTime + " : " + speed + " : " + acc);
+            */
+            //console.log(this.sun.mesh.position.subtract(this.sunPosPrec).length() + " : " + deltaTime + " : " + speed + " : " + acc);
+            console.log(this.score[0]);
             
         } 
         

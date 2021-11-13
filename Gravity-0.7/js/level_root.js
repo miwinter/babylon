@@ -63,7 +63,8 @@ class gameLevel {
         for(let i = 0; i < 50; i++) {
             this.score[ i ] = 0;
          }
-        this.sunDistPrec = 0;
+        this.timePrec = 0;
+        this.sunSpeedPrec = 0;
     }
 
     // nettoyage des meshs spécifiques au niveau
@@ -163,13 +164,6 @@ class gameLevel {
 
         this.planets.push(this.sun);
 
-        // for Score experiment
-        this.sunPosPrec = this.sun.mesh.position.clone();
-        this.sunDistPrec = 0;
-
-        for(let i = 0; i < 50; i++) {
-            this.score[ i ] = 0;
-         }
     }
 
     sunAngle = 0;
@@ -237,22 +231,30 @@ class gameLevel {
     // for Score experiment
     sunPosPrec = [];
     score = [];
-    sunDistPrec = 0;
+    sunSpeedPrec = 0;
+    timePrec = 0;
     computeScore(){
-        var dist = this.sun.mesh.position.subtract(this.sunPosPrec).length();
-        var speed = Math.abs(dist - this.sunDistPrec);
-        if(speed < 0.1) {
-            let index = Math.floor(speed * 500);
-            this.score[index] += 1;
-        } else {
-            this.score[49] += 1;
+        var speed = 0;
+        var timeNow = Date.now() / 1000;
+        if(this.timePrec != 0)
+        {   
+            var deltaTime = timeNow - this.timePrec; 
+            speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime;
+            var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime;
+            if(acc < 100) {
+                let index = Math.floor(acc / 2);
+                this.score[index] += 1;
+            } else {
+                this.score[49] += 1;
+            }
+            console.log(this.sun.mesh.position.subtract(this.sunPosPrec).length() + " : " +
+            deltaTime + " : " + speed + " : " + acc);
+            
         } 
-
-
+        
         this.sunPosPrec = this.sun.mesh.position.clone();
-        this.sunDistPrec = dist;
-
-        console.log(speed);
+        this.sunSpeedPrec = speed;
+        this.timePrec = timeNow;
     }
 
     // loop utilisée pour la phase de jeu

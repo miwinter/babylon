@@ -60,9 +60,7 @@ class gameLevel {
         SOLAR.theTimerPlaneText.text = String((this.levelDuration).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
 
         // for Score experiment
-        for(let i = 0; i < 50; i++) {
-            this.score[ i ] = 0;
-         }
+        this.score = 0;
         this.timePrec = 0;
         this.sunSpeedPrec = 0;
     }
@@ -230,7 +228,7 @@ class gameLevel {
 
     // for Score experiment
     sunPosPrec = [];
-    score = [];
+    score = 0;
     sunSpeedPrec = 0;
     timePrec = 0;
     computeScore(){
@@ -239,20 +237,11 @@ class gameLevel {
         if(this.timePrec != 0)
         {   
             var deltaTime = timeNow - this.timePrec; 
-            speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime;
-            var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime;
-            this.score[0] += Math.floor(100*Math.exp(-acc/50));
-            /*
-            if(acc < 100) {
-                let index = Math.floor(acc / 2);
-                this.score[index] += 1;
-            } else {
-                this.score[49] += 1;
-            }
-            */
-            //console.log(this.sun.mesh.position.subtract(this.sunPosPrec).length() + " : " + deltaTime + " : " + speed + " : " + acc);
-            console.log(this.score[0]);
+            speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime; // speed in m/s
+            var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime; // acc in m / s2 
+            this.score += 100*Math.exp(-acc/50);
             
+            //console.log(this.score[0]);
         } 
         
         this.sunPosPrec = this.sun.mesh.position.clone();
@@ -310,13 +299,8 @@ class gameLevel {
             this.stateChange = true;
             this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
             SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
-            //var score = 10 * Math.round(this.score / this.levelDuration * 100 );
-            var msg = "";
-            for(let i = 0; i < 50; i++) {
-                msg = msg + " : " + this.score[ i ];
-                if(((i+1)%10) == 0) msg = msg + "\n";
-             }
-            SOLAR.theSuccessPlaneText.text = msg;
+            var score = 10 * Math.round(this.score / this.levelDuration * 10 );
+            SOLAR.theSuccessPlaneText.text = "Score : " + String((score).toLocaleString('fr-FR'));
         }
 
         /* ************************************************************* 

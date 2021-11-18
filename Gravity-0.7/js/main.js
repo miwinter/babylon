@@ -15,7 +15,11 @@ var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, {
 var createScene = async function () {
 
     theScene = new BABYLON.Scene(engine);
-   
+    
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -0.15), theScene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
+
     theHLight = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 5, 0), theScene);
     theHLight.diffuse = new BABYLON.Color3(1, 1, 1);
 	theHLight.specular = new BABYLON.Color3(0, 0, 0);
@@ -32,10 +36,10 @@ var createScene = async function () {
     );
     
 
-    theXRHelper = await theScene.createDefaultXRExperienceAsync({});
+    SOLAR.theXRHelper = await theScene.createDefaultXRExperienceAsync({});
     
 
-    theXRHelper.input.onControllerAddedObservable.add((controller) => {
+    SOLAR.theXRHelper.input.onControllerAddedObservable.add((controller) => {
         controller.onMotionControllerInitObservable.add((motionController) => {
             isWebXRInitialized = true;
             if (motionController.handness === 'right') {
@@ -60,7 +64,8 @@ var createScene = async function () {
 
         if(SOLAR.currentLevelID ==  SOLAR.GAME_STATE_WAINTING_WEBXR) {
 
-            SOLAR.theHeight = theXRHelper.baseExperience.camera.realWorldHeight;
+            SOLAR.theHeight = SOLAR.theXRHelper.baseExperience.camera.realWorldHeight;
+            console.log(SOLAR.theXRHelper.baseExperience.camera);
             SOLAR.createMenuPlane();
             SOLAR.createExplanationPlane();
             SOLAR.createTimerPlane();

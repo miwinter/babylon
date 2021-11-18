@@ -71,7 +71,7 @@ SOLAR.createMenuPlane = function (){
     menuStackPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
 
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "Start Menu";
+    header.text = "Babylon Sun";
     header.textWrapping= true;
     header.width = "1200px";
     header.height = "500px";
@@ -84,7 +84,6 @@ SOLAR.createMenuPlane = function (){
     var buttonPanel = new BABYLON.GUI.StackPanel();  
       
     buttonPanel.isVertical = false;
-    //buttonPanel.width = "450px";
     buttonPanel.height = "200px";
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     menuStackPanel.addControl(buttonPanel);  
@@ -109,9 +108,24 @@ SOLAR.createMenuPlane = function (){
         });
         buttonPanel.addControl(button);
     }
+
+    buttonPanel = new BABYLON.GUI.StackPanel();  
+    buttonPanel.isVertical = false;
+    buttonPanel.height = "400px";
+    buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    buttonPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    var exitBtn = SOLAR.newExitButton();
+    exitBtn.color = "white";
+    //exitBtn.background = "black";
+    exitBtn.padding = "50px";
+    buttonPanel.addControl(exitBtn);
+
+    menuStackPanel.addControl(buttonPanel); 
+    
+
     SOLAR.theMenuPlane = menuPlane;
     SOLAR.theMenuPlane.setEnabled(false);
-    //return explanationPlane;
+
 }
 
 SOLAR.createCubePlayground = function (){
@@ -207,6 +221,26 @@ SOLAR.newNextLevelButton = function (){
     return button;
 }
 
+SOLAR.newExitButton = function (){
+    var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Exit");
+    button.width = "400px";
+    button.height = "200px";
+    button.color = "yellow";
+    button.thickness = 8;
+    button.fontSize = 100;
+    //button.background = "green";
+    button.paddingTop = "10px";
+    button.cornerRadius = 50;
+    button.paddingRight = "20px";
+    button.fontFamily = 'Righteous';
+
+    button.onPointerUpObservable.add(function() {
+        SOLAR.theXRHelper.baseExperience.exitXRAsync();
+    });
+
+    return button;
+}
+
 SOLAR.createFailPlane = function (){
     var failPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
     failPlane.position.z = SOLAR.zMax;
@@ -239,6 +273,7 @@ SOLAR.createFailPlane = function (){
 
     buttonPanel.addControl(SOLAR.newRetryButton());
     buttonPanel.addControl(SOLAR.newMenuButton());
+    buttonPanel.addControl(SOLAR.newExitButton());
     failPanel.addControl(buttonPanel);  
 
     SOLAR.theFailPlane = failPlane;
@@ -282,6 +317,7 @@ SOLAR.createSuccessPlane = function (){
     }
     
     buttonPanel.addControl(SOLAR.newMenuButton());
+    buttonPanel.addControl(SOLAR.newExitButton());
     
     successPanel.addControl(buttonPanel);  
 
@@ -323,6 +359,7 @@ SOLAR.createExplanationPlane = function (){
             SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_WAIT;
             SOLAR.theCurrentLevel.stateChange = true;
         });
+        
         explanationPanel.addControl(button);
         SOLAR.theExplanationPlane = explanationPlane;
         SOLAR.theExplanationPlane.setEnabled(false);
@@ -340,9 +377,9 @@ SOLAR.hideControllers = function (){
         p.getChildMeshes(false)[i].visibility = false; 
     }
 
-    theXRHelper.pointerSelection.displayLaserPointer = false;
-    theXRHelper.pointerSelection.disablePointerLighting = false;
-    theXRHelper.pointerSelection.displaySelectionMesh = false;
+    SOLAR.theXRHelper.pointerSelection.displayLaserPointer = false;
+    SOLAR.theXRHelper.pointerSelection.disablePointerLighting = false;
+    SOLAR.theXRHelper.pointerSelection.displaySelectionMesh = false;
 }
 
 SOLAR.showControllers = function (){
@@ -357,9 +394,9 @@ SOLAR.showControllers = function (){
         p.getChildMeshes(false)[i].visibility = true; 
     }
 
-    theXRHelper.pointerSelection.displayLaserPointer = true;
-    theXRHelper.pointerSelection.disablePointerLighting = true;
-    theXRHelper.pointerSelection.displaySelectionMesh = true;
+    SOLAR.theXRHelper.pointerSelection.displayLaserPointer = true;
+    SOLAR.theXRHelper.pointerSelection.disablePointerLighting = true;
+    SOLAR.theXRHelper.pointerSelection.displaySelectionMesh = true;
 }
 
 SOLAR.createTimerPlane = function (){

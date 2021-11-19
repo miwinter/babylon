@@ -35,8 +35,29 @@ var createScene = async function () {
         theScene
     );
     
+    var btn = document.createElement("button");        // Create a <button> element
+    var t = document.createTextNode("ENTER");       // Create a text node
+    btn.appendChild(t);                                // Append the text to <button>
 
-    SOLAR.theXRHelper = await theScene.createDefaultXRExperienceAsync({});
+    var xrButton = new BABYLON.WebXREnterExitUIButton(btn, "immersive-vr", "local-floor");
+
+    // XR
+    SOLAR.theXRHelper = await theScene.createDefaultXRExperienceAsync({
+        // disableDefaultUI: true,
+        uiOptions: {
+            customButtons: [xrButton]
+        }
+    });
+
+    // centering the "ENTER" button
+    var x_center = Math.floor(document.getElementById("renderCanvas").width / 2);
+    var y_center = Math.floor(document.getElementById("renderCanvas").height * 0.7);
+    
+    var d = document.getElementsByClassName('xr-button-overlay').item(0);
+    d.style.position = "absolute";
+    d.style.left = x_center+'px';
+    d.style.top = y_center+'px';
+
     
 
     SOLAR.theXRHelper.input.onControllerAddedObservable.add((controller) => {

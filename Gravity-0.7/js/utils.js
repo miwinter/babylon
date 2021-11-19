@@ -114,11 +114,7 @@ SOLAR.createMenuPlane = function (){
     buttonPanel.height = "400px";
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     buttonPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    var exitBtn = SOLAR.newExitButton();
-    exitBtn.color = "white";
-    //exitBtn.background = "black";
-    exitBtn.padding = "50px";
-    buttonPanel.addControl(exitBtn);
+    buttonPanel.addControl(SOLAR.newExitButton());
 
     menuStackPanel.addControl(buttonPanel); 
     
@@ -225,17 +221,17 @@ SOLAR.newExitButton = function (){
     var button = BABYLON.GUI.Button.CreateSimpleButton("clickMeButton", "Exit");
     button.width = "400px";
     button.height = "200px";
-    button.color = "yellow";
+    button.color = "white";
     button.thickness = 8;
     button.fontSize = 100;
-    //button.background = "green";
     button.paddingTop = "10px";
     button.cornerRadius = 50;
     button.paddingRight = "20px";
     button.fontFamily = 'Righteous';
 
     button.onPointerUpObservable.add(function() {
-        SOLAR.theXRHelper.baseExperience.exitXRAsync();
+        //SOLAR.theXRHelper.baseExperience.exitXRAsync();
+        location.reload();
     });
 
     return button;

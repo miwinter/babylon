@@ -230,7 +230,7 @@ SOLAR.newExitButton = function (){
     button.fontFamily = 'Righteous';
 
     button.onPointerUpObservable.add(function() {
-        //SOLAR.theXRHelper.baseExperience.exitXRAsync();
+        SOLAR.theXRHelper.baseExperience.exitXRAsync();
         location.reload();
     });
 

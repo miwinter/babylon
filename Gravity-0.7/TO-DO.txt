@@ -1,0 +1,20 @@
+- Faire un visuel d'attente avnt immersion
+- Faire plein de niveaux !!!!
+- changer la couleur des discs
+- attacher des sons aux planetes
+- tester la saisie de lettres
+- faire un webservice simple d'accès aux scores
+- trouver un hébergeur :
+        Les meilleurs hébergeurs web de 2021 : 
+        Hostinger
+        PlanetHoster
+        Infomaniak
+        o2switch
+        EX2
+        LWS
+        1&1 IONOS
+        HostPapa
+        Gandi
+        OVH
+- trouver un template simple pour site-web
+- regarder pour une licence open-source

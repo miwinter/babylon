@@ -36,7 +36,8 @@ var createScene = async function () {
     );
     
     var btn = document.createElement("button");        // Create a <button> element
-    var t = document.createTextNode("ENTER");       // Create a text node
+    btn.className = "enter-class";
+    var t = document.createTextNode("ENTER VR");       // Create a text node
     btn.appendChild(t);                                // Append the text to <button>
 
     var xrButton = new BABYLON.WebXREnterExitUIButton(btn, "immersive-vr", "local-floor");
@@ -50,13 +51,19 @@ var createScene = async function () {
     });
 
     // centering the "ENTER" button
-    var x_center = Math.floor(document.getElementById("renderCanvas").width / 2);
-    var y_center = Math.floor(document.getElementById("renderCanvas").height * 0.7);
+    var x_center = Math.floor(document.getElementById("renderCanvas").width / 2 - 100);
+    var y_center = Math.floor(document.getElementById("renderCanvas").height * 0.5);
     
     var d = document.getElementsByClassName('xr-button-overlay').item(0);
+    //d.setAttribute("style", "background-color:darkblue;"); // border-radius: 8px;
+
     d.style.position = "absolute";
     d.style.left = x_center+'px';
     d.style.top = y_center+'px';
+
+    var d = document.getElementsByClassName('title').item(0);
+    d.style.left = Math.floor(document.getElementById("renderCanvas").width / 3 - 100)+'px';
+    d.style.top = Math.floor(document.getElementById("renderCanvas").height * 0.25)+'px';
 
     
 

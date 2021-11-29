@@ -1,8 +1,0 @@
-- Limiter la taille de la flèche à 3 valeurs : petite, normale, grande et ajouter cette taille au radius de la planète
-- changer la fenêtre de rentrée dans l'immersion
-- mettre un bouton de sortie de VR
-- Faire plein de niveaux !!!!
-- Valider le chargement des fonts (ca marche jamais du premier coup en VR)
-- Définir un score en fonction de : 
--- Le minimum (ou le maximum) de déplacement du soleil
--- l'éloignement des planètes du bord

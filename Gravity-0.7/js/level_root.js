@@ -170,13 +170,16 @@ class gameLevel {
 
         this.planets.push(this.sun);
 
-        var music = new BABYLON.Sound("sun", "sounds/solar-1.wav", theScene, null, {
-            loop: true,
-            autoplay: true
-          });
+        var music = new BABYLON.Sound("music", "sounds/violons11.wav",
+        //var music = new BABYLON.Sound("music", "sounds/solar-1.wav",
+            theScene, null, {
+            loop: true, autoplay: true, spatialSound: true,
+            distanceModel: "exponential", rolloffFactor: 2
+    });
           
         // Sound will now follow the box mesh position
         music.attachToMesh(this.sun.mesh);
+        //theScene.audioPositioningRefreshRate = 10000;
     }
 
     sunAngle = 0;

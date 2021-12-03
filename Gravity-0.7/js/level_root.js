@@ -170,7 +170,7 @@ class gameLevel {
 
         this.planets.push(this.sun);
 
-        var music = new BABYLON.Sound("music", "sounds/violons11.wav",
+        var music = new BABYLON.Sound("music", "sounds/V-Next.wav",
         //var music = new BABYLON.Sound("music", "sounds/solar-1.wav",
             theScene, null, {
             loop: true, autoplay: true, spatialSound: true,

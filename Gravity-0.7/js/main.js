@@ -86,8 +86,8 @@ var createScene = async function () {
     levels[2] = new Level2();
     levels[3] = new Level3();
     levels[4] = new Level4();
-
     theScene.registerBeforeRender(() => {  
+    
         if(! isWebXRInitialized) return;
 
         if(SOLAR.currentLevelID ==  SOLAR.GAME_STATE_WAINTING_WEBXR) {

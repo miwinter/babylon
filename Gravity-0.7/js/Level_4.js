@@ -35,21 +35,21 @@ class Level4 extends gameLevel {
         var m1 = new BABYLON.Sound("music", "sounds/L1-C-T.wav",
             theScene, null, {
             loop: true, autoplay: true, spatialSound: true,
-            distanceModel: "linear", maxDistance: 5
+            distanceModel: "linear", rolloffFactor: 3
         });
         m1.attachToMesh(this.sun.mesh);
 
         var m2 = new BABYLON.Sound("music", "sounds/L1-E-3.wav",
             theScene, null, {
             loop: true, autoplay: true, spatialSound: true,
-            distanceModel: "linear", maxDistance: 5
+            distanceModel: "exponential", rolloffFactor: 3
         });
         m2.attachToMesh(P1.mesh);
 
         var m3 = new BABYLON.Sound("music", "sounds/L1-G-5.wav",
             theScene, null, {
             loop: true, autoplay: true, spatialSound: true,
-            distanceModel: "linear", maxDistance: 5
+            distanceModel: "exponential", rolloffFactor: 3
         });
         m3.attachToMesh(P2.mesh);
     }

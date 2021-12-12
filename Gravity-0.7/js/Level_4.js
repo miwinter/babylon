@@ -31,6 +31,27 @@ class Level4 extends gameLevel {
         P2.mesh.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
 
         this.planets.push(P2);
+
+        var m1 = new BABYLON.Sound("music", "sounds/L1-C-T.wav",
+            theScene, null, {
+            loop: true, autoplay: true, spatialSound: true,
+            distanceModel: "exponential", rolloffFactor: 2
+        });
+        m1.attachToMesh(this.sun.mesh);
+
+        var m2 = new BABYLON.Sound("music", "sounds/L1-E-3.wav",
+            theScene, null, {
+            loop: true, autoplay: true, spatialSound: true,
+            distanceModel: "exponential", rolloffFactor: 2
+        });
+        m2.attachToMesh(P1.mesh);
+
+        var m3 = new BABYLON.Sound("music", "sounds/L1-G-5.wav",
+            theScene, null, {
+            loop: true, autoplay: true, spatialSound: true,
+            distanceModel: "exponential", rolloffFactor: 2
+        });
+        m3.attachToMesh(P2.mesh);
     }
 
 } // end class

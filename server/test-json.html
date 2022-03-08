@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Use JavaScript to Change Text</h2>
+<p>This example writes "Hello JavaScript!" into an HTML element with id="demo":</p>
+<p id="demo"></p>
+
+<script>
+
+var highScoreTable = null; 
+var newHighScoreTable = null; 
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+
+const getHighScore = async (level) => {
+  highScoreTable = null;
+
+  const response = await fetch('http://localhost/babylon/server/high-scores.php?level='+level, {
+     
+     // Adding method type
+     method: "GET",
+     
+     // Adding headers to the request
+     headers: {
+         "Content-type": "application/json; charset=UTF-8"
+     }
+    });
+
+  console.log(response);
+  highScoreTable = await response.json(); //extract JSON from the http response
+  console.log(highScoreTable);
+  // do something with myJson
+}
+
+
+printScoreTable = function (table){
+  if(table) {
+
+      var tableString = "<table>";
+
+      for(let i = 1; i < 11; i++) {
+          tableString += "<tr>";
+          tableString += "<td>"+i+"</td>";
+          tableString += "<td>"+table[i]['score']+"</td>";
+          tableString += "<td>"+table[i]['name']+"</td>";
+          tableString += "</tr>";
+      }
+      tableString += "</table>";
+
+      document.getElementById("demo").innerHTML = tableString;
+      }
+
+}
+
+const setHighScore = async (level,newScore,newName) => {
+
+  newHighScoreTable = null;
+
+  const response = await fetch('http://localhost/babylon/server/high-scores.php', {
+     
+     // Adding method type
+     method: "POST",
+      
+     // Adding body or contents to send
+     body: JSON.stringify({
+         level: level,
+         new_score: newScore,
+         name:newName
+     }),
+      
+     // Adding headers to the request
+     headers: {
+         "Content-type": "application/json; charset=UTF-8"
+     }
+    });
+
+  console.log(response);
+  newHighScoreTable = await response.json(); //extract JSON from the http response
+  console.log(newHighScoreTable);
+  // do something with myJson
+}
+
+getHighScore(1);
+setTimeout(() => { printScoreTable(highScoreTable); console.log("Starting"); }, 1000);
+
+addScore = function () {
+  var score = document.getElementById("input_score").value;
+  var name = document.getElementById("input_name").value;
+  console.log(score);
+  console.log(name);
+  setHighScore(1,score,name);
+  setTimeout(() => { printScoreTable(newHighScoreTable); console.log("New value"); }, 1000);
+}
+
+</script> 
+
+<label for="name">Name</label>
+<input type="text" id="input_name">
+<label for="name">Score</label>
+<input type="text" id="input_score">
+<button onclick="addScore()">Ajouter</button>
+</body>
+</html>

@@ -5,7 +5,8 @@ var SOLAR = {
     LEVEL_STATE_WAIT : 1,
     LEVEL_STATE_GAME : 2,
     LEVEL_STATE_SUCCESS : 3,
-    LEVEL_STATE_FAIL : 4,
+    LEVEL_STATE_HIGHSCORE : 4,
+    LEVEL_STATE_FAIL : 5,
 
     LEVELS_NUMBER : 4,
 
@@ -28,6 +29,7 @@ var SOLAR = {
     theFailPlaneText : null,
     theSuccessPlane : null,
     theSuccessPlaneText : null,
+    theNewHighScorePlane : null,
 
     xMin : -2, 
     xMax : 2,
@@ -52,15 +54,96 @@ var SOLAR = {
     currentLevel : null,
     levels : null,
     targetLevelID : 0,
+    currentScore : 0,
 
     // liste des disques qui signalent le rapprochement d'une paroi
-    discs : []
+    discs : [],
+
+    highScoreTableInformation : null,
+    highScoreTableContainer : null
+
 }
 
 SOLAR.currentLevelID = SOLAR.GAME_STATE_WAINTING_WEBXR;
 SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.UNDEFINED;
 
+SOLAR.isHighScore = function (score){
+    if(SOLAR.highScoreTableInformation == null)
+    {
+        return true;
+    }
+    else{
+        return SOLAR.highScoreTableInformation[10]['score'] < score;
+    }
+}
 
+SOLAR.getHighScore = async (level) => {
+    SOLAR.highScoreTableInformation = null;
+  
+    const response = await fetch('server/high-scores.php?level='+level, {
+       
+       // Adding method type
+       method: "GET",
+       
+       // Adding headers to the request
+       headers: {
+           "Content-type": "application/json; charset=UTF-8"
+       }
+      });
+  
+    console.log(response);
+    SOLAR.highScoreTableInformation = await response.json(); //extract JSON from the http response
+    console.log(SOLAR.highScoreTableInformation);
+    // do something with myJson
+}
+
+SOLAR.setHighScoreTable = function (newScore,newName) {
+
+    if(SOLAR.highScoreTableInformation != null)
+    {
+        var current_rank = 9;
+
+        while((SOLAR.highScoreTableInformation[current_rank+1]['score'] < newScore) && (current_rank >= 1))
+        {
+            SOLAR.highScoreTableInformation[current_rank+1]['score'] = SOLAR.highScoreTableInformation[current_rank]['score'];
+            SOLAR.highScoreTableInformation[current_rank+1]['name'] = SOLAR.highScoreTableInformation[current_rank]['name'];
+            current_rank -= 1;
+        }
+    
+        SOLAR.highScoreTableInformation[current_rank+1]['score'] = newScore;
+        SOLAR.highScoreTableInformation[current_rank+1]['name'] = newName;
+    }
+}
+
+SOLAR.setHighScore = async (level,newScore,newName) => {
+
+    newHighScoreTable = null;
+    console.log("in setHighScore:" + level + ":" + newScore + ":" + newName);
+  
+    const response = await fetch('server/high-scores.php', {
+       
+       // Adding method type
+       method: "POST",
+        
+       // Adding body or contents to send
+       body: JSON.stringify({
+           level: level,
+           new_score: newScore,
+           name:newName
+       }),
+        
+       // Adding headers to the request
+       headers: {
+           "Content-type": "application/json; charset=UTF-8"
+       }
+      });
+  
+    console.log(response);
+    SOLAR.highScoreTableInformation = await response.json(); //extract JSON from the http response
+    console.log(newHighScoreTable);
+    // do something with myJson
+}
+  
 SOLAR.createMenuPlane = function (){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
     menuPlane.position = new BABYLON.Vector3(0, SOLAR.theHeight, 2);        
@@ -238,8 +321,8 @@ SOLAR.newExitButton = function (){
 }
 
 SOLAR.createFailPlane = function (){
-    var failPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
-    failPlane.position.z = SOLAR.zMax;
+    var failPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
+    failPlane.position.z = 2;
     failPlane.position.y = SOLAR.theHeight;
     
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(failPlane);
@@ -276,13 +359,169 @@ SOLAR.createFailPlane = function (){
     SOLAR.theFailPlane.setEnabled(false);
 }
 
+SOLAR.fillHighScore = function (){
+    if(SOLAR.highScoreTableInformation == null)
+    {
+        for(let i = 1; i<11; i++){
+            SOLAR.highScoreTableContainer[i]['score'].text = "-----";
+            SOLAR.highScoreTableContainer[i]['name'].text = "-----";
+        }
+    }
+    else {
+        for(let i = 1; i<11; i++){
+            SOLAR.highScoreTableContainer[i]['score'].text = 
+             String((SOLAR.highScoreTableInformation[i]['score']).toLocaleString('fr-FR'));
+                
+            SOLAR.highScoreTableContainer[i]['name'].text = SOLAR.highScoreTableInformation[i]['name'];
+        }
+    }
+}
+
+SOLAR.newHighScoreLine = function (i){
+    SOLAR.highScoreTableContainer[i] = [];
+    var linePanel = new BABYLON.GUI.StackPanel();  
+    linePanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    linePanel.isVertical = false;
+    linePanel.height = "120px";
+
+    var textLine = new BABYLON.GUI.TextBlock();
+    textLine.fontFamily = 'Cousine';
+    textLine.text = String(i+".");
+    textLine.width = "440px";
+    textLine.color = "white";
+    textLine.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    textLine.fontSize = 120;
+    linePanel.addControl(textLine);  
+
+    textLine = new BABYLON.GUI.TextBlock();
+    textLine.fontFamily = 'Cousine';
+    textLine.text = '---'; //SOLAR.highScoreTable[i]['score'];
+    textLine.width = "700px";
+    textLine.color = "white";
+    textLine.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    textLine.fontSize = 120;
+    SOLAR.highScoreTableContainer[i]['score'] = textLine;
+    linePanel.addControl(textLine);  
+
+    textLine = new BABYLON.GUI.TextBlock();
+    textLine.fontFamily = 'Cousine';
+    textLine.text = '--------'; //SOLAR.highScoreTable[i]['name'];
+    textLine.width = "600px";
+    textLine.color = "white";
+    textLine.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    textLine.fontSize = 110;
+    SOLAR.highScoreTableContainer[i]['name'] = textLine;
+    linePanel.addControl(textLine);  
+
+    return linePanel;
+}
+
+SOLAR.newVSpacer = function (){
+    var textLine = new BABYLON.GUI.TextBlock();
+    textLine.height = "100px";
+    return textLine;
+}
+
+SOLAR.createNewHighScorePlane = function (){
+
+    var newHighScorePlane = BABYLON.MeshBuilder.CreatePlane("leftWall", {width: 3,height: 3}, theScene);
+    newHighScorePlane.position.z = 2;
+    newHighScorePlane.position.y = SOLAR.theHeight;
+       
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(newHighScorePlane);
+    advancedTexture.idealHeight = 3000;
+    advancedTexture.idealWidth = 2000;
+    var newHighScoreStackPanel = new BABYLON.GUI.StackPanel();
+    advancedTexture.addControl(newHighScoreStackPanel); 
+
+    var header = new BABYLON.GUI.TextBlock();
+    header.text = "You reached a new highscore. ";
+    header.fontFamily = 'Righteous';
+    header.height = "120px";
+    header.color = "white";
+    header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    header.fontSize = 120;
+    newHighScoreStackPanel.addControl(header);
+
+    header = new BABYLON.GUI.TextBlock();
+    header.text = "Enter your name:";
+    header.fontFamily = 'Righteous';
+    header.height = "120px";
+    header.color = "white";
+    header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    header.fontSize = 120;
+    newHighScoreStackPanel.addControl(header);
+
+    newHighScoreStackPanel.addControl(SOLAR.newVSpacer());
+
+    var input = new BABYLON.GUI.TextBlock();
+    input.height = "120px";
+    input.fontFamily = 'Righteous';
+    input.fontSize = 120;
+    input.text = "--------";
+    input.color = "white";
+    input.background = "green";
+    newHighScoreStackPanel.addControl(input);    
+            
+    var keyboard = BABYLON.GUI.VirtualKeyboard.CreateDefaultLayout();
+
+    var lg = 8;
+    keyboard.onKeyPressObservable.add(function (key) {
+            if(key==="\u21B5")
+            {
+                while(input.text.charAt(0) == "-") {
+                    input.text = input.text.substring(1,input.text.length);
+                }
+                SOLAR.theCurrentLevel.nextState = SOLAR.LEVEL_STATE_SUCCESS;
+                SOLAR.theCurrentLevel.stateChange = true;
+                SOLAR.setHighScoreTable(SOLAR.currentScore,input.text);
+                SOLAR.setHighScore(SOLAR.currentLevelID,SOLAR.currentScore,input.text);
+                input.text = "--------";
+                lg = 8;
+            }
+            else if(key==="\u2190")
+            {
+                if(lg < 9) {
+                    input.text = "-" + input.text.slice(0,7);
+                    lg += 1; 
+                }
+            }
+            else {
+                if(lg > 0) {
+                    input.text = input.text.slice(1,8) + key;
+                    lg -= 1; 
+                }
+            }
+        })
+
+    keyboard.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    keyboard.clearControls();
+    //keyboard.fontSize = 120;
+    //keyboard.scaleX = 2;
+    //keyboard.scaleY = 2;
+    keyboard.defaultButtonBackground = "#333333";
+    keyboard.highlightLineWidth = 5;
+    keyboard.addKeysRow(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "\u2190"]);
+    keyboard.addKeysRow(["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]);
+    keyboard.addKeysRow(["A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "\u21B5"]);
+    keyboard.addKeysRow(["Z", "X", "C", "V", "B", "N", "M", "_", ".", "/", "-"]);
+    keyboard.addKeysRow([" "], [{ width: "200px" }]);
+    newHighScoreStackPanel.addControl(keyboard);
+
+    SOLAR.theNewHighScorePlane = newHighScorePlane;
+    SOLAR.theNewHighScorePlane.setEnabled(false);
+}
+
 SOLAR.createSuccessPlane = function (){
-    var successPlane = BABYLON.Mesh.CreatePlane("plane", 2, theScene);
-    successPlane.position.z = SOLAR.zMax;
+    //var successPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
+    SOLAR.highScoreTableContainer = [];
+
+    var successPlane = BABYLON.MeshBuilder.CreatePlane("leftWall", {width: 3,height: 3}, theScene);
+    successPlane.position.z = 2;
     successPlane.position.y = SOLAR.theHeight;
     
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(successPlane);
-    advancedTexture.idealHeight = 2000;
+    advancedTexture.idealHeight = 3000;
     advancedTexture.idealWidth = 2000;
     
     var successPanel = new BABYLON.GUI.StackPanel();
@@ -290,21 +529,41 @@ SOLAR.createSuccessPlane = function (){
     successPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 
     advancedTexture.addControl(successPanel);  
+
+    successPanel.addControl(SOLAR.newVSpacer());
+
     var header = new BABYLON.GUI.TextBlock();
-    header.text = "You did it !!!";
-    header.textWrapping= true;
-    header.height = "1200px";
+    header.text = "High Scores";
+    header.fontFamily = 'Righteous';
+    header.height = "150px";
     header.color = "white";
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    header.fontSize = 200;
-
+    header.fontSize = 150;
     successPanel.addControl(header);
-    SOLAR.theSuccessPlaneText = header;
+
+    successPanel.addControl(SOLAR.newVSpacer());
+
+    var textLine = null;
+    for(let i = 1; i<11; i++){
+        successPanel.addControl(SOLAR.newHighScoreLine(i));
+    }
+
+    successPanel.addControl(SOLAR.newVSpacer());
+
+    var userScore = new BABYLON.GUI.TextBlock();
+    userScore.text = "<User Score>";
+    userScore.fontFamily = 'Righteous';
+    userScore.height = "140px";
+    userScore.color = "white";
+    userScore.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    userScore.fontSize = 140;
+    successPanel.addControl(userScore);
+    SOLAR.theSuccessPlaneText = userScore;
 
     var buttonPanel = new BABYLON.GUI.StackPanel();  
     buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     buttonPanel.isVertical = false;
-    buttonPanel.height = "500px";
+    buttonPanel.height = "300px";
 
     buttonPanel.addControl(SOLAR.newRetryButton());
     if(SOLAR.currentLevelID < SOLAR.LEVELS_NUMBER) {

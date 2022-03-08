@@ -7,8 +7,8 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Anton&family=Righteous&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css2?family=Cousine:wght@700&family=Righteous&display=swap" rel="stylesheet">
+        
         <!-- Babylon.js playground version         -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
         <script src="https://preview.babylonjs.com/ammo.js"></script>
@@ -40,6 +40,7 @@
                 width: 100%;
                 height: 100%;
                 touch-action: none;
+                font-family: "Righteous";
             }
 
             .enter-class {
@@ -62,10 +63,18 @@
                 font-size: 110px;
             }
 
+            #preload {
+                font-family: "Cousine";
+            }
+
         </style>
     </head>
 <body>
     <canvas id="renderCanvas"></canvas>
+
+    <div class="title">
+        Babylon Sun
+  </div>
 
     <script src="js/utils.js"></script>
     <script src="js/planet.js"></script>
@@ -77,9 +86,9 @@
     <script src="js/Level_4.js"></script>
     <script src="js/main.js"></script>
 
-    <div class="title">
-          Babylon Sun
-    </div>
+
+
+    <div id="preload">&nbsp;</div>
 
 </body>
 </html>

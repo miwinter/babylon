@@ -100,6 +100,7 @@ var createScene = async function () {
             SOLAR.createCubePlayground();
             SOLAR.createFailPlane();
             SOLAR.createSuccessPlane();
+            SOLAR.createNewHighScorePlane();
 
             SOLAR.currentLevelID = 0;
             SOLAR.theCurrentLevel = levels[0];

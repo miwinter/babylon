@@ -29,6 +29,8 @@ class gameLevel {
     sunSpeedPrec = 0;
     timePrec = 0;
 
+    intro_sound = null;
+    level_sound = null;
 
     // création des objets spécifiques au niveau
     // cube, panels et sun sont construit au niveau global
@@ -86,6 +88,9 @@ class gameLevel {
 
         if(SOLAR.discs.length > 0)
             SOLAR.cleanDiscs();
+
+        if(this.level_sound) this.level_sound.stop();
+        if(this.intro_sound) this.level_sound.stop();
     }
 
     // configuration du level en fonction de son état (suite à un stateChange)
@@ -95,6 +100,7 @@ class gameLevel {
             case SOLAR.LEVEL_STATE_INTRO : 
                 console.log("LEVEL_STATE_INTRO");
                 SOLAR.theExplanationPlane.setEnabled(true);
+                SOLAR.getHighScore(1);
                 break;
             case SOLAR.LEVEL_STATE_WAIT :
                 console.log("LEVEL_STATE_WAIT");
@@ -106,6 +112,8 @@ class gameLevel {
                 SOLAR.theCubePlayground.setEnabled(true);
                 this.initPlayground();
                 this.timer = Date.now();
+                if(this.level_sound) {this.level_sound.setVolume(0,0);this.level_sound.play();this.level_sound.setVolume(0.5,3);}
+                if(this.intro_sound) this.intro_sound.setVolume(0,3);
                 break;
             case SOLAR.LEVEL_STATE_GAME :
                 console.log("LEVEL_STATE_GAME");
@@ -116,13 +124,33 @@ class gameLevel {
                 break;
             case SOLAR.LEVEL_STATE_SUCCESS : 
                 console.log("LEVEL_STATE_SUCCESS");
-                SOLAR.theTimerPlane.setEnabled(false);
-                SOLAR.showControllers();
+                if(SOLAR.theNewHighScorePlane.isEnabled)
+                {
+                    SOLAR.theNewHighScorePlane.setEnabled(false);
+                    SOLAR.fillHighScore();
+                }
+                else {
+                    SOLAR.theTimerPlane.setEnabled(false);
+                    SOLAR.showControllers();
+
+                    if(this.won_sound) this.won_sound.play();
+                    if(this.intro_sound) this.intro_sound.setVolume(0.5,5);
+                    if(this.level_sound) this.level_sound.stop();
+                }                
                 if(SOLAR.currentLevelID  < SOLAR.LEVELS_NUMBER)
                     SOLAR.theNextButton.isEnabled = true;
                 else
                     SOLAR.theNextButton.isEnabled = false;
                 SOLAR.theSuccessPlane.setEnabled(true);
+                
+                break;
+            case SOLAR.LEVEL_STATE_HIGHSCORE :
+                SOLAR.theTimerPlane.setEnabled(false);
+                SOLAR.theNewHighScorePlane.setEnabled(true);
+                SOLAR.showControllers();
+                if(this.won_sound) this.won_sound.play();
+                if(this.intro_sound) this.intro_sound.setVolume(0.5,10);
+                if(this.level_sound) this.level_sound.stop();
                 break;
             case SOLAR.LEVEL_STATE_FAIL : 
                 console.log("LEVEL_STATE_FAIL");
@@ -130,6 +158,9 @@ class gameLevel {
                 SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.showControllers();
                 SOLAR.theFailPlane.setEnabled(true);
+                if(this.fail_sound) this.fail_sound.play();
+                if(this.intro_sound) this.intro_sound.setVolume(0.5,10);
+                if(this.level_sound) this.level_sound.stop();
                 break;
         }
     }
@@ -154,6 +185,8 @@ class gameLevel {
                 this.gameLoop();
                 break;
         }
+
+        // nothing done in other states
 
     }
 
@@ -218,7 +251,7 @@ class gameLevel {
 
     // loop utilisée uniquement lors du compte à rebours
     timerLoop(){
-        var s = Math.ceil(5 - (Date.now() - this.timer)/1000);
+        var s = Math.ceil(3 - (Date.now() - this.timer)/1000);
         if(s == 0){
             this.stateChange = true;
             this.nextState = SOLAR.LEVEL_STATE_GAME;
@@ -298,10 +331,19 @@ class gameLevel {
         SOLAR.theTimerPlaneText.text = String(s.toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
         if(s <= 0){
             this.stateChange = true;
-            this.nextState = SOLAR.LEVEL_STATE_SUCCESS; // success
             SOLAR.theTimerPlaneText.text = String((0).toLocaleString('en-GB',{ minimumFractionDigits: 1 }));
             var score = 10 * Math.round(this.score / this.levelDuration * 10 );
-            SOLAR.theSuccessPlaneText.text = "Score : " + String((score).toLocaleString('fr-FR'));
+
+            if((SOLAR.highScoreTableInformation != null) && SOLAR.isHighScore(score)) {
+                // notinvoked if the highscore table has not been retreived
+                this.nextState = SOLAR.LEVEL_STATE_HIGHSCORE; 
+                SOLAR.currentScore = score;
+                SOLAR.theSuccessPlaneText.text = "";
+            }
+            else {
+                this.nextState = SOLAR.LEVEL_STATE_SUCCESS; 
+                SOLAR.theSuccessPlaneText.text = "Your score : " + String((score).toLocaleString('fr-FR'));
+            }
         }
 
         /* ************************************************************* 

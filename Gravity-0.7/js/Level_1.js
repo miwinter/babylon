@@ -19,25 +19,6 @@ class Level1 extends gameLevel {
 
         this.planets.push(P1);
 
-        
-        var music = new BABYLON.Sound("music", "sounds/intro.mp3",
-            theScene, function() {music.setVolume(0,0);music.play();music.setVolume(0.5,20);}, {
-            loop: true, autoplay: false
-        });
-        this.intro_sound = music;
-        
-        this.level_sound = new BABYLON.Sound("music", "sounds/level.mp3",
-            theScene, null, {
-            loop: false, autoplay: false
-        });
-        this.won_sound = new BABYLON.Sound("music", "sounds/won.mp3",
-            theScene, null, {
-            loop: false, autoplay: false
-        });
-        this.fail_sound = new BABYLON.Sound("music", "sounds/fail.mp3",
-            theScene, null, {
-            loop: false, autoplay: false
-        });
     }
 
 } // end class

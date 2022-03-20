@@ -102,6 +102,7 @@ class gameLevel {
                 SOLAR.theExplanationPlane.setEnabled(true);
                 SOLAR.getHighScore(1);
                 break;
+
             case SOLAR.LEVEL_STATE_WAIT :
                 console.log("LEVEL_STATE_WAIT");
                 SOLAR.theFailPlane.setEnabled(false);
@@ -112,9 +113,9 @@ class gameLevel {
                 SOLAR.theCubePlayground.setEnabled(true);
                 this.initPlayground();
                 this.timer = Date.now();
-                if(this.level_sound) {this.level_sound.setVolume(0,0);this.level_sound.play();this.level_sound.setVolume(0.5,3);}
-                if(this.intro_sound) this.intro_sound.setVolume(0,3);
+                SOLAR.startLevelSound();
                 break;
+
             case SOLAR.LEVEL_STATE_GAME :
                 console.log("LEVEL_STATE_GAME");
                 SOLAR.theExplanationPlane.setEnabled(false);
@@ -122,45 +123,41 @@ class gameLevel {
                 this.launchGame();
                 this.timer = Date.now();
                 break;
+
             case SOLAR.LEVEL_STATE_SUCCESS : 
                 console.log("LEVEL_STATE_SUCCESS");
-                if(SOLAR.theNewHighScorePlane.isEnabled)
+                if(SOLAR.theNewHighScorePlane.isEnabled())
                 {
                     SOLAR.theNewHighScorePlane.setEnabled(false);
-                    SOLAR.fillHighScore();
                 }
                 else {
                     SOLAR.theTimerPlane.setEnabled(false);
                     SOLAR.showControllers();
-
-                    if(this.won_sound) this.won_sound.play();
-                    if(this.intro_sound) this.intro_sound.setVolume(0.5,5);
-                    if(this.level_sound) this.level_sound.stop();
+                    SOLAR.playWinSound();                    
                 }                
                 if(SOLAR.currentLevelID  < SOLAR.LEVELS_NUMBER)
                     SOLAR.theNextButton.isEnabled = true;
                 else
                     SOLAR.theNextButton.isEnabled = false;
+
+                SOLAR.fillHighScore();
                 SOLAR.theSuccessPlane.setEnabled(true);
-                
                 break;
+
             case SOLAR.LEVEL_STATE_HIGHSCORE :
+                console.log("LEVEL_STATE_HIGHSCORE");
                 SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.theNewHighScorePlane.setEnabled(true);
                 SOLAR.showControllers();
-                if(this.won_sound) this.won_sound.play();
-                if(this.intro_sound) this.intro_sound.setVolume(0.5,10);
-                if(this.level_sound) this.level_sound.stop();
+                SOLAR.playWinSound();
                 break;
+
             case SOLAR.LEVEL_STATE_FAIL : 
                 console.log("LEVEL_STATE_FAIL");
-
                 SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.showControllers();
                 SOLAR.theFailPlane.setEnabled(true);
-                if(this.fail_sound) this.fail_sound.play();
-                if(this.intro_sound) this.intro_sound.setVolume(0.5,10);
-                if(this.level_sound) this.level_sound.stop();
+                SOLAR.playFailSound();
                 break;
         }
     }

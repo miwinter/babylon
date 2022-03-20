@@ -60,12 +60,64 @@ var SOLAR = {
     discs : [],
 
     highScoreTableInformation : null,
-    highScoreTableContainer : null
+    highScoreTableContainer : null,
 
+    // sounds section
+    intro_sound : null,
+    level_sound : null,
+    fail_sound : null,
+    win_sound : null
 }
 
 SOLAR.currentLevelID = SOLAR.GAME_STATE_WAINTING_WEBXR;
 SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.UNDEFINED;
+
+SOLAR.initSound = function (){
+
+    var music = new BABYLON.Sound("music", "sounds/intro.mp3",
+    theScene, function() {music.setVolume(0,0);music.play();music.setVolume(0.2,20);}, {
+    loop: true, autoplay: false
+    });
+    SOLAR.intro_sound = music;
+
+    SOLAR.level_sound = new BABYLON.Sound("music", "sounds/level.mp3",
+    theScene, null, {
+    loop: false, autoplay: false
+    });
+
+    SOLAR.win_sound = new BABYLON.Sound("music", "sounds/won.mp3",
+    theScene, null, {
+    loop: false, autoplay: false
+    });
+
+    SOLAR.fail_sound = new BABYLON.Sound("music", "sounds/fail.mp3",
+    theScene, null, {
+    loop: false, autoplay: false
+    });
+}
+
+SOLAR.startLevelSound = function (){
+    SOLAR.level_sound.setVolume(0,0);
+    SOLAR.level_sound.play();
+    SOLAR.level_sound.setVolume(0.4,5);
+
+    SOLAR.intro_sound.setVolume(0.1,3);
+}
+
+SOLAR.playWinSound = function (){
+    SOLAR.win_sound.play();
+    SOLAR.intro_sound.setVolume(0.2,5);
+    SOLAR.level_sound.stop();
+}
+
+SOLAR.playFailSound = function (){
+    SOLAR.fail_sound.play();
+    SOLAR.intro_sound.setVolume(0.2,5);
+    SOLAR.level_sound.stop();
+}
+
+
+
 
 SOLAR.isHighScore = function (score){
     if(SOLAR.highScoreTableInformation == null)

@@ -81,6 +81,7 @@ var createScene = async function () {
     });
 
     levels = new Array(3);
+    SOLAR.initSound();
     levels[0] = new Menu();
     levels[1] = new Level1();
     levels[2] = new Level2();

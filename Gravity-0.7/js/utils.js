@@ -8,7 +8,7 @@ var SOLAR = {
     LEVEL_STATE_HIGHSCORE : 4,
     LEVEL_STATE_FAIL : 5,
 
-    LEVELS_NUMBER : 4,
+    LEVELS_NUMBER : 6,
 
     DISC_DIST : 1, // distance par rapport aux bords à partir de laquelle les disc apparaissent
 
@@ -636,7 +636,10 @@ SOLAR.createExplanationPlane = function (){
         var explanationPlane = BABYLON.Mesh.CreatePlane("plane", 1, theScene);
         explanationPlane.position = new BABYLON.Vector3(0, 1.5, 2);        
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(explanationPlane);
-        var explanationPanel = new BABYLON.GUI.StackPanel();    
+        var explanationPanel = new BABYLON.GUI.StackPanel();
+        explanationPanel.isVertical = true;
+        //explanationPanel.width = "5000px";  
+        //explanationPanel.background = "green"; 
         advancedTexture.addControl(explanationPanel);  
         var header = new BABYLON.GUI.TextBlock();
         header.text = "<Level explanation text>";
@@ -645,6 +648,7 @@ SOLAR.createExplanationPlane = function (){
         header.height = "500px";
         header.fontFamily = 'Righteous';
         header.color = "white";
+        header.background = "red";
         header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         header.fontSize = "50"
         explanationPanel.addControl(header);

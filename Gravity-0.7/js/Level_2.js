@@ -6,7 +6,8 @@ class Level2 extends gameLevel {
         this.G = 0.001;
         this.levelDuration = 40;
 
-        SOLAR.theExplanationPlaneText.text = "Welcome to Level 4 !!!\n2 planets to mange.";
+        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 2 !!!
+        \n Garder les deux planètes jumelle dans le cadre pendant ${this.levelDuration} secondes. `;
 
         // création de la planete 1
         var P1 = new planet(0.05, // radius

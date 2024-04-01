@@ -187,6 +187,7 @@ class gameLevel {
 
     }
 
+
     initSun(){
         // création de la planete 1
         this.sun = new planet(0.12, // radius
@@ -273,6 +274,10 @@ class gameLevel {
             speed = this.sun.mesh.position.subtract(this.sunPosPrec).length() / deltaTime; // speed in m/s
             var acc = Math.abs(speed - this.sunSpeedPrec) / deltaTime; // acc in m / s2 
             this.score += 100*Math.exp(-acc/50);
+
+            var index = Math.trunc(acc/100);
+            index = ((index <= 10) ? index : 10);
+            console.log(index);
         } 
         
         this.sunPosPrec = this.sun.mesh.position.clone();
@@ -375,6 +380,7 @@ class gameLevel {
                     sum_gravity_force_for_i.addInPlace( gravity_force[i][j]);
                 }
             }
+            /*
             if(sum_gravity_force_for_i.length() > 1) {
                 sum_gravity_force_for_i.normalize().scaleInPlace(1);
                 //console.log('+');
@@ -383,6 +389,7 @@ class gameLevel {
                 sum_gravity_force_for_i.normalize().scaleInPlace(0.02);
                 //console.log('-');
             }
+            */
 
             this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
             this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));

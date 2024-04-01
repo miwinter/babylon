@@ -5,7 +5,9 @@ class Level3 extends gameLevel {
         this.delta_time = 0.1;
         this.G = 0.00001;
 
-        SOLAR.theExplanationPlaneText.text = "A high speed planet coming from the left.";
+        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 3 !!!
+        \n Une planète rapide arrive de la gauche, freinez-la puis gardez-la dans le cadre pendant ${this.levelDuration} secondes. `;
+
 
         // création de la planete 1
         var P1 = new planet(0.05, // radius

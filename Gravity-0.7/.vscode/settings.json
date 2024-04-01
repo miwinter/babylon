@@ -1,0 +1,10 @@
+{
+	"liveServer.settings.root": "/",
+	"liveServer.settings.https": {
+	  "enable": true,
+	  "cert": "/Users/michelwinter/Projets/BabylonJS/babylon/Gravity-0.7/localhost.pem",
+	  "key": "/Users/michelwinter/Projets/BabylonJS/babylon/Gravity-0.7/localhost.key",
+	  "passphrase": "ride like the wind"
+	}
+  }
+  

@@ -9,15 +9,15 @@ class Level6 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 3000;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 5 !!!
-        \n Garder les deux planètes dans le cadre pendant ${this.levelDuration} secondes. `;
+        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 6 !!!
+        \n Gardez une géante gazeuse et ses deux satellites dans le cadre pendant ${this.levelDuration} secondes. `;
 
         this.levelDuration = 30;
 
         // création de la planete 1
         var P1 = new planet(0.2, // radius
                 20000, // mass
-                "planet-4.png", // texture file
+                "jupiter.jpg", // texture file
                 new BABYLON.Vector3(0,1,2), // initial position
                 new BABYLON.Vector3(0.5,0,0.5)); // initial momentum
 

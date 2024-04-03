@@ -7,7 +7,7 @@ class Level1 extends gameLevel {
         this.sun.masse = 5;
         this.levelDuration = 15;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 1 !!!
+        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 1 Michel !!!
         \n Apprenez à modifier la trajectoire de la planète.
         \n Garder la planète dans le cadre pendant ${this.levelDuration} secondes. `;
 

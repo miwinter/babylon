@@ -50,19 +50,7 @@ class Level5 extends gameLevel {
         P3.mesh.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
 
         this.planets.push(P3);
-/*
-        // création de la planete 4
-        var P4 = new planet(0.05, // radius
-            100, // mass
-            "planet-5.png", // texture file
-            new BABYLON.Vector3(-0.5,0.5,1), // initial position
-            new BABYLON.Vector3(0,0,0)); // initial momentum
 
-        P4.angleSpeed = 0.1;
-        P4.mesh.rotate(new BABYLON.Vector3(0, 0, 1),-Math.PI/10);
-        P4.mesh.rotate(new BABYLON.Vector3(1, 0, 0),Math.PI/10);
-        this.planets.push(P4);
-      */  
     }
 
 } // end class

@@ -8,7 +8,7 @@ var SOLAR = {
     LEVEL_STATE_HIGHSCORE : 4,
     LEVEL_STATE_FAIL : 5,
 
-    LEVELS_NUMBER : 6,
+    LEVELS_NUMBER : 8,
 
     DISC_DIST : 1, // distance par rapport aux bords à partir de laquelle les disc apparaissent
 
@@ -200,7 +200,7 @@ SOLAR.createMenuPlane = function (){
     var menuPlane = BABYLON.Mesh.CreatePlane("menu", 1, theScene);
     menuPlane.position = new BABYLON.Vector3(0, SOLAR.theHeight, 2);        
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(menuPlane);
-    advancedTexture.idealHeight = 1600;
+    advancedTexture.idealHeight = 1800;
     var menuStackPanel = new BABYLON.GUI.StackPanel();
     advancedTexture.addControl(menuStackPanel); 
     menuStackPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -215,33 +215,36 @@ SOLAR.createMenuPlane = function (){
     header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     header.fontSize = 200;
     menuStackPanel.addControl(header);
+
+    for(let j = 0; j<Math.floor(SOLAR.LEVELS_NUMBER / 4); j++){
    
-    var buttonPanel = new BABYLON.GUI.StackPanel();  
-      
-    buttonPanel.isVertical = false;
-    buttonPanel.height = "200px";
-    buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    menuStackPanel.addControl(buttonPanel);  
-
-    for (let i = 1; i <= SOLAR.LEVELS_NUMBER; i++) {
-
-        var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i, i);
-        button.width = "200px";
-        button.height = "200px";
-        button.color = "yellow";
-        button.thickness = 8;
-        button.fontSize = 100;
-        button.background = "green";
-        button.paddingTop = "10px";
-        button.cornerRadius = 50;
-        button.paddingRight = "10px";
-        button.fontFamily = 'Righteous';
+        var buttonPanel = new BABYLON.GUI.StackPanel();  
         
-        button.onPointerUpObservable.add(function() {
-            SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.GOTO_LEVEL;
-            SOLAR.targetLevelID = i;
-        });
-        buttonPanel.addControl(button);
+        buttonPanel.isVertical = false;
+        buttonPanel.height = "200px";
+        buttonPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        menuStackPanel.addControl(buttonPanel);  
+
+        for (let i = 1; i <= 4; i++) {
+
+            var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i+j*4, i+j*4);
+            button.width = "200px";
+            button.height = "200px";
+            button.color = "yellow";
+            button.thickness = 8;
+            button.fontSize = 100;
+            button.background = "green";
+            button.paddingTop = "10px";
+            button.cornerRadius = 50;
+            button.paddingRight = "10px";
+            button.fontFamily = 'Righteous';
+
+            button.onPointerUpObservable.add(function() {
+                SOLAR.levelChange = SOLAR.LEVEL_CHANGE_FLAG.GOTO_LEVEL;
+                SOLAR.targetLevelID = i+j*4;
+            });
+            buttonPanel.addControl(button);
+        }
     }
 
     buttonPanel = new BABYLON.GUI.StackPanel();  

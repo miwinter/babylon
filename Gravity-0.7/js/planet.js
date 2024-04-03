@@ -11,6 +11,7 @@ class planet {
     rotation2 = null;
     angleSpeed = 0;
     arrow = null;
+    static = false;
 
     constructor(radius, masse, texture, initialPosition, initialMomentum, arrowRatio = 1) {
         this.mesh = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: 2*radius, segments: 32}, theScene);
@@ -54,7 +55,7 @@ class planet {
         
         // var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum);
         // var lg = this.initialMomentum.length();
-        var lg = this.radius + 0.05 * size;
+        var lg = this.radius + 0.1 * size;
         var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum.clone().normalize().scaleInPlace(lg));
         console.log(this.radius + " : " + 0.15*size)
         
@@ -62,6 +63,7 @@ class planet {
         var arrowPoint2 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.03,-0.01,0));
         var arrowPoint3 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.03,0,0.01));
         var arrowPoint4 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.03,0,-0.01));
+        
         
         this.arrow = BABYLON.Mesh.CreateLines("planet_arrow", [ 
             this.initialPosition, arrowEndPoint,

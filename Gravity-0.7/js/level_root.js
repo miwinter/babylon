@@ -196,6 +196,29 @@ class gameLevel {
             new BABYLON.Vector3.Zero(), // initial position
             new BABYLON.Vector3.Zero()); // initial momentum
 
+        // ****************** Juste pour le glow
+        // ATTENTION le glow fait s'effondrer le framerate
+        /*
+        
+        var material = new BABYLON.StandardMaterial("material", theScene);
+        var noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 386, theScene);
+        noiseTexture.octaves = 7;
+        noiseTexture.persistence = 2;
+        noiseTexture.brightness = 0.1;
+
+        noiseTexture.animationSpeedFactor = 1;
+        material.emissiveTexture = noiseTexture;
+        material.diffusiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+        material.emissiveColor = new BABYLON.Color4(0.6259, 0.3056, 0.0619, 0.5);
+        this.sun.mesh.material = material;
+        this.sun.initialMaterial = material;
+            
+        var gl = new BABYLON.GlowLayer("glow", theScene);
+        gl.intensity = 0.1;
+        gl.addIncludedOnlyMesh(this.sun.mesh);
+        */
+        // ****************** fin du glow
+        
         this.sunlight = new BABYLON.PointLight('sunLight', new BABYLON.Vector3.Zero(), theScene);
         this.sunlight.intensity = 15;      
 
@@ -372,28 +395,29 @@ class gameLevel {
         let sum_gravity_force_for_i = new BABYLON.Vector3.Zero();
         // i=0 -> sun
         for(let i = 1; i < this.planets.length; i++) {
-            sum_gravity_force_for_i = BABYLON.Vector3.Zero();
+            if(! this.planets[i].static) {
+                sum_gravity_force_for_i = BABYLON.Vector3.Zero();
 
-            for(let j = 0; j < this.planets.length; j++) {
+                for(let j = 0; j < this.planets.length; j++) {
 
-                if(i != j) {
-                    sum_gravity_force_for_i.addInPlace( gravity_force[i][j]);
+                    if(i != j) {
+                        sum_gravity_force_for_i.addInPlace( gravity_force[i][j]);
+                    }
                 }
-            }
-            /*
-            if(sum_gravity_force_for_i.length() > 1) {
-                sum_gravity_force_for_i.normalize().scaleInPlace(1);
-                //console.log('+');
-            }
-            if(sum_gravity_force_for_i.length() < 0.02) {
-                sum_gravity_force_for_i.normalize().scaleInPlace(0.02);
-                //console.log('-');
-            }
-            */
+                /*
+                if(sum_gravity_force_for_i.length() > 1) {
+                    sum_gravity_force_for_i.normalize().scaleInPlace(1);
+                    //console.log('+');
+                }
+                if(sum_gravity_force_for_i.length() < 0.02) {
+                    sum_gravity_force_for_i.normalize().scaleInPlace(0.02);
+                    //console.log('-');
+                }
+                */
 
-            this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
-            this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
-
+                this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
+                this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
+            }
             this.planets[i].mesh.rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
         }
 

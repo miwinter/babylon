@@ -91,6 +91,10 @@ var createScene = async function () {
     levels[6] = new Level6();
     levels[7] = new Level7();
     levels[8] = new Level8();
+    levels[9] = new Level9();
+    levels[10] = new Level10();
+    levels[11] = new Level11();
+    levels[12] = new Level12();
     theScene.registerBeforeRender(() => {  
     
         if(! isWebXRInitialized) return;

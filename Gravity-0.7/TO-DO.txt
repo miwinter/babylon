@@ -1,20 +1,12 @@
-- Faire un visuel d'attente avnt immersion
-- Faire plein de niveaux !!!!
-- changer la couleur des discs
-- attacher des sons aux planetes
-- tester la saisie de lettres
-- faire un webservice simple d'accès aux scores
-- trouver un hébergeur :
-        Les meilleurs hébergeurs web de 2021 : 
-        Hostinger
-        PlanetHoster
-        Infomaniak
-        o2switch
-        EX2
-        LWS
-        1&1 IONOS
-        HostPapa
-        Gandi
-        OVH
-- trouver un template simple pour site-web
-- regarder pour une licence open-source
+- IDEES pour des familles de niveaux :
+        .1 : initiation, planete +
+        .2 : JANUS simple : mélange de planètes + et -
+        .3 : positioning : il faut trouver le centre du système
+        .4 : generated : jouez sans vous lasser, les tableaux sont tous le temps différents
+        .5 : extended : le cadre est agrandi
+        .6 : bi-sun : un soleil dans chaque main
+        .7 : full-monty : un soleil ou un anti-sun dans chaque main
+        .8 : strategy : il faut poser 1 ou plusieurs soleils pour stabiliser le système
+        .9 : trajectory : le joueur doit faire suivre (en temps réel) une trajectoire prédéfinie à une/plusieurs planètes
+        .10: on doit placer des planetes dans l'espace pour amener une planete à un endroit prédeterminé
+        

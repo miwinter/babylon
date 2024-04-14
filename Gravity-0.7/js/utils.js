@@ -8,7 +8,7 @@ var SOLAR = {
     LEVEL_STATE_HIGHSCORE : 4,
     LEVEL_STATE_FAIL : 5,
 
-    LEVELS_NUMBER : 8,
+    LEVELS_NUMBER : 12,
 
     DISC_DIST : 1, // distance par rapport aux bords à partir de laquelle les disc apparaissent
 
@@ -216,7 +216,7 @@ SOLAR.createMenuPlane = function (){
     header.fontSize = 200;
     menuStackPanel.addControl(header);
 
-    for(let j = 0; j<Math.floor(SOLAR.LEVELS_NUMBER / 4); j++){
+    for(let j = 0; j<Math.ceil(SOLAR.LEVELS_NUMBER / 4); j++){
    
         var buttonPanel = new BABYLON.GUI.StackPanel();  
         
@@ -226,6 +226,8 @@ SOLAR.createMenuPlane = function (){
         menuStackPanel.addControl(buttonPanel);  
 
         for (let i = 1; i <= 4; i++) {
+
+            if((i+j*4) > SOLAR.LEVELS_NUMBER) break;
 
             var button = BABYLON.GUI.Button.CreateSimpleButton("L"+i+j*4, i+j*4);
             button.width = "200px";

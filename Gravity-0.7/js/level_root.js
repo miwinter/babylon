@@ -37,6 +37,32 @@ class gameLevel {
     initLevel(){
     }
 
+    // fonction qui calcule la position d'une mesh après une rotation autour d'un point
+   // qui n'est pas le centre du repère
+   rotateVectorAroundPoint(startVector, endVector, rotationVector, pointOfRotation) {
+    // Déplacer le système de coordonnées pour que le point de rotation soit l'origine
+    var translatedStart = startVector.subtract(pointOfRotation);
+    var translatedEnd = endVector.subtract(pointOfRotation);
+
+    // Créer une matrice de rotation à partir du vecteur de rotation
+    var rotationMatrix = BABYLON.Matrix.RotationYawPitchRoll(
+    rotationVector.y, // Rotation autour de l'axe Y
+    rotationVector.x, // Rotation autour de l'axe X
+    rotationVector.z  // Rotation autour de l'axe Z
+    );
+
+    // Appliquer la rotation aux vecteurs déplacés
+    var rotatedTranslatedStart = BABYLON.Vector3.TransformCoordinates(translatedStart, rotationMatrix);
+    var rotatedTranslatedEnd = BABYLON.Vector3.TransformCoordinates(translatedEnd, rotationMatrix);
+
+    // Remettre les vecteurs dans le système de coordonnées d'origine
+    var rotatedStart = rotatedTranslatedStart.add(pointOfRotation);
+    var rotatedEnd = rotatedTranslatedEnd.add(pointOfRotation);
+
+    // Renvoyer les vecteurs de début et de fin après rotation
+    return { start: rotatedStart, end: rotatedEnd };
+}
+
     // setup et affichage des objets pendant le compte à rebours
     initPlayground(){
         this.sun.mesh.setEnabled(true);

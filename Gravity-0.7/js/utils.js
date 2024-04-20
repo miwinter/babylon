@@ -8,7 +8,7 @@ var SOLAR = {
     LEVEL_STATE_HIGHSCORE : 4,
     LEVEL_STATE_FAIL : 5,
 
-    LEVELS_NUMBER : 12,
+    LEVELS_NUMBER : 19,
 
     DISC_DIST : 1, // distance par rapport aux bords à partir de laquelle les disc apparaissent
 
@@ -235,7 +235,10 @@ SOLAR.createMenuPlane = function (){
             button.color = "yellow";
             button.thickness = 8;
             button.fontSize = 100;
-            button.background = "green";
+            if((i+j*4)>12)
+                button.background = "blue";
+            else
+                button.background = "green";
             button.paddingTop = "10px";
             button.cornerRadius = 50;
             button.paddingRight = "10px";
@@ -755,16 +758,16 @@ SOLAR.showExitPoint = function (planet)
         d.position.x = SOLAR.xMax;
         planet.mesh.position.x = SOLAR.xMax;
     } else if(planet.mesh.position.y < SOLAR.yMin) {
-        d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
+        d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
         d.position.y = SOLAR.yMin;
         planet.mesh.position.y = SOLAR.yMin;
     } else if(planet.mesh.position.y > SOLAR.yMax) {
-        d.rotation = new BABYLON.Vector3(Math.PI / 2,0,0);
+        d.rotation = new BABYLON.Vector3(-Math.PI / 2,0,0);
         d.position.y = SOLAR.yMax;
         planet.mesh.position.y = SOLAR.yMax;
     } else if(planet.mesh.position.z > SOLAR.zMax) {
         d.position.z = SOLAR.zMax;
-        planet.mesh.position.z = SOLAR.yMax;
+        planet.mesh.position.z = SOLAR.zMax;
     }  else if(planet.mesh.position.z < SOLAR.zMin) {
         d.position.z = SOLAR.zMin;
     } 

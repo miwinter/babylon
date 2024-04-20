@@ -103,6 +103,7 @@ class gameLevel {
     cleanLevel(){
         SOLAR.theFailPlane.setEnabled(false);
         SOLAR.theSuccessPlane.setEnabled(false);
+        SOLAR.theTimerPlane.setEnabled(false);
 
         this.sunlight.dispose();
 
@@ -180,7 +181,6 @@ class gameLevel {
 
             case SOLAR.LEVEL_STATE_FAIL : 
                 console.log("LEVEL_STATE_FAIL");
-                SOLAR.theTimerPlane.setEnabled(false);
                 SOLAR.showControllers();
                 SOLAR.theFailPlane.setEnabled(true);
                 SOLAR.playFailSound();
@@ -442,7 +442,7 @@ class gameLevel {
                 */
 
                 this.planets[i].momentum.addInPlace( sum_gravity_force_for_i.scale(this.delta_time) );
-                this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / this.planets[i].masse));
+                this.planets[i].mesh.position.addInPlace( this.planets[i].momentum.scale(this.delta_time / Math.abs(this.planets[i].masse)));
             }
             this.planets[i].mesh.rotate(BABYLON.Axis.Y,this.planets[i].angleSpeed);
         }

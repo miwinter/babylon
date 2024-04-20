@@ -9,4 +9,4 @@
         .8 : strategy : il faut poser 1 ou plusieurs soleils pour stabiliser le système
         .9 : trajectory : le joueur doit faire suivre (en temps réel) une trajectoire prédéfinie à une/plusieurs planètes
         .10: on doit placer des planetes dans l'espace pour amener une planete à un endroit prédeterminé
-        
+        .11: une planète doit faire une trajectoire en dynamique (un 8, autre...)

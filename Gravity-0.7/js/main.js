@@ -80,21 +80,15 @@ var createScene = async function () {
  
     });
 
-    levels = new Array(10);
+    levels = new Array(SOLAR.LEVELS_NUMBER+1);
     SOLAR.initSound();
+ 
     levels[0] = new Menu();
-    levels[1] = new Level1();
-    levels[2] = new Level2();
-    levels[3] = new Level3();
-    levels[4] = new Level4();
-    levels[5] = new Level5();
-    levels[6] = new Level6();
-    levels[7] = new Level7();
-    levels[8] = new Level8();
-    levels[9] = new Level9();
-    levels[10] = new Level10();
-    levels[11] = new Level11();
-    levels[12] = new Level12();
+    for (let i = 1; i <= SOLAR.LEVELS_NUMBER; i++) {
+        let levelClass = eval(`Level${i}`);
+        levels[i] = new levelClass();
+    }
+    
     theScene.registerBeforeRender(() => {  
     
         if(! isWebXRInitialized) return;

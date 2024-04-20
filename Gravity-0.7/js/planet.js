@@ -15,10 +15,24 @@ class planet {
 
     constructor(radius, masse, texture, initialPosition, initialMomentum, arrowRatio = 1) {
         this.mesh = BABYLON.MeshBuilder.CreateSphere("planet", {diameter: 2*radius, segments: 32}, theScene);
-        this.mesh.material = new BABYLON.StandardMaterial("planetMat", theScene);
-        this.mesh.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
-        this.mesh.material.diffuseTexture = new BABYLON.Texture("textures/"+texture, theScene);
-
+        
+        if(masse > 0){
+        
+            this.mesh.material = new BABYLON.StandardMaterial("planetMat", theScene);
+            this.mesh.material.specularColor = new BABYLON.Color3(0.05,0.03,0);
+            this.mesh.material.diffuseTexture = new BABYLON.Texture("textures/"+texture, theScene);
+        }
+        else{
+            var fireMaterial = new BABYLON.StandardMaterial("fontainSculptur2", theScene);
+            var fireTexture = new BABYLON.FireProceduralTexture("fire", 256, theScene);
+            fireTexture.speed = new BABYLON.Vector2(0.5, 0.5);
+            fireTexture.fireColors = BABYLON.FireProceduralTexture.BlueFireColors;
+            fireMaterial.diffuseTexture = fireTexture;
+            fireMaterial.opacityTexture = fireTexture;
+            this.mesh.material = fireMaterial;
+            this.mesh.material.specularColor = new BABYLON.Color3(0, 0, 0);
+            //this.mesh.material.alpha = 0.5;
+        }
         this.initialMaterial = this.mesh.material;
         
         this.initialPosition = initialPosition; // à deux endroits

@@ -30,6 +30,7 @@ class Level12 extends gameLevel {
         var rotated = this.rotateVectorAroundPoint(startVector, startVector.add(momentum), rotationVector, center);
         var p0_momentum = rotated.end.subtract(rotated.start);
         
+        //************************************************************ 
         // nouvelles psotions de P0
         var P0 = new planet(0.1, // radius
                 100, // mass
@@ -45,6 +46,7 @@ class Level12 extends gameLevel {
 
         // création de la planete 1
         
+        //************************************************************ 
         // nouvelles psotions de P0
         var startVector = new BABYLON.Vector3(center.x+2,center.y,center.z);
         var momentum = new BABYLON.Vector3(-50,0,0);                     

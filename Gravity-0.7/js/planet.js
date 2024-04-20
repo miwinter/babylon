@@ -44,7 +44,7 @@ class planet {
 
         this.mesh.setEnabled(false);
         this.drawPlanetMomentum(arrowRatio);
-        this.arrow.setEnabled(false);
+        this.arrowSetEnabled(false);
 
     }
 
@@ -64,7 +64,7 @@ class planet {
     
         return T2.addInPlace(VCenter);   
     }
-
+/*
     drawPlanetMomentum(size = 1){
         
         // var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum);
@@ -88,6 +88,60 @@ class planet {
             this.scene);
         this.arrow.color = new BABYLON.Color3(0, 1, 0);
     }
+    */
+    // function qui dessine un cylinder entre deux points qui representent
+    // le centre de la base du cylinder et le centre du sommet du cylinder
+
+    drawCylinerBetweenTwoPoints(point1, point2){
+        var direction = point2.subtract(point1).normalize();
+        var distance = BABYLON.Vector3.Distance(point1, point2);
+        var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {
+            height: distance,
+            diameter: 0.02, // Adjust the diameter to change the thickness of the line
+            tessellation: 32
+        }, this.scene);
+        cylinder.position = point1.add(point2).scale(0.5);
+        var up = new BABYLON.Vector3(0, 1, 0);
+        var angle = Math.acos(BABYLON.Vector3.Dot(up, direction));
+        var axis = BABYLON.Vector3.Cross(up, direction).normalize();
+        cylinder.rotationQuaternion = BABYLON.Quaternion.RotationAxis(axis, angle);
+        cylinder.material = new BABYLON.StandardMaterial("material", this.scene);
+        cylinder.material.diffuseColor = new BABYLON.Color3(0, 1, 0);
+        return cylinder;
+    }
+
+
+    drawPlanetMomentum(size = 1){
+
+        this.arrows = [];
+
+        // calcul de la norme du vecteur momentum
+        if(this.initialMomentum.length() > 0){
+            console.log("**********   "+this.initialMomentum.length())
+
+            var lg = this.radius + 0.1 * size;
+            var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum.clone().normalize().scaleInPlace(lg));
+            
+            var arrowPoint1 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,0.02,0));
+            var arrowPoint2 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,-0.02,0));
+            var arrowPoint3 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,0,0.02));
+            var arrowPoint4 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,0,-0.02));
+
+            this.arrows.push(this.drawCylinerBetweenTwoPoints(this.initialPosition, arrowEndPoint));
+            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint1));
+            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint2));
+            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint3));
+            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint4));
+        }
+    }
+
+// function arrowSetEnabled qui permet de rendre visible ou invisible la fleche de momentum
+// de la planete
+arrowSetEnabled(enabled){
+    for (var i = 0; i < this.arrows.length; i++){
+        this.arrows[i].setEnabled(enabled);
+    }
+}
 
 reset(){
     this.mesh.position = this.initialPosition.clone();
@@ -95,12 +149,15 @@ reset(){
     this.mesh.material = this.initialMaterial;
 
     this.mesh.setEnabled(true);
-    this.arrow.setEnabled(true);
+    this.arrowSetEnabled(true);
 }
 
 dispose(){
     this.mesh.dispose();
-    this.arrow.dispose();
+    // suppression des cylindres
+    for (var i = 0; i < this.arrows.length; i++){
+        this.arrows[i].dispose();
+    }
 }
 
 }

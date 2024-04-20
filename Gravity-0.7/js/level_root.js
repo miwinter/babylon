@@ -87,7 +87,7 @@ class gameLevel {
     launchGame(){
         // i=0 -> sun
         for(let i = 1; i < this.planets.length; i++) {
-            this.planets[ i ].arrow.setEnabled(false);
+            this.planets[ i ].arrowSetEnabled(false);
         }
 
         this.timer = Date.now();

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cousine:wght@700&family=Righteous&display=swap" rel="stylesheet">
+        
+        <!-- Babylon.js playground version         -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: "Righteous";
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+                font-family: "Righteous";
+            }
+
+            .enter-class {
+                font-family: "Righteous";
+                font-size: 25px;
+                border-style: solid;
+                border-color: yellow;
+                border-radius: 4px;
+                border-width: 1px;
+                background-color: green;
+                color: yellow;
+                padding: 20px;
+            }
+
+            .title {
+                z-index: 11;
+                position: absolute;
+                color: white;
+                font-family: "Righteous";
+                font-size: 110px;
+            }
+
+            #preload {
+                font-family: "Cousine";
+            }
+
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+
+    <div class="title">
+        Babylon Sun
+  </div>
+
+    <script src="js/utils.js?v=<?=@filemtime('utils.js')?>"></script>
+    <script src="js/planet.js?v=<?=@filemtime('planet.js')?>"></script>
+    <script src="js/level_root.js?v=<?=@filemtime('level_root.js')?>"></script>
+    <script src="js/level_menu.js?v=<?=@filemtime('level_menu.js')?>"></script>
+    <script src="js/Level_1.js?v=<?=@filemtime('Level_1.js')?>"></script>
+    <script src="js/Level_2.js?v=<?=@filemtime('Level_2.js')?>"></script>
+    <script src="js/Level_3.js?v=<?=@filemtime('Level_3.js')?>"></script>
+    <script src="js/Level_4.js?v=<?=@filemtime('Level_4.js')?>"></script>
+    <script src="js/Level_5.js?v=<?=@filemtime('Level_5.js')?>"></script>
+    <script src="js/Level_6.js?v=<?=@filemtime('Level_6.js')?>"></script>
+    <script src="js/Level_7.js?v=<?=@filemtime('Level_7.js')?>"></script>
+    <script src="js/Level_8.js?v=<?=@filemtime('Level_8.js')?>"></script>
+    <script src="js/Level_9.js?v=<?=@filemtime('Level_9.js')?>"></script>
+    <script src="js/Level_10.js?v=<?=@filemtime('Level_10.js')?>"></script>
+    <script src="js/Level_11.js?v=<?=@filemtime('Level_11.js')?>"></script>
+    <script src="js/Level_12.js?v=<?=@filemtime('Level_12.js')?>"></script>
+    <script src="js/Level_13.js?v=<?=@filemtime('Level_13.js')?>"></script>
+    <script src="js/Level_14.js?v=<?=@filemtime('Level_14.js')?>"></script>
+    <script src="js/Level_15.js?v=<?=@filemtime('Level_15.js')?>"></script>
+    <script src="js/Level_16.js?v=<?=@filemtime('Level_16.js')?>"></script>
+    <script src="js/Level_17.js?v=<?=@filemtime('Level_17.js')?>"></script>
+    <script src="js/Level_18.js?v=<?=@filemtime('Level_18.js')?>"></script>
+    <script src="js/Level_19.js?v=<?=@filemtime('Level_19.js')?>"></script>
+    <script src="js/main.js?v=<?=@filemtime('main.js')?>"></script>
+
+    <div id="preload">&nbsp;</div>
+
+</body>
+</html>

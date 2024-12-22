@@ -1,0 +1,12 @@
+- IDEES pour des familles de niveaux :
+        .1 : initiation, planete +
+        .2 : JANUS simple : mélange de planètes + et -
+        .3 : positioning : il faut trouver le centre du système
+        .4 : generated : jouez sans vous lasser, les tableaux sont tous le temps différents
+        .5 : extended : le cadre est agrandi
+        .6 : bi-sun : un soleil dans chaque main
+        .7 : full-monty : un soleil ou un anti-sun dans chaque main
+        .8 : strategy : il faut poser 1 ou plusieurs soleils pour stabiliser le système
+        .9 : trajectory : le joueur doit faire suivre (en temps réel) une trajectoire prédéfinie à une/plusieurs planètes
+        .10: on doit placer des planetes dans l'espace pour amener une planete à un endroit prédeterminé
+        .11: une planète doit faire une trajectoire en dynamique (un 8, autre...)

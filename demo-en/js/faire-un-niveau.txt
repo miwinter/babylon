@@ -1,0 +1,3 @@
+Augmenter le nombre de level ds utils.js
+ajouter l'include ds index.html
+instancier la classe dans main.js

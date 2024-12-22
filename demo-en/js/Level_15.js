@@ -9,9 +9,10 @@ class Level15 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 200;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 15 !!!
-        \n Négative & Positive...
-        \n 2 planètes à garder dans le cadre pendant ${this.levelDuration} secondes.`;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 15 !!!
+            \n Negative & Positive...
+            \n Keep 2 planets in the frame for ${this.levelDuration} seconds.`;
+
 
         this.levelDuration = 30;
 

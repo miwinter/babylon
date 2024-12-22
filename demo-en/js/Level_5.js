@@ -9,8 +9,9 @@ class Level5 extends gameLevel {
         this.G = 0.0001;
         this.sun.masse = 1000;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 5 !!!
-        \n 3 planètes à garder dans le cadre pendant ${this.levelDuration} secondes.`;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 5 !!!
+            \n 3 planets to keep in the frame for ${this.levelDuration} seconds.`;
+
 
         this.levelDuration = 30;
 

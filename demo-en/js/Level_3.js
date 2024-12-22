@@ -5,8 +5,9 @@ class Level3 extends gameLevel {
         this.delta_time = 0.1;
         this.G = 0.00001;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 3 !!!
-        \n Une planète rapide arrive de la gauche, freinez-la puis gardez-la dans le cadre pendant ${this.levelDuration} secondes. `;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 3!!!
+            \n A fast planet is coming from the left, slow it down and keep it in the frame for ${this.levelDuration} seconds. `;
+
 
 
         // création de la planete 1

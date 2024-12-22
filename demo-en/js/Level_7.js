@@ -9,8 +9,9 @@ class Level7 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 3000;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 7 !!!
-        \n Résistez à la géante bleue pendant ${this.levelDuration} secondes. `;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 7!!!
+            \n Survive the blue giant for ${this.levelDuration} seconds. `;
+
 
         this.levelDuration = 30;
 

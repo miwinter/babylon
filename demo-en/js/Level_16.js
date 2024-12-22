@@ -8,10 +8,9 @@ class Level16 extends gameLevel {
         this.delta_time = 0.008;
         this.G = 0.001;
         this.sun.masse = 200;
-
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 16 !!!
-        \n Empéchez les 2 grosses planètes positives d'éjecter la petite planète négative.
-        \n Pendant ${this.levelDuration} secondes.`;
+        SOLAR.theExplanationPlaneText.text = `Welcome to level 16!!!
+        \n Prevent the 2 large positive planets from ejecting the small negative planet.
+        \n For ${this.levelDuration} seconds.`;
 
         this.levelDuration = 30;
 

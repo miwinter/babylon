@@ -11,8 +11,9 @@ class Level11 extends gameLevel {
 
         this.levelDuration = 30;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 11 !!!
-        \n Gardez la planete et ses satellites dans le cadre pendant ${this.levelDuration} secondes. `;
+                SOLAR.theExplanationPlaneText.text = `Welcome to level 11!!!
+                \n Keep the planet and its satellites in the frame for ${this.levelDuration} seconds. `;
+
 
         // création de la planete 0
         var center = new BABYLON.Vector3(-1,1,2);

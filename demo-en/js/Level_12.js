@@ -11,8 +11,9 @@ class Level12 extends gameLevel {
 
         this.levelDuration = 30;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 12 !!!
-        \n Evitez la catastrophe... pendant ${this.levelDuration} secondes. `;
+                SOLAR.theExplanationPlaneText.text = `Welcome to level 12!!!
+                \n Avoid the catastrophe... for ${this.levelDuration} seconds. `;
+
 
         // on fait tourner l'axe des 2 planetes suivant une rotation aléatoire
         // de sorte qu'elle continue de se rencontrer

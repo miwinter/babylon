@@ -275,7 +275,6 @@ SOLAR.createCubePlayground = function (){
     SOLAR.yMin = -0.5;
     SOLAR.yMax = SOLAR.yMin + SOLAR.yRange;
 
-
     var cubePoints = [
         new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMin, SOLAR.zMin),
         new BABYLON.Vector3(SOLAR.xMin, SOLAR.yMax, SOLAR.zMin),

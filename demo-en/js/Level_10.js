@@ -11,8 +11,9 @@ class Level10 extends gameLevel {
 
         this.levelDuration = 30;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 10 !!!
-        \n Le problème à (...) corps... pendant ${this.levelDuration} secondes. `;
+                SOLAR.theExplanationPlaneText.text = `Welcome to level 10!!!
+                \n The problem with (...) bodies... for ${this.levelDuration} seconds. `;
+
 
         // création de la planete 0
         var center = new BABYLON.Vector3(0,1.8,2);

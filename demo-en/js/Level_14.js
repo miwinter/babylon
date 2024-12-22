@@ -8,9 +8,8 @@ class Level14 extends gameLevel {
         this.delta_time = 0.01;
         this.G = 0.001;
         this.sun.masse = 200;
-
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 14 !!!
-        \n 2 planètes négatives à garder dans le cadre pendant ${this.levelDuration} secondes.`;
+        SOLAR.theExplanationPlaneText.text = `Welcome to level 14 !!!
+        \n 2 negative planets to keep within the frame for ${this.levelDuration} seconds.`;
 
         this.levelDuration = 30;
 

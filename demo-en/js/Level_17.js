@@ -9,9 +9,10 @@ class Level17 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 500;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 17 !!!
-        \n Empéchez les 2 grosses planètes positives d'éjecter la petite planète négative.
-        \n Pendant ${this.levelDuration} secondes.`;
+                SOLAR.theExplanationPlaneText.text = `Welcome to level 17!!!
+                \n Prevent the 2 large positive planets from ejecting the small negative planet.
+                \n For ${this.levelDuration} seconds.`;
+
 
         this.levelDuration = 30;
 

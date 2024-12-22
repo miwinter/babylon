@@ -12,8 +12,10 @@ class Level9 extends gameLevel {
 
         this.levelDuration = 30;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 9 !!!
-        \n Le problème à 4 corps... pendant ${this.levelDuration} secondes. `;
+                SOLAR.theExplanationPlaneText.text = `Welcome to level 9!!!
+                \n A circumferential version of the 4-body problem
+                \n ... for ${this.levelDuration} seconds. `;
+
 
 
         var x=0, y=1.8, z=3;

@@ -92,7 +92,7 @@ class planet {
     // function qui dessine un cylinder entre deux points qui representent
     // le centre de la base du cylinder et le centre du sommet du cylinder
 
-    drawCylinerBetweenTwoPoints(point1, point2){
+    drawCylinderBetweenTwoPoints(point1, point2){
         var direction = point2.subtract(point1).normalize();
         var distance = BABYLON.Vector3.Distance(point1, point2);
         var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {
@@ -117,8 +117,6 @@ class planet {
 
         // calcul de la norme du vecteur momentum
         if(this.initialMomentum.length() > 0){
-            console.log("**********   "+this.initialMomentum.length())
-
             var lg = this.radius + 0.1 * size;
             var arrowEndPoint = this.initialPosition.clone().addInPlace(this.initialMomentum.clone().normalize().scaleInPlace(lg));
             
@@ -127,11 +125,11 @@ class planet {
             var arrowPoint3 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,0,0.02));
             var arrowPoint4 = this.arrowTransform(this.initialMomentum, this.initialPosition, new BABYLON.Vector3(lg-0.05,0,-0.02));
 
-            this.arrows.push(this.drawCylinerBetweenTwoPoints(this.initialPosition, arrowEndPoint));
-            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint1));
-            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint2));
-            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint3));
-            this.arrows.push(this.drawCylinerBetweenTwoPoints(arrowEndPoint, arrowPoint4));
+            this.arrows.push(this.drawCylinderBetweenTwoPoints(this.initialPosition, arrowEndPoint));
+            this.arrows.push(this.drawCylinderBetweenTwoPoints(arrowEndPoint, arrowPoint1));
+            this.arrows.push(this.drawCylinderBetweenTwoPoints(arrowEndPoint, arrowPoint2));
+            this.arrows.push(this.drawCylinderBetweenTwoPoints(arrowEndPoint, arrowPoint3));
+            this.arrows.push(this.drawCylinderBetweenTwoPoints(arrowEndPoint, arrowPoint4));
         }
     }
 

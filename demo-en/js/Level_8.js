@@ -10,9 +10,8 @@ class Level8 extends gameLevel {
         this.sun.masse = 200;
 
         this.levelDuration = 60;
-
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 8 !!!
-        \n Le problème à 4 corps... pendant ${this.levelDuration} secondes. `;
+        SOLAR.theExplanationPlaneText.text = `Welcome to level 8!!!
+        \n The 4-body problem... for ${this.levelDuration} seconds. `;
 
         // création de la planete 1
         var P1 = new planet(0.05, // radius

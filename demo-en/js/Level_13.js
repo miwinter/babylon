@@ -9,9 +9,10 @@ class Level13 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 200;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 13 !!!
-        \n Apprenez à gérer les planètes négatives...
-        \n Garder la planète négative dans le cadre pendant ${this.levelDuration} secondes.`;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 13 !!!
+            \n Learn to manage negative planets...
+            \n Keep the negative planet in the frame for ${this.levelDuration} seconds.`;
+
 
         this.levelDuration = 30;
 

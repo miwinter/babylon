@@ -9,8 +9,9 @@ class Level6 extends gameLevel {
         this.G = 0.001;
         this.sun.masse = 3000;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 6 !!!
-        \n Gardez une géante gazeuse et ses deux satellites dans le cadre pendant ${this.levelDuration} secondes. `;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 6 !!!
+            \n Keep a gas giant and its two satellites in the frame for ${this.levelDuration} seconds. `;
+
 
         this.levelDuration = 30;
 

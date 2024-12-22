@@ -8,8 +8,9 @@ class Level4 extends gameLevel {
         this.delta_time = 0.1;
         this.G = 0.00001;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 4 !!!
-        \n Garder les deux planètes dans le cadre pendant ${this.levelDuration} secondes. `;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 4 !!!
+            \n Keep both planets in the frame for ${this.levelDuration} seconds. `;
+
 
         this.levelDuration = 30;
 

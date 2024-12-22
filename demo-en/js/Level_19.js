@@ -10,8 +10,9 @@ class Level19 extends gameLevel {
         this.sun.masse = 1000;
         this.levelDuration = 40;
 
-        SOLAR.theExplanationPlaneText.text = `Bienvenue au niveau 18 !!!
-        \n Pendant ${this.levelDuration} secondes.`;
+            SOLAR.theExplanationPlaneText.text = `Welcome to level 18!!!
+            \n For ${this.levelDuration} seconds.`;
+
 
         for(var x = -0.5; x <= 0.5; x+=1)
         {
